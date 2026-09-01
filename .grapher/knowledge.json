@@ -2502,6 +2502,138 @@
       "meta": {},
       "created_at": "2026-09-01T10:54:22+00:00",
       "updated_at": "2026-09-01T10:54:22+00:00"
+    },
+    "finding-ui-knob-pitch-scale-up": {
+      "id": "finding-ui-knob-pitch-scale-up",
+      "type": "finding",
+      "title": "Knobs + pitch wheel slight scale-up",
+      "content": "Scaled M1–M3 knobs (~2.35–3.25rem) and pitch wheel (~1.48×2.85–2.05×4.75rem). Kept shared side-controls/knobs gap clamp(0.2rem,1.2vh,0.35rem) so M1–M3–PITCH spacing stays even.",
+      "path": null,
+      "tags": [
+        "ui",
+        "knobs",
+        "pitch"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T10:55:02+00:00",
+      "updated_at": "2026-09-01T10:55:02+00:00"
+    },
+    "finding-ui-type-readable-bump": {
+      "id": "finding-ui-type-readable-bump",
+      "type": "finding",
+      "title": "LCD/chrome type ~15% larger",
+      "content": "Added --fs-xs/sm/md/lg tokens; LCD screens inherit --fs-sm; soft keys, library, menu, params, edit hints, knob/pitch labels, hw buttons bumped ~12–15% for readability.",
+      "path": null,
+      "tags": [
+        "ui",
+        "typography",
+        "lcd"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T11:00:30+00:00",
+      "updated_at": "2026-09-01T11:00:30+00:00"
+    },
+    "finding-fix-kit-ok-pick-trap": {
+      "id": "finding-fix-kit-ok-pick-trap",
+      "type": "finding",
+      "title": "Kit edit OK edits pad; pick mode no kit trap",
+      "content": "Kit-edit OK now opens pad sound edit (same as C EDIT), not lib pick — B SOUND remains replace. clearLibPick on menu/closeMenu/detail→library so MENU hold cannot leave libPickMode stuck. Pick lists filter out kits (user/fav) so OK on a kit cannot toast PICK A SOUND.",
+      "path": null,
+      "tags": [
+        "ui",
+        "kits",
+        "bugfix"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T11:04:48+00:00",
+      "updated_at": "2026-09-01T11:04:48+00:00"
+    },
+    "finding-ui-kit-library-pad-audition": {
+      "id": "finding-ui-kit-library-pad-audition",
+      "type": "finding",
+      "title": "Library kit highlight loads pads live",
+      "content": "Open library snapshots pads+padBank. Highlighting a kit (not pick mode) calls loadKitPads without persist so physical pads audition that kit; non-kit highlight restores snapshot pads. BACK exitLibrary restores pads/bank. USE PADS persists via loadKitPads({persist:true}).",
+      "path": null,
+      "tags": [
+        "ui",
+        "kits",
+        "library"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T11:12:24+00:00",
+      "updated_at": "2026-09-01T11:12:24+00:00"
+    },
+    "finding-pad-kit-vol-user-pads-factory": {
+      "id": "finding-pad-kit-vol-user-pads-factory",
+      "type": "finding",
+      "title": "Independent kit/pad volume, USER/PADS, factory fun pack",
+      "content": "Pad assign: M1 pad level, M2 pan, M3 kit vol (kit edit) or pad level (plain assign). Pad-sourced sound edit M3 is pad level not master. Playback gain = kitVolume * slot.level via #padGain; pan via StereoPanner on GlassPoly and Drum. project.kitVolume + kit.volume persist; library kit snapshot restores kitVolume. Save As from pad edit → USER / PADS; in-place sound save clears matching slot.patch; kit save reloads pads when bank active. Factory fun pack added ~12 synths, 6 drums, 5 kits (garage/lofi/party/space/hybrid) in public/factory/sounds.json (GlassPoly + Drum only).",
+      "path": null,
+      "tags": [
+        "cassio",
+        "pads",
+        "volume",
+        "kits",
+        "factory",
+        "user-pads"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T15:44:31+00:00",
+      "updated_at": "2026-09-01T15:44:31+00:00"
+    },
+    "finding-ui-library-list-scrollbar": {
+      "id": "finding-ui-library-list-scrollbar",
+      "type": "finding",
+      "title": "Library list constrained scroll + thin bar",
+      "content": "Sound library list pane is a flex column with min-height:0 so .lib-list becomes a real scrollport (overflow-y:auto). Thin mid-opacity scrollbar (scrollbar-width:thin + 4px webkit thumb at ~45% white). After library render, selected .lib-row scrollIntoView({block:nearest}) so UP/DOWN keeps highlight visible.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "ui",
+        "library",
+        "scrollbar"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T16:49:36+00:00",
+      "updated_at": "2026-09-01T16:49:36+00:00"
+    },
+    "finding-ui-preload-splash-audio-unlock": {
+      "id": "finding-ui-preload-splash-audio-unlock",
+      "type": "finding",
+      "title": "Preload load + V-screen logo fade",
+      "content": "Cold start: #cassio-preload covers load (factory/user/audio). Then V-screen logo intro only: CASSIO + studio - 0926, fade in/hold/fade out (~1.65s), no progress bar. Then PLAY. Boot bar screen skipped on happy path; error still uses TAP TO RETRY. Gesture audio unlock + noise cache unchanged.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "ui",
+        "splash",
+        "pwa",
+        "audio",
+        "latency"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T16:52:01+00:00",
+      "updated_at": "2026-09-01T16:56:14+00:00"
+    },
+    "finding-rails-milestone-c": {
+      "id": "finding-rails-milestone-c",
+      "type": "finding",
+      "title": "Milestone C1: Sampler mic/import/export/SampleVoice",
+      "content": "Milestone C1 sampler path: MENU→SOUND hub (LIBRARY/SAMPLER). Sampler Home A MIC / B FILE / C OPEN / D BACK. MicCapture getUserMedia+MediaRecorder→AudioBuffer. Import via file picker + decodeAudioData (wav/mp3/ogg/m4a). Sample Edit trim (M1/M2), root/mode, PLAY/EXPORT/SAVE. Save → USER / SAMPLES IndexedDB with stored channel data. SampleVoice oneshot/gate on keys/pads. Export WAV (PCM), MP3 (lamejs /public/lame.min.js), M4A (MediaRecorder audio/mp4|aac when supported). Screens in screens/sampler.js; flow in sampler_controller.js.",
+      "path": null,
+      "tags": [
+        "rails",
+        "milestone",
+        "sampler",
+        "mic",
+        "export",
+        "m4a",
+        "mp3",
+        "wav"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T20:42:27+00:00",
+      "updated_at": "2026-09-01T20:42:27+00:00"
     }
   },
   "edges": [
@@ -4342,6 +4474,144 @@
       "to": "finding-ui-kit-save-drum-bend",
       "rel": "related",
       "created_at": "2026-09-01T10:54:24+00:00"
+    },
+    {
+      "from": "finding-ui-knob-pitch-scale-up",
+      "to": "finding-ui-equal-spacing-se-scale",
+      "rel": "related",
+      "created_at": "2026-09-01T10:55:03+00:00"
+    },
+    {
+      "from": "finding-ui-type-readable-bump",
+      "to": "finding-ui-lcd-nav-text-bump",
+      "rel": "related",
+      "created_at": "2026-09-01T11:00:32+00:00"
+    },
+    {
+      "from": "finding-fix-kit-ok-pick-trap",
+      "to": "finding-fix-kit-pad-save-dup",
+      "rel": "related",
+      "created_at": "2026-09-01T11:04:50+00:00"
+    },
+    {
+      "from": "finding-fix-kit-ok-pick-trap",
+      "to": "finding-ui-kit-save-drum-bend",
+      "rel": "related",
+      "created_at": "2026-09-01T11:04:50+00:00"
+    },
+    {
+      "from": "finding-ui-kit-library-pad-audition",
+      "to": "finding-ui-kits-tab-edit-save",
+      "rel": "related",
+      "created_at": "2026-09-01T11:12:26+00:00"
+    },
+    {
+      "from": "finding-ui-kit-library-pad-audition",
+      "to": "concept-screen-04",
+      "rel": "related",
+      "created_at": "2026-09-01T11:12:26+00:00"
+    },
+    {
+      "from": "finding-pad-kit-vol-user-pads-factory",
+      "to": "finding-fix-kit-pad-save-dup",
+      "rel": "related",
+      "created_at": "2026-09-01T15:44:38+00:00"
+    },
+    {
+      "from": "finding-pad-kit-vol-user-pads-factory",
+      "to": "finding-rails-milestone-bplus",
+      "rel": "related",
+      "created_at": "2026-09-01T15:44:38+00:00"
+    },
+    {
+      "from": "finding-pad-kit-vol-user-pads-factory",
+      "to": "concept-factory-library",
+      "rel": "related",
+      "created_at": "2026-09-01T15:44:38+00:00"
+    },
+    {
+      "from": "finding-pad-kit-vol-user-pads-factory",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T15:44:38+00:00"
+    },
+    {
+      "from": "finding-ui-library-list-scrollbar",
+      "to": "concept-screen-04",
+      "rel": "related",
+      "created_at": "2026-09-01T16:49:38+00:00"
+    },
+    {
+      "from": "finding-ui-library-list-scrollbar",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T16:49:38+00:00"
+    },
+    {
+      "from": "finding-ui-library-list-scrollbar",
+      "to": "finding-rails-milestone-bplus",
+      "rel": "related",
+      "created_at": "2026-09-01T16:49:38+00:00"
+    },
+    {
+      "from": "finding-ui-preload-splash-audio-unlock",
+      "to": "concept-screen-01",
+      "rel": "related",
+      "created_at": "2026-09-01T16:52:03+00:00"
+    },
+    {
+      "from": "finding-ui-preload-splash-audio-unlock",
+      "to": "finding-ui-boot-knobs-brand-0926",
+      "rel": "related",
+      "created_at": "2026-09-01T16:52:03+00:00"
+    },
+    {
+      "from": "finding-ui-preload-splash-audio-unlock",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T16:52:03+00:00"
+    },
+    {
+      "from": "finding-ui-preload-splash-audio-unlock",
+      "to": "finding-ui-keyboard-vscreen-pwa",
+      "rel": "related",
+      "created_at": "2026-09-01T16:52:03+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "finding-roadmap-bplus-then-c",
+      "rel": "related",
+      "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "concept-screen-12",
+      "rel": "related",
+      "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "concept-workflow-record-mic",
+      "rel": "related",
+      "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "concept-workflow-import",
+      "rel": "related",
+      "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-c",
+      "to": "concept-area-sound",
+      "rel": "related",
+      "created_at": "2026-09-01T20:42:29+00:00"
     }
   ]
 }

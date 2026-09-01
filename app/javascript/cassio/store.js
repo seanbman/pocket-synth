@@ -152,6 +152,7 @@ export function defaultProject() {
     delay: 0,
     root: "C3",
     padBank: "KIT TIGHT",
+    kitVolume: 1,
     pads: defaultPads()
   }
 }

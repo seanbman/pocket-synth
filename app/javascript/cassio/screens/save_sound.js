@@ -23,15 +23,15 @@ export function renderSaveSound(state) {
       <div class="lcd-macros">
         <span>M1 —</span>
         <span>M2 —</span>
-        <span>M3 VOLUME</span>
+        <span>M3 ${fromPad ? "PAD VOL" : "VOLUME"}</span>
       </div>
       <div class="save-body">
         <div class="sound-name">${esc(name)}${edited}</div>
         ${fromPad ? `
-        <div class="muted">PAD EDITS STAY ON THIS KIT SLOT.</div>
-        <div class="green">D ${isUser ? "SAVE UPDATES THE USER SOUND" : "TO PAD WRITES THIS PAD ONLY"}.</div>
-        <div class="green">C SAVE AS MAKES A NEW LIBRARY SOUND.</div>
-        <div class="muted">THEN SAVE THE KIT TO KEEP CHANGES.</div>
+        <div class="muted">C SAVE AS → USER / PADS LIBRARY.</div>
+        <div class="green">D ${isUser ? "SAVE UPDATES THAT USER PAD" : "TO PAD WRITES THIS KIT SLOT ONLY"}.</div>
+        <div class="muted">SAVED PADS CAN BE SWAPPED INTO ANY KIT.</div>
+        <div class="muted">THEN SAVE THE KIT TO KEEP BANK CHANGES.</div>
         ` : `
         <div class="muted">FACTORY PRESETS ARE READ-ONLY.</div>
         <div class="green">SAVE AS CREATES A USER SOUND</div>

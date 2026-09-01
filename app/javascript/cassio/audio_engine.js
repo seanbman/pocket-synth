@@ -82,6 +82,22 @@ export class AudioEngine {
     }
   }
 
+  /** Near-silent tick to warm the output path after a gesture unlock. */
+  warmSilent() {
+    if (!this.ctx || !this.master) return
+    try {
+      const ctx = this.ctx
+      const osc = ctx.createOscillator()
+      const g = ctx.createGain()
+      g.gain.value = 0.0001
+      osc.connect(g)
+      g.connect(this.master)
+      const t = ctx.currentTime
+      osc.start(t)
+      osc.stop(t + 0.02)
+    } catch (_) { /* ignore */ }
+  }
+
   getWaveform(out) {
     if (!this.analyser) return null
     const buf = out || this._wave
@@ -122,10 +138,18 @@ export class AudioEngine {
     if (this.trebleEq) this.trebleEq.gain.setTargetAtTime(g, this.ctx.currentTime, 0.04)
   }
 
-  connectVoice(node) {
-    node.connect(this.dry)
-    node.connect(this.wetGain)
-    node.connect(this.delayGain)
+  connectVoice(node, pan = 0) {
+    let src = node
+    const p = Number(pan)
+    if (Number.isFinite(p) && Math.abs(p) > 0.001 && this.ctx) {
+      const panner = this.ctx.createStereoPanner()
+      panner.pan.value = Math.min(1, Math.max(-1, p))
+      node.connect(panner)
+      src = panner
+    }
+    src.connect(this.dry)
+    src.connect(this.wetGain)
+    src.connect(this.delayGain)
   }
 
   now() {

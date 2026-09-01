@@ -19,13 +19,27 @@ export class DrumVoice {
     this.noise = 0.5
     this.reverb = 0.1
     this.drive = 0.1
+    this.pan = 0
     this.pitchBend = 0
     this.active = new Map()
     this._seq = 0
+    this._noiseBuf = null
   }
 
   get activeCount() {
     return this.active.size
+  }
+
+  /** Prebuild shared noise buffer once audio context exists. */
+  ensureNoiseCache() {
+    const ctx = this.engine.ctx
+    if (!ctx || this._noiseBuf) return
+    const seconds = 0.45
+    const len = Math.floor(ctx.sampleRate * seconds)
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate)
+    const data = buf.getChannelData(0)
+    for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1
+    this._noiseBuf = buf
   }
 
   #bendRatio() {
@@ -60,6 +74,7 @@ export class DrumVoice {
   setNoise(v) { this.noise = clamp01(v, 0.5) }
   setReverb(v) { this.reverb = clamp01(v, 0.1) }
   setDrive(v) { this.drive = clamp01(v, 0.1) }
+  setPan(v) { this.pan = Math.min(1, Math.max(-1, Number(v) || 0)) }
   setPitchBend(semitones) {
     this.pitchBend = Math.min(2, Math.max(-2, semitones))
   }
@@ -73,21 +88,28 @@ export class DrumVoice {
     const driveBoost = 0.85 + this.drive * 1.1
     out.gain.value = Math.min(1.4, velocity * driveBoost)
 
-    // Per-hit room/delay so FX knobs are audible without stomping keyboard space
+    // Per-hit room/delay; pan before bus so pad stereo is independent of master
+    let bus = out
+    if (Math.abs(this.pan) > 0.001) {
+      const panner = ctx.createStereoPanner()
+      panner.pan.value = Math.min(1, Math.max(-1, this.pan))
+      out.connect(panner)
+      bus = panner
+    }
     const dry = this.engine.dry
     const conv = this.engine.convolver
     const delayIn = this.engine.delay
-    out.connect(dry)
+    bus.connect(dry)
     if (conv && this.reverb > 0.01) {
       const send = ctx.createGain()
       send.gain.value = this.reverb * 0.95
-      out.connect(send)
+      bus.connect(send)
       send.connect(conv)
     }
     if (delayIn && this.drive > 0.15) {
       const dsend = ctx.createGain()
       dsend.gain.value = (this.drive - 0.15) * 0.45
-      out.connect(dsend)
+      bus.connect(dsend)
       dsend.connect(delayIn)
     }
 
@@ -113,6 +135,8 @@ export class DrumVoice {
   }
 
   #noiseBuffer(ctx, seconds = 0.2) {
+    this.ensureNoiseCache()
+    if (this._noiseBuf) return this._noiseBuf
     const len = Math.floor(ctx.sampleRate * seconds)
     const buf = ctx.createBuffer(1, len, ctx.sampleRate)
     const data = buf.getChannelData(0)

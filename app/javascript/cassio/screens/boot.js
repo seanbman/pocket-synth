@@ -1,12 +1,8 @@
 export function renderSplash() {
   return `
-    <div class="lcd-boot splash">
+    <div class="lcd-boot splash splash-logo">
       <div class="boot-title splash-title">CASSIO</div>
-      <div class="boot-sub splash-sub">POCKET SYNTH / SAMPLER</div>
-      <div class="boot-bar splash-bar">
-        ${Array.from({ length: 12 }, (_, i) => `<span class="boot-block splash-block" style="animation-delay:${i * 0.06}s"></span>`).join("")}
-      </div>
-      <div class="boot-msg splash-msg">POWER ON</div>
+      <div class="boot-sub splash-sub">studio - 0926</div>
     </div>
   `
 }

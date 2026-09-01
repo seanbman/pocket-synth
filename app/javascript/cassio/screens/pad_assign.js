@@ -48,12 +48,16 @@ export function renderPadAssign(state) {
       <div class="lcd-macros">
         <span>M1 PAD LEVEL</span>
         <span>M2 PAD PAN</span>
-        <span>M3 VOLUME</span>
+        <span>${kitEdit ? "M3 KIT VOL" : "M3 PAD VOL"}</span>
       </div>
       <div class="pad-assign-body">
         <div class="sound-name">${kitEdit ? "EDIT:" : "ASSIGN:"} ${esc(assignName)}</div>
         <div class="pad-grid">${cells}</div>
-        <div class="muted">${kitEdit ? (state.kitDirty ? "DIRTY · D SAVES KIT" : "B REPLACE · C EDIT PAD · HIT PAD TO HEAR") : "PRESS A PHYSICAL PAD TO SELECT IT"}</div>
+        <div class="muted">${kitEdit
+          ? (state.kitDirty
+            ? `DIRTY · KIT ${Math.round((state.kitVolume ?? 1) * 100)}% · D SAVES`
+            : "B REPLACE · OK/C EDIT · M1 LVL M2 PAN M3 KIT")
+          : "M1 LEVEL · M2 PAN · M3 PAD VOL"}</div>
       </div>
       <div class="lcd-soft">${softs}</div>
     </div>

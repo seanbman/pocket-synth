@@ -1,12 +1,13 @@
 import { AudioEngine } from "cassio/audio_engine"
 import { GlassPolyVoice, noteNameToMidi } from "cassio/voices/glass_poly"
 import { DrumVoice } from "cassio/voices/drum"
+import { SampleVoice } from "cassio/voices/sample"
 import { Transport } from "cassio/transport"
 import {
   loadRecovery, saveRecovery, defaultProject, defaultPads,
   listUserSounds, putUserSound, deleteUserSound, loadFavorites, saveFavorites
 } from "cassio/store"
-import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum } from "cassio/patch"
+import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum, isSample } from "cassio/patch"
 import { renderBoot, renderBootError, renderSplash } from "cassio/screens/boot"
 import { renderPlay } from "cassio/screens/play"
 import { renderMenu, AREAS } from "cassio/screens/menu"
@@ -18,6 +19,11 @@ import { renderPadAssign } from "cassio/screens/pad_assign"
 import { renderManage } from "cassio/screens/manage"
 import { renderConfirm } from "cassio/screens/confirm"
 import { renderNameEntry } from "cassio/screens/name_entry"
+import {
+  renderSoundHub, renderSamplerHome, renderMicRecord, renderSampleEdit,
+  renderSaveSample, renderExportPick
+} from "cassio/screens/sampler"
+import { SamplerController, SAMPLER_SCREENS } from "cassio/sampler_controller"
 
 const KEY_MAP = {
   KeyZ: 0, KeyS: 1, KeyX: 2, KeyD: 3, KeyC: 4, KeyV: 5, KeyG: 6,
@@ -48,6 +54,8 @@ export class CassioApp {
     this.synth = new GlassPolyVoice(this.engine)
     this.padSynth = new GlassPolyVoice(this.engine)
     this.drums = new DrumVoice(this.engine)
+    this.sampleVoice = new SampleVoice(this.engine)
+    this.sampler = new SamplerController(this)
     this.voice = this.synth
     this.transport = new Transport()
     this.factory = null
@@ -80,14 +88,23 @@ export class CassioApp {
     this.confirmTitle = ""
     this.confirmLines = []
     this.confirmAction = null
+    this.samplerIndex = 0
+    this.sampleBuffer = null
+    this.sampleDraft = null
+    this.samplePeaks = null
+    this.exportFormat = "wav"
+    this.exportReturnScreen = "sample-edit"
     this.booting = true
     this.bootError = null
     this.splashDone = false
+    this.audioUnlocked = false
+    this._unlocking = null
     this._vizRaf = null
     this.#bindHardware()
     this.#bindPitchWheel()
     this.#bindKeyboardPointer()
     this.#bindComputerKeys()
+    this.#bindGestureUnlock()
     this.#bindOrientation()
     this.#fitChassis()
     this.root.addEventListener("selectstart", (e) => e.preventDefault())
@@ -97,49 +114,33 @@ export class CassioApp {
   }
 
   async #runSplashThenBoot() {
-    this.screen = "splash"
-    this.render()
-    await new Promise((r) => setTimeout(r, 1500))
-    this.splashDone = true
-    await this.#startBoot()
+    await this.#bootThenLogoIntro()
   }
 
-  async #startBoot() {
-    this.screen = "boot"
-    this.booting = true
+  #setPreloadMsg(msg) {
+    const el = document.querySelector("#cassio-preload .cassio-preload-msg")
+    if (el) el.textContent = msg
+  }
+
+  #dismissPreload() {
+    document.getElementById("cassio-preload")?.remove()
+  }
+
+  /** Load under preload (if present), then V-screen logo fade → PLAY. Also used for retry. */
+  async #bootThenLogoIntro() {
     this.bootError = null
-    this.render()
+    this.booting = true
+    this.splashDone = true
+    this.screen = "boot"
+    this.#setPreloadMsg("LOADING…")
     try {
-      this.#setBootProgress(0.2, "LOADING FACTORY…")
-      const res = await fetch("/factory/sounds.json")
-      this.factory = await res.json()
-      this.#setBootProgress(0.4, "LOADING USER…")
-      this.userSounds = await listUserSounds()
-      this.favorites = await loadFavorites()
-      this.#setBootProgress(0.6, "LOADING RECOVERY…")
-      const recovered = await loadRecovery()
-      if (recovered) {
-        Object.assign(this.project, recovered)
-        if (!this.project.pads?.length) this.project.pads = defaultPads()
-      } else if (this.factory?.defaultPads?.length) {
-        this.project.pads = this.factory.defaultPads.map((p) => ({
-          pad: p.pad,
-          soundId: p.soundId,
-          level: p.level ?? 1,
-          pan: p.pan ?? 0,
-          mode: p.mode || "oneshot",
-          patch: p.patch || null
-        }))
-        this.project.padBank = "KIT TIGHT"
-      }
-      this.transport.bpm = this.project.bpm
-      this.#setBootProgress(0.8, "LOADING AUDIO…")
-      await this.engine.start()
-      this.engine.setMasterVolume(this.project.masterVolume)
-      this.#resolveSound(this.project.soundId)
-      this.#applyProjectPatch()
-      this.#setBootProgress(1, "READY")
-      await new Promise((r) => setTimeout(r, 280))
+      await this.#loadBootAssets()
+      this.#dismissPreload()
+      this.screen = "splash"
+      this.splashDone = false
+      this.render()
+      await new Promise((r) => setTimeout(r, 1650))
+      this.splashDone = true
       this.booting = false
       this.screen = "play"
       this.render()
@@ -147,18 +148,88 @@ export class CassioApp {
       this.#persist()
     } catch (e) {
       this.bootError = String(e.message || e) || "AUDIO INIT FAILED — TAP TO RETRY"
+      this.#dismissPreload()
       this.render()
     }
   }
 
+  async #startBoot() {
+    await this.#bootThenLogoIntro()
+  }
+
+  async #loadBootAssets() {
+    this.#setBootProgress(0.2, "LOADING FACTORY…")
+    const res = await fetch("/factory/sounds.json")
+    this.factory = await res.json()
+    this.#setBootProgress(0.4, "LOADING USER…")
+    this.userSounds = await listUserSounds()
+    this.favorites = await loadFavorites()
+    this.#setBootProgress(0.6, "LOADING RECOVERY…")
+    const recovered = await loadRecovery()
+    if (recovered) {
+      Object.assign(this.project, recovered)
+      if (!this.project.pads?.length) this.project.pads = defaultPads()
+    } else if (this.factory?.defaultPads?.length) {
+      this.project.pads = this.factory.defaultPads.map((p) => ({
+        pad: p.pad,
+        soundId: p.soundId,
+        level: p.level ?? 1,
+        pan: p.pan ?? 0,
+        mode: p.mode || "oneshot",
+        patch: p.patch || null
+      }))
+      this.project.padBank = "KIT TIGHT"
+    }
+    this.transport.bpm = this.project.bpm
+    if (this.project.kitVolume == null) this.project.kitVolume = 1
+    this.#setBootProgress(0.8, "LOADING AUDIO…")
+    await this.engine.start()
+    this.drums.ensureNoiseCache()
+    this.engine.setMasterVolume(this.project.masterVolume)
+    this.#resolveSound(this.project.soundId)
+    this.#applyProjectPatch()
+    this.#setBootProgress(1, "READY")
+  }
+
+  #bindGestureUnlock() {
+    const unlock = () => { void this.#unlockAudioFromGesture() }
+    window.addEventListener("pointerdown", unlock, { capture: true, passive: true })
+    window.addEventListener("keydown", unlock, { capture: true })
+  }
+
+  async #unlockAudioFromGesture() {
+    if (this.audioUnlocked && this.engine.ctx?.state === "running") return
+    if (this._unlocking) return this._unlocking
+    this._unlocking = (async () => {
+      try {
+        await this.engine.start()
+        await this.engine.resume()
+        this.drums.ensureNoiseCache()
+        this.engine.warmSilent()
+        this.audioUnlocked = this.engine.ctx?.state === "running"
+      } catch (_) { /* ignore */ }
+      finally { this._unlocking = null }
+    })()
+    return this._unlocking
+  }
+
   async #ensureAudioRunning() {
-    if (!this.engine.ready) return
-    await this.engine.resume()
+    if (!this.engine.ready) await this.engine.start()
+    if (this.engine.ctx?.state === "suspended") await this.engine.resume()
+    if (!this.audioUnlocked && this.engine.ctx?.state === "running") {
+      this.drums.ensureNoiseCache()
+      this.engine.warmSilent()
+      this.audioUnlocked = true
+    }
   }
 
   #setBootProgress(p, msg) {
     this.bootProgress = p
     this.bootMessage = msg
+    if (document.getElementById("cassio-preload")) {
+      this.#setPreloadMsg(msg)
+      return
+    }
     this.render()
   }
 
@@ -208,6 +279,9 @@ export class CassioApp {
     })
     if (isDrum(s)) {
       this.drums.applyPatch(fromSound)
+    } else if (isSample(s)) {
+      this.sampler.loadBufferForSound(s)
+      this.sampleVoice.applyPatch(fromSound)
     } else {
       this.synth.applyPatch(fromSound)
     }
@@ -232,11 +306,18 @@ export class CassioApp {
     this.project.decay = p.decay
     this.project.snap = p.snap
     if (isDrum(this.sound)) this.drums.applyPatch(p)
-    else this.synth.applyPatch(p)
+    else if (isSample(this.sound)) {
+      this.sampler.loadBufferForSound(this.sound)
+      this.sampleVoice.applyPatch(p)
+    } else this.synth.applyPatch(p)
   }
 
   #keyboardIsDrum() {
     return isDrum(this.sound)
+  }
+
+  #keyboardIsSample() {
+    return isSample(this.sound)
   }
 
   #soundById(id) {
@@ -278,14 +359,32 @@ export class CassioApp {
       kitEditMode: this.kitEditMode,
       kitDirty: this.kitDirty,
       kitFocus: this.kitFocus,
+      kitVolume: this.project.kitVolume ?? 1,
       editReturnScreen: this.editReturnScreen,
       libPickMode: this.libPickMode,
       factorySounds: this.#factorySounds(),
       userSounds: this.userSounds,
       nameDraft: this.nameDraft,
       confirmTitle: this.confirmTitle,
-      confirmLines: this.confirmLines
+      confirmLines: this.confirmLines,
+      ...this.sampler.stateExtras()
     }
+  }
+
+  openLibraryFromHub() {
+    this.#openLibrary()
+  }
+
+  beginSampleName({ initial, returnScreen }) {
+    this.#askName({
+      initial: initial || "SAMPLE",
+      mode: "save-sample",
+      returnScreen: returnScreen || "save-sample"
+    })
+  }
+
+  async ensureAudioRunningPublic() {
+    await this.#ensureAudioRunning()
   }
 
   render() {
@@ -298,8 +397,23 @@ export class CassioApp {
       this.vscreen.innerHTML = renderBoot(this.bootProgress || 0.1, this.bootMessage || "LOADING…")
     } else if (this.screen === "menu") {
       this.vscreen.innerHTML = renderMenu(this.state())
+    } else if (this.screen === "sound-hub") {
+      this.vscreen.innerHTML = renderSoundHub(this.state())
+    } else if (this.screen === "sampler-home") {
+      this.vscreen.innerHTML = renderSamplerHome(this.state())
+    } else if (this.screen === "mic-record") {
+      this.vscreen.innerHTML = renderMicRecord(this.state())
+    } else if (this.screen === "sample-edit") {
+      this.vscreen.innerHTML = renderSampleEdit(this.state())
+    } else if (this.screen === "save-sample") {
+      this.vscreen.innerHTML = renderSaveSample(this.state())
+    } else if (this.screen === "export-pick") {
+      this.vscreen.innerHTML = renderExportPick(this.state())
     } else if (this.screen === "library") {
       this.vscreen.innerHTML = renderLibrary(this.state())
+      requestAnimationFrame(() => {
+        this.vscreen.querySelector(".lib-row.selected")?.scrollIntoView({ block: "nearest" })
+      })
     } else if (this.screen === "detail") {
       this.vscreen.innerHTML = renderDetail(this.state())
     } else if (EDIT_SCREENS.has(this.screen)) {
@@ -330,6 +444,7 @@ export class CassioApp {
   }
 
   #m1Value() {
+    if (this.screen === "pad-assign") return this.#selectedPad()?.level ?? 1
     if (this.screen === "edit-drum-tone") return this.editPatch?.tone ?? 0.5
     if (this.screen === "edit-drum-decay") return this.editPatch?.decay ?? 0.4
     if (this.screen === "edit-drum-snap") return this.editPatch?.snap ?? 0.55
@@ -342,6 +457,7 @@ export class CassioApp {
   }
 
   #m2Value() {
+    if (this.screen === "pad-assign") return ((this.#selectedPad()?.pan ?? 0) + 1) / 2
     if (this.screen === "edit-drum-tone") return this.editPatch?.tuning ?? 0.5
     if (this.screen === "edit-drum-decay") return this.editPatch?.noise ?? 0.5
     if (this.screen === "edit-drum-snap") return this.editPatch?.drive ?? 0.1
@@ -353,13 +469,34 @@ export class CassioApp {
     return this.project.space
   }
 
+  #m3Value() {
+    if (this.screen === "pad-assign") {
+      if (this.kitEditMode) return this.project.kitVolume ?? 1
+      return this.#selectedPad()?.level ?? 1
+    }
+    if (EDIT_SCREENS.has(this.screen) && this.editReturnScreen === "pad-assign") {
+      return this.#selectedPad()?.level ?? 1
+    }
+    return this.project.masterVolume
+  }
+
+  #selectedPad() {
+    return this.project.pads?.find((p) => p.pad === this.padSelect) || null
+  }
+
+  #padGain(slot) {
+    const kit = Math.min(1, Math.max(0, this.project.kitVolume ?? 1))
+    const level = Math.min(1, Math.max(0, slot?.level ?? 1))
+    return kit * level
+  }
+
   #syncKnobVisual(which) {
     const el = this.root.querySelector(`[data-knob="${which}"]`)
     if (!el) return
     let value = 0
     if (which === "m1") value = this.#m1Value()
     else if (which === "m2") value = this.#m2Value()
-    else if (which === "m3") value = this.project.masterVolume
+    else if (which === "m3") value = this.#m3Value()
     el.style.transform = `rotate(${this.#knobAngle(value)}deg)`
   }
 
@@ -538,6 +675,7 @@ export class CassioApp {
       delay: this.project.delay,
       root: this.project.root,
       padBank: this.project.padBank,
+      kitVolume: this.project.kitVolume ?? 1,
       pads: this.project.pads
     })
   }
@@ -546,6 +684,7 @@ export class CassioApp {
     this.root.addEventListener("pointerdown", (e) => {
       if (this.root.classList.contains("landscape")) return
       if (this.booting || this.bootError) {
+        void this.#unlockAudioFromGesture()
         if (this.bootError) {
           this.bootError = null
           this.booting = true
@@ -708,7 +847,46 @@ export class CassioApp {
   }
 
   #nudgeKnob(which, delta) {
+    if (SAMPLER_SCREENS.has(this.screen) && this.sampler.nudgeKnob(which, delta)) return
+
+    if (this.screen === "pad-assign") {
+      const p = this.#selectedPad()
+      if (!p) return
+      if (which === "m1") {
+        p.level = Math.min(1, Math.max(0, (p.level ?? 1) + delta))
+        this.toast(`PAD ${this.padSelect} LVL ${Math.round(p.level * 100)}%`)
+      } else if (which === "m2") {
+        p.pan = Math.min(1, Math.max(-1, (p.pan ?? 0) + delta * 2))
+        this.toast(`PAD ${this.padSelect} PAN ${Math.round(p.pan * 100)}`)
+      } else if (which === "m3") {
+        if (this.kitEditMode) {
+          this.project.kitVolume = Math.min(1, Math.max(0, (this.project.kitVolume ?? 1) + delta))
+          this.toast(`KIT VOL ${Math.round(this.project.kitVolume * 100)}%`)
+        } else {
+          p.level = Math.min(1, Math.max(0, (p.level ?? 1) + delta))
+          this.toast(`PAD ${this.padSelect} LVL ${Math.round(p.level * 100)}%`)
+        }
+      }
+      if (this.kitEditMode) this.kitDirty = true
+      this.#syncKnobVisual(which)
+      this.render()
+      this.#persist()
+      this.#previewPadSlot()
+      return
+    }
+
     if (which === "m3") {
+      if (EDIT_SCREENS.has(this.screen) && this.editReturnScreen === "pad-assign") {
+        const p = this.#selectedPad()
+        if (p) {
+          p.level = Math.min(1, Math.max(0, (p.level ?? 1) + delta))
+          if (this.kitEditMode || this.kitFocus) this.kitDirty = true
+          this.toast(`PAD ${this.padSelect} LVL ${Math.round(p.level * 100)}%`)
+          this.#syncKnobVisual(which)
+          this.#persist()
+          return
+        }
+      }
       this.project.masterVolume = Math.min(1, Math.max(0, this.project.masterVolume + delta))
       this.engine.setMasterVolume(this.project.masterVolume)
       this.toast(`VOLUME ${Math.round(this.project.masterVolume * 100)}%`)
@@ -973,6 +1151,7 @@ export class CassioApp {
   }
 
   #backTap() {
+    if (SAMPLER_SCREENS.has(this.screen) && this.sampler.back()) return
     if (this.screen === "menu") {
       this.#closeMenu()
       return
@@ -989,6 +1168,7 @@ export class CassioApp {
       return
     }
     if (this.screen === "detail") {
+      this.#clearLibPick()
       this.screen = "library"
       this.render()
       return
@@ -1040,6 +1220,8 @@ export class CassioApp {
   }
 
   #softKey(key) {
+    if (SAMPLER_SCREENS.has(this.screen) && this.sampler.softKey(key)) return
+
     if (this.screen === "menu") {
       if (key === "a") this.#openArea()
       if (key === "b") {
@@ -1244,12 +1426,18 @@ export class CassioApp {
     if (key === "d") this.#openLibrary()
   }
 
+  #clearLibPick() {
+    this.libPickMode = false
+  }
+
   #openMenu() {
+    this.#clearLibPick()
     this.screen = "menu"
     this.render()
   }
 
   #closeMenu() {
+    this.#clearLibPick()
     this.screen = "play"
     this.render()
   }
@@ -1261,7 +1449,7 @@ export class CassioApp {
       return
     }
     if (area === "SOUND") {
-      this.#openLibrary()
+      this.sampler.openHub()
       return
     }
     this.toast(`${area} — COMING SOON`)
@@ -1278,15 +1466,19 @@ export class CassioApp {
       return this.#factorySounds().filter((s) => !isKit(s))
     }
     if (this.libTab === "kits") {
+      if (this.libPickMode) return []
       const fac = this.#factorySounds().filter((s) => isKit(s))
       const user = this.userSounds.filter((s) => isKit(s))
       return [...fac, ...user]
     }
     if (this.libTab === "user") {
-      return this.userSounds
+      return this.libPickMode
+        ? this.userSounds.filter((s) => !isKit(s))
+        : this.userSounds
     }
     if (this.libTab === "fav") {
-      return this.favorites.map((id) => this.#soundById(id)).filter(Boolean)
+      const favs = this.favorites.map((id) => this.#soundById(id)).filter(Boolean)
+      return this.libPickMode ? favs.filter((s) => !isKit(s)) : favs
     }
     // legacy / pick mode: treat unknown as factory non-kits
     return this.#factorySounds().filter((s) => !isKit(s))
@@ -1323,7 +1515,10 @@ export class CassioApp {
       bassDb: this.project.bassDb,
       trebleDb: this.project.trebleDb,
       space: this.project.space,
-      delay: this.project.delay
+      delay: this.project.delay,
+      padBank: this.project.padBank,
+      kitVolume: this.project.kitVolume ?? 1,
+      pads: this.#clonePads(this.project.pads)
     }
     this.libTab = "factory"
     this.libIndex = 0
@@ -1335,13 +1530,66 @@ export class CassioApp {
 
   #exitLibrary(committed) {
     if (!committed && this.librarySnapshot) {
-      Object.assign(this.project, this.librarySnapshot)
+      const snap = this.librarySnapshot
+      Object.assign(this.project, {
+        soundId: snap.soundId,
+        root: snap.root,
+        brightness: snap.brightness,
+        resonance: snap.resonance,
+        attack: snap.attack,
+        release: snap.release,
+        bassDb: snap.bassDb,
+        trebleDb: snap.trebleDb,
+        space: snap.space,
+        delay: snap.delay,
+        padBank: snap.padBank,
+        kitVolume: snap.kitVolume ?? 1,
+        pads: this.#clonePads(snap.pads)
+      })
       this.#resolveSound(this.project.soundId)
       this.#applyProjectPatch()
     }
     this.librarySnapshot = null
     this.screen = "play"
     this.render()
+  }
+
+  #clonePads(pads) {
+    return (pads || []).map((p) => ({
+      pad: p.pad,
+      soundId: p.soundId ?? null,
+      level: p.level ?? 1,
+      pan: p.pan ?? 0,
+      mode: p.mode || "oneshot",
+      patch: p.patch ? { ...p.patch } : null
+    }))
+  }
+
+  #loadKitPads(kit, { persist = false } = {}) {
+    if (!kit || !isKit(kit) || !kit.pads?.length) return false
+    this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => {
+      const slot = kit.pads.find((p) => p.pad === n) || {}
+      return {
+        pad: n,
+        soundId: slot.soundId ?? null,
+        level: slot.level ?? 1,
+        pan: slot.pan ?? 0,
+        mode: slot.mode || "oneshot",
+        patch: slot.patch ? { ...slot.patch } : null
+      }
+    })
+    this.project.padBank = kit.name
+    this.project.kitVolume = kit.volume != null ? Math.min(1, Math.max(0, Number(kit.volume) || 1)) : 1
+    if (persist) this.#persist()
+    return true
+  }
+
+  #restoreSnapshotPads() {
+    const snap = this.librarySnapshot
+    if (!snap?.pads) return
+    this.project.pads = this.#clonePads(snap.pads)
+    this.project.padBank = snap.padBank
+    if (snap.kitVolume != null) this.project.kitVolume = snap.kitVolume
   }
 
   #synthHoldMs(patch) {
@@ -1358,6 +1606,7 @@ export class CassioApp {
     if (s.playable === false) return
     this.#ensureAudioRunning()
     if (isKit(s)) {
+      if (!this.libPickMode) this.#loadKitPads(s, { persist: false })
       const first = s.pads?.find((p) => p.soundId)
       const drum = first ? this.#soundById(first.soundId) : null
       if (drum) {
@@ -1367,10 +1616,18 @@ export class CassioApp {
       }
       return
     }
+    if (!this.libPickMode && this.librarySnapshot?.pads) this.#restoreSnapshotPads()
     const patch = patchFromSound(s, s.patch || {})
     if (isDrum(s)) {
       this.drums.applyPatch(patch)
       this.drums.noteOn(noteNameToMidi(patch.root || "C3"), 0.75)
+      return
+    }
+    if (isSample(s)) {
+      this.sampler.loadBufferForSound(s)
+      const midi = noteNameToMidi(patch.root || s.root || "C3")
+      this.sampleVoice.noteOff(midi, true)
+      this.sampleVoice.noteOn(midi, 0.75)
       return
     }
     this.synth.applyPatch(patch)
@@ -1403,6 +1660,8 @@ export class CassioApp {
   }
 
   #nav(dir) {
+    if (SAMPLER_SCREENS.has(this.screen) && this.sampler.nav(dir)) return
+
     if (this.screen === "menu") {
       if (dir === "up") this.menuIndex = (this.menuIndex + AREAS.length - 1) % AREAS.length
       if (dir === "down") this.menuIndex = (this.menuIndex + 1) % AREAS.length
@@ -1499,7 +1758,7 @@ export class CassioApp {
     }
     if (this.screen === "pad-assign") {
       if (this.kitEditMode) {
-        this.#openLibPickForPad()
+        this.#editSelectedPadSound()
         return
       }
       this.#assignPad()
@@ -1530,6 +1789,7 @@ export class CassioApp {
     this.project.soundId = s.id
     this.sound = s
     this.#commitPatchToProject(patch)
+    if (isSample(s)) this.sampler.loadBufferForSound(s)
     this.librarySnapshot = null
     this.editDirty = false
     this.screen = "play"
@@ -1540,28 +1800,15 @@ export class CassioApp {
 
   #useKit() {
     const s = this.focusSound || this.sound
-    if (!s || !isKit(s) || !s.pads?.length) {
+    if (!this.#loadKitPads(s, { persist: true })) {
       this.toast("NO KIT")
       return
     }
-    this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => {
-      const slot = s.pads.find((p) => p.pad === n) || {}
-      return {
-        pad: n,
-        soundId: slot.soundId ?? null,
-        level: slot.level ?? 1,
-        pan: slot.pan ?? 0,
-        mode: slot.mode || "oneshot",
-        patch: slot.patch || null
-      }
-    })
-    this.project.padBank = s.name
     this.kitDirty = false
     this.kitFocus = s
     this.librarySnapshot = null
     this.screen = "play"
     this.render()
-    this.#persist()
     this.toast(`${s.name} → PADS`)
   }
 
@@ -1654,15 +1901,19 @@ export class CassioApp {
     }
     this.#ensureAudioRunning()
     const midi = this.#padMidi(this.padSelect)
+    const vel = Math.min(1, 0.95 * this.#padGain(slot))
+    const pan = slot.pan ?? 0
     if (isDrum(assigned)) {
       const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
       this.drums.applyPatch(patch)
-      this.drums.noteOn(midi, 0.85)
+      this.drums.setPan(pan)
+      this.drums.noteOn(midi, vel)
       return
     }
     const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
     this.padSynth.applyPatch(patch)
-    this.padSynth.noteOn(midi, 0.75)
+    this.padSynth.setPan(pan)
+    this.padSynth.noteOn(midi, vel)
     setTimeout(() => this.padSynth.noteOff(midi), this.#synthHoldMs(patch))
   }
 
@@ -1714,6 +1965,7 @@ export class CassioApp {
       return
     }
     kit.pads = this.#kitPadsSnapshot()
+    kit.volume = this.project.kitVolume ?? 1
     kit.kind = "kit"
     kit.voice = "kit"
     kit.source = "user"
@@ -1723,7 +1975,7 @@ export class CassioApp {
     this.userSounds = await listUserSounds()
     this.focusSound = this.userSounds.find((u) => u.id === kit.id) || kit
     this.kitFocus = this.focusSound
-    this.project.padBank = this.focusSound.name
+    this.#syncPadsAfterKitSave(this.focusSound)
     this.kitDirty = false
     this.kitEditMode = false
     this.#persist()
@@ -1742,6 +1994,7 @@ export class CassioApp {
       voice: "kit",
       source: "user",
       category: "USER / KITS",
+      volume: this.project.kitVolume ?? 1,
       pads,
       playable: true
     }
@@ -1749,7 +2002,7 @@ export class CassioApp {
     this.userSounds = await listUserSounds()
     this.focusSound = kit
     this.kitFocus = kit
-    this.project.padBank = kit.name
+    this.#syncPadsAfterKitSave(kit)
     this.kitDirty = false
     this.kitEditMode = false
     this.#persist()
@@ -1758,6 +2011,21 @@ export class CassioApp {
     this.libCategory = "USER / KITS"
     this.screen = "detail"
     this.render()
+  }
+
+  #syncPadsAfterSoundSave(sound) {
+    if (!sound?.id) return
+    for (const p of this.project.pads || []) {
+      if (p.soundId === sound.id) p.patch = null
+    }
+  }
+
+  #syncPadsAfterKitSave(kit) {
+    if (!kit || !isKit(kit)) return
+    if (this.project.padBank === kit.name || this.kitFocus?.id === kit.id) {
+      this.#loadKitPads(kit, { persist: false })
+      this.kitFocus = kit
+    }
   }
 
   #padPatchFromEdit(src, editPatch) {
@@ -1835,6 +2103,10 @@ export class CassioApp {
     const s = this.focusSound || this.sound
     if (!s || s.playable === false || isKit(s)) {
       this.toast(isKit(s) ? "USE KIT EDIT" : "NO ENGINE")
+      return
+    }
+    if (isSample(s)) {
+      this.sampler.openFromSound(s)
       return
     }
     this.focusSound = s
@@ -1996,6 +2268,13 @@ export class CassioApp {
       return
     }
 
+    if (mode === "save-sample") {
+      if (this.sampleDraft) this.sampleDraft.name = v
+      this.screen = "save-sample"
+      this.render()
+      return
+    }
+
     if (mode === "duplicate") {
       await this.#finishDuplicate(v)
       return
@@ -2025,10 +2304,11 @@ export class CassioApp {
     const patch = sanitizePatch(this.editPatch || patchFromSound(src))
     const id = `user-${Date.now().toString(36)}`
     const drum = isDrum(src)
+    const fromPad = this.editReturnScreen === "pad-assign"
     const sound = {
       id,
       name: this.saveName,
-      category: drum ? "USER / DRUMS" : "USER / SYNTH",
+      category: fromPad ? "USER / PADS" : (drum ? "USER / DRUMS" : "USER / SYNTH"),
       voice: drum ? "drum" : (src?.voice || "poly"),
       root: patch.root || src?.root || "C3",
       padMode: src?.padMode || (drum ? "oneshot" : "gate"),
@@ -2062,8 +2342,8 @@ export class CassioApp {
     this.focusSound = sound
     this.editPatch = patch
     this.editDirty = false
-    this.toast(drum ? "SAVED DRUM" : "SAVED USER")
-    if (this.editReturnScreen === "pad-assign") {
+    this.toast(fromPad ? "SAVED · SEE USER / PADS" : (drum ? "SAVED DRUM" : "SAVED USER"))
+    if (fromPad) {
       const p = this.project.pads.find((x) => x.pad === this.padSelect)
       if (p) {
         p.soundId = sound.id
@@ -2075,6 +2355,7 @@ export class CassioApp {
           this.project.padBank = "PADS CUSTOM"
         }
       }
+      this.#syncPadsAfterSoundSave(sound)
       this.#returnToKitEdit()
       this.#persist()
     } else {
@@ -2098,7 +2379,8 @@ export class CassioApp {
     s.root = patch.root
     if (isDrum(s)) {
       s.voice = "drum"
-      s.category = s.category || "USER / DRUMS"
+      if (this.editReturnScreen === "pad-assign") s.category = "USER / PADS"
+      else s.category = s.category || "USER / DRUMS"
       s.patch = {
         drumType: patch.drumType || s.patch?.drumType || "kick",
         tone: patch.tone,
@@ -2110,15 +2392,15 @@ export class CassioApp {
         drive: patch.drive
       }
     } else {
+      if (this.editReturnScreen === "pad-assign") s.category = "USER / PADS"
       s.patch = { ...patch }
     }
     await putUserSound(s)
     this.userSounds = await listUserSounds()
     this.focusSound = this.userSounds.find((u) => u.id === s.id) || s
     if (this.project.soundId === s.id) this.#commitPatchToProject(patch)
+    this.#syncPadsAfterSoundSave(this.focusSound)
     if (this.editReturnScreen === "pad-assign") {
-      const p = this.project.pads.find((x) => x.pad === this.padSelect)
-      if (p) p.patch = null
       this.editDirty = false
       this.toast("PAD SOUND SAVED")
       this.#returnToKitEdit()
@@ -2307,12 +2589,19 @@ export class CassioApp {
   }
 
   #keyDown(degree) {
-    this.#ensureAudioRunning()
+    if (!this.engine.ready || this.engine.ctx?.state === "suspended") {
+      void this.#ensureAudioRunning().then(() => {
+        if (this.engine.ctx?.state === "running") this.#keyDown(degree)
+      })
+      return
+    }
+    void this.#ensureAudioRunning()
     if (this.project.hold && this.heldKeys.has(degree)) {
       const midi = this.heldKeys.get(degree)
       this.heldKeys.delete(degree)
       if (midi != null) {
         if (this.#keyboardIsDrum()) this.drums.noteOff(midi, true)
+        else if (this.#keyboardIsSample()) this.sampleVoice.noteOff(midi, true)
         else this.synth.noteOff(midi, true)
       }
       this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.remove("active")
@@ -2322,12 +2611,17 @@ export class CassioApp {
     if (this.heldKeys.has(degree)) {
       const prev = this.heldKeys.get(degree)
       if (this.#keyboardIsDrum()) this.drums.noteOff(prev, true)
+      else if (this.#keyboardIsSample()) this.sampleVoice.noteOff(prev, true)
       else this.synth.noteOff(prev, true)
     }
     this.heldKeys.set(degree, midi)
     if (this.#keyboardIsDrum()) {
       this.drums.applyPatch(patchFromSound(this.sound, this.sound?.patch || {}))
       this.drums.noteOn(midi)
+    } else if (this.#keyboardIsSample()) {
+      this.sampler.loadBufferForSound(this.sound)
+      this.sampleVoice.applyPatch(patchFromSound(this.sound, this.sound?.patch || {}))
+      this.sampleVoice.noteOn(midi)
     } else {
       this.synth.noteOn(midi)
     }
@@ -2346,6 +2640,7 @@ export class CassioApp {
     this.heldKeys.delete(degree)
     if (midi != null) {
       if (this.#keyboardIsDrum()) this.drums.noteOff(midi)
+      else if (this.#keyboardIsSample()) this.sampleVoice.noteOff(midi)
       else this.synth.noteOff(midi)
     }
   }
@@ -2366,8 +2661,14 @@ export class CassioApp {
       if (this.kitEditMode) this.#previewPadSlot()
       return
     }
+    if (!this.engine.ready || this.engine.ctx?.state === "suspended") {
+      void this.#ensureAudioRunning().then(() => {
+        if (this.engine.ctx?.state === "running") this.#padDown(n)
+      })
+      return
+    }
     if (EDIT_SCREENS.has(this.screen) && this.editPatch) {
-      this.#ensureAudioRunning()
+      void this.#ensureAudioRunning()
       const midi = this.#padMidi(n)
       const focus = this.focusSound || this.sound
       if (isDrum(focus)) {
@@ -2388,11 +2689,13 @@ export class CassioApp {
       this.#syncLeds()
       return
     }
-    this.#ensureAudioRunning()
+    void this.#ensureAudioRunning()
     if (this.project.hold && this.heldPads.has(n)) {
       const entry = this.heldPads.get(n)
       this.heldPads.delete(n)
+      if (entry?.timer) clearTimeout(entry.timer)
       if (entry?.engine === "padSynth" && entry.midi != null) this.padSynth.noteOff(entry.midi, true)
+      else if (entry?.engine === "sample" && entry.midi != null) this.sampleVoice.noteOff(entry.midi, true)
       this.#syncLeds()
       return
     }
@@ -2415,8 +2718,42 @@ export class CassioApp {
         ...(slot.patch || {})
       })
       this.drums.applyPatch(patch)
+      this.drums.setPan(slot.pan ?? 0)
       this.heldPads.set(n, { midi, engine: "drum" })
-      this.drums.noteOn(midi)
+      this.drums.noteOn(midi, Math.min(1, 0.95 * this.#padGain(slot)))
+      this.#syncLeds()
+      return
+    }
+
+    if (isSample(assigned)) {
+      const patch = patchFromSound(assigned, {
+        ...(assigned.patch || {}),
+        ...(slot.patch || {})
+      })
+      this.sampler.loadBufferForSound(assigned)
+      this.sampleVoice.applyPatch(patch)
+      this.sampleVoice.setPan(slot.pan ?? 0)
+      const mode = slot.mode || assigned.padMode || "oneshot"
+      const oneshot = mode === "oneshot"
+      const vel = Math.min(1, 0.95 * this.#padGain(slot))
+      if (this.heldPads.has(n)) {
+        const prev = this.heldPads.get(n)
+        if (prev?.timer) clearTimeout(prev.timer)
+        if (prev?.engine === "sample" && prev.midi != null) this.sampleVoice.noteOff(prev.midi, true)
+      }
+      const entry = { midi, engine: "sample", oneshot }
+      if (oneshot) {
+        entry.timer = setTimeout(() => {
+          const cur = this.heldPads.get(n)
+          if (cur?.midi === midi && cur.engine === "sample") {
+            this.heldPads.delete(n)
+            this.sampleVoice.noteOff(midi)
+            this.#syncLeds()
+          }
+        }, Math.min(8000, Math.max(200, (this.sampleVoice.buffer?.duration || 1) * 1000)))
+      }
+      this.heldPads.set(n, entry)
+      this.sampleVoice.noteOn(midi, vel)
       this.#syncLeds()
       return
     }
@@ -2431,6 +2768,7 @@ export class CassioApp {
       ...(slot.patch || {})
     })
     this.padSynth.applyPatch(patch)
+    this.padSynth.setPan(slot.pan ?? 0)
     if (this.heldPads.has(n)) {
       const prev = this.heldPads.get(n)
       if (prev?.timer) clearTimeout(prev.timer)
@@ -2438,6 +2776,7 @@ export class CassioApp {
     }
     const mode = slot.mode || assigned.padMode || "gate"
     const oneshot = mode === "oneshot"
+    const vel = Math.min(1, 0.9 * this.#padGain(slot))
     const entry = { midi, engine: "padSynth", oneshot }
     if (oneshot) {
       entry.timer = setTimeout(() => {
@@ -2450,7 +2789,7 @@ export class CassioApp {
       }, this.#synthHoldMs(patch))
     }
     this.heldPads.set(n, entry)
-    this.padSynth.noteOn(midi)
+    this.padSynth.noteOn(midi, vel)
     this.#syncLeds()
   }
 
@@ -2473,6 +2812,7 @@ export class CassioApp {
     if (entry?.timer) clearTimeout(entry.timer)
     if (entry?.engine === "padSynth" && entry.midi != null) this.padSynth.noteOff(entry.midi)
     else if (entry?.engine === "synth" && entry.midi != null) this.synth.noteOff(entry.midi)
+    else if (entry?.engine === "sample" && entry.midi != null) this.sampleVoice.noteOff(entry.midi)
     this.#syncLeds()
   }
 
@@ -2481,6 +2821,7 @@ export class CassioApp {
       if (e.repeat || this.root.classList.contains("landscape")) return
       if (this.#namingActive() || e.target?.id === "cassio-name-field") return
       if (this.booting || this.bootError) {
+        void this.#unlockAudioFromGesture()
         if (this.bootError) {
           this.bootError = null
           this.booting = true

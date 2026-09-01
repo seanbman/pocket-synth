@@ -41,7 +41,10 @@ export function defaultPatch() {
     tuning: 0.5,
     decay: 0.4,
     snap: 0.55,
-    noise: 0.5
+    noise: 0.5,
+    trimStart: 0,
+    trimEnd: 1,
+    gain: 1
   }
 }
 
@@ -83,6 +86,9 @@ export function sanitizePatch(patch) {
   p.decay = Math.min(1, Math.max(0.02, num(p.decay, d.decay)))
   p.snap = Math.min(1, Math.max(0, num(p.snap, d.snap)))
   p.noise = Math.min(1, Math.max(0, num(p.noise, d.noise)))
+  p.trimStart = Math.min(0.99, Math.max(0, num(p.trimStart, 0)))
+  p.trimEnd = Math.min(1, Math.max(p.trimStart + 0.005, num(p.trimEnd, 1)))
+  p.gain = Math.min(2, Math.max(0, num(p.gain, 1)))
   return p
 }
 
@@ -118,6 +124,10 @@ export function isKit(sound) {
 
 export function isDrum(sound) {
   return sound?.voice === "drum"
+}
+
+export function isSample(sound) {
+  return sound?.voice === "sample"
 }
 
 export function nudgeRoot(root, delta) {

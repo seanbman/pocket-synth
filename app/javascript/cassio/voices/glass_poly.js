@@ -33,6 +33,7 @@ export class GlassPolyVoice {
     this.drive = 0
     this.pulseWidth = 0.5
     this.motion = 0
+    this.pan = 0
     this._lfos = new Map()
   }
 
@@ -115,6 +116,10 @@ export class GlassPolyVoice {
     }
   }
 
+  setPan(v) {
+    this.pan = Math.min(1, Math.max(-1, Number(v) || 0))
+  }
+
   setPitchBend(semitones) {
     this.pitchBend = Math.min(2, Math.max(-2, semitones))
     const cents = this.pitchBend * 100
@@ -163,7 +168,7 @@ export class GlassPolyVoice {
     mix.connect(drive)
     drive.connect(filter)
     filter.connect(env)
-    this.engine.connectVoice(env)
+    this.engine.connectVoice(env, this.pan)
 
     if (this.motion > 0.02) {
       const lfo = ctx.createOscillator()
