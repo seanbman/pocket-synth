@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "sounds": [
+    {
+      "id": "glass-poly",
+      "name": "GLASS POLY",
+      "category": "FACTORY / SYNTH",
+      "voice": "poly",
+      "root": "C3",
+      "padMode": "gate",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "brightness", "default": 0.68 },
+        "m2": { "label": "FX", "param": "space", "default": 0.24 }
+      },
+      "playable": true
+    },
+    {
+      "id": "neon-lead",
+      "name": "NEON LEAD",
+      "category": "FACTORY / SYNTH",
+      "macros": { "m1": { "label": "CUTOFF" }, "m2": { "label": "DRIVE" } },
+      "playable": false
+    },
+    {
+      "id": "bit-pluck",
+      "name": "BIT PLUCK",
+      "category": "FACTORY / SYNTH",
+      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
+      "playable": false
+    },
+    {
+      "id": "tape-pad",
+      "name": "TAPE PAD",
+      "category": "FACTORY / SYNTH",
+      "macros": { "m1": { "label": "COLOR" }, "m2": { "label": "SPACE" } },
+      "playable": false
+    },
+    {
+      "id": "pulse-stack",
+      "name": "PULSE STACK",
+      "category": "FACTORY / SYNTH",
+      "macros": { "m1": { "label": "WIDTH" }, "m2": { "label": "MOTION" } },
+      "playable": false
+    },
+    {
+      "id": "kick-01",
+      "name": "KICK 01",
+      "category": "FACTORY / DRUMS",
+      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
+      "playable": false
+    },
+    {
+      "id": "snare-01",
+      "name": "SNARE 01",
+      "category": "FACTORY / DRUMS",
+      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "SNAP" } },
+      "playable": false
+    },
+    {
+      "id": "hat-01",
+      "name": "CLOSED HAT",
+      "category": "FACTORY / DRUMS",
+      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
+      "playable": false
+    }
+  ],
+  "defaultPads": [
+    { "pad": 1, "soundId": "kick-01" },
+    { "pad": 2, "soundId": null },
+    { "pad": 3, "soundId": "snare-01" },
+    { "pad": 4, "soundId": null },
+    { "pad": 5, "soundId": "hat-01" },
+    { "pad": 6, "soundId": null }
+  ]
+}

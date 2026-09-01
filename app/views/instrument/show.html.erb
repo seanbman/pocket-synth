@@ -1,0 +1,120 @@
+<% content_for :title, "CASSIO" %>
+
+<div class="cassio-stage" data-controller="cassio">
+  <div class="portrait-gate" data-portrait-gate hidden>
+    <div class="portrait-gate-inner">
+      <div class="boot-title">CASSIO</div>
+      <div class="boot-sub">PORTRAIT ONLY</div>
+      <div class="boot-msg">ROTATE DEVICE</div>
+    </div>
+  </div>
+
+  <div class="chassis" aria-label="CASSIO pocket synth sampler">
+    <header class="brand-row">
+      <div class="brand-block">
+        <div class="brand-line">
+          <div class="brand">CASSIO</div>
+          <div class="brand-model">studio - 0926</div>
+        </div>
+        <div class="brand-sub">POCKET SYNTH / SAMPLER</div>
+      </div>
+    </header>
+
+    <div class="top-row">
+      <div class="display-stack">
+        <div class="vscreen-frame">
+          <div class="lcd vscreen" data-vscreen></div>
+          <div class="vscreen-overlay" data-vscreen-overlay aria-live="polite"></div>
+        </div>
+        <div class="soft-keys">
+          <button type="button" class="hw-btn soft" data-action="soft-a">A</button>
+          <button type="button" class="hw-btn soft" data-action="soft-b">B</button>
+          <button type="button" class="hw-btn soft" data-action="soft-c">C</button>
+          <button type="button" class="hw-btn soft" data-action="soft-d">D</button>
+        </div>
+      </div>
+
+      <div class="side-controls">
+        <div class="knobs">
+          <div class="knob-wrap">
+            <div class="knob-bay">
+              <button type="button" class="knob" data-knob="m1" aria-label="M1"></button>
+            </div>
+            <span>M1</span>
+          </div>
+          <div class="knob-wrap">
+            <div class="knob-bay">
+              <button type="button" class="knob" data-knob="m2" aria-label="M2"></button>
+            </div>
+            <span>M2</span>
+          </div>
+          <div class="knob-wrap">
+            <div class="knob-bay">
+              <button type="button" class="knob" data-knob="m3" aria-label="M3 master volume"></button>
+            </div>
+            <span>M3</span>
+          </div>
+        </div>
+
+        <div class="pitch-wrap">
+          <div class="pitch-bay">
+            <div class="pitch-wheel" data-pitch-wheel role="slider" aria-label="Pitch bend" aria-valuemin="-2" aria-valuemax="2" aria-valuenow="0" tabindex="0">
+              <div class="pitch-roller" data-pitch-roller>
+                <span class="pitch-hash"></span>
+              </div>
+            </div>
+          </div>
+          <span>PITCH</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mid-row">
+      <div class="mid-panel">
+        <div class="nav-cluster">
+          <button type="button" class="hw-btn back-menu" data-action="back-menu">BACK / MENU</button>
+          <div class="dpad">
+            <button type="button" class="hw-btn" data-action="nav-up">▲</button>
+            <div class="dpad-mid">
+              <button type="button" class="hw-btn" data-action="nav-left">◀</button>
+              <button type="button" class="hw-btn ok" data-action="nav-ok">OK</button>
+              <button type="button" class="hw-btn" data-action="nav-right">▶</button>
+            </div>
+            <button type="button" class="hw-btn" data-action="nav-down">▼</button>
+          </div>
+          <div class="transport">
+            <button type="button" class="hw-btn" data-action="stop"><span data-led="stop" class="led"></span>STOP</button>
+            <button type="button" class="hw-btn" data-action="play"><span data-led="play" class="led"></span>PLAY</button>
+            <button type="button" class="hw-btn" data-action="rec"><span data-led="rec" class="led"></span>REC</button>
+            <button type="button" class="hw-btn" data-action="tap">TAP</button>
+          </div>
+        </div>
+
+        <div class="pads">
+          <% (1..6).each do |n| %>
+            <button type="button" class="pad" data-action="pad-<%= n %>" data-pad="<%= n %>"><%= n %></button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="keyboard" aria-label="Mini keyboard">
+      <%
+        whites = [0, 2, 4, 5, 7, 9, 11, 12]
+        blacks = { 0 => 1, 2 => 3, 5 => 6, 7 => 8, 9 => 10 }
+      %>
+      <div class="keys-white">
+        <% whites.each do |deg| %>
+          <button type="button" class="key white" data-action="key-<%= deg %>"></button>
+        <% end %>
+      </div>
+      <div class="keys-black">
+        <% whites.each_with_index do |deg, i| %>
+          <% if blacks[deg] %>
+            <button type="button" class="key black" style="left: calc(<%= i %> * 12.5% + 8%)" data-action="key-<%= blacks[deg] %>"></button>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
