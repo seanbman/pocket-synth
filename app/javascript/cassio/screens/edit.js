@@ -16,7 +16,7 @@ function meter(label, pctText, fill01) {
     </div>`
 }
 
-const PAGES = {
+const SYNTH_PAGES = {
   "edit-shape": {
     title: "SHAPE",
     m1: "CUTOFF",
@@ -67,16 +67,73 @@ const PAGES = {
   }
 }
 
+const DRUM_PAGES = {
+  "edit-drum-tone": {
+    title: "TONE",
+    m1: "TONE",
+    m2: "TUNE",
+    soft: "TONE",
+    body(p) {
+      return meter("TONE", meterPct(p.tone ?? 0.5), p.tone ?? 0.5)
+        + meter("TUNE", meterPct(p.tuning ?? 0.5), p.tuning ?? 0.5)
+        + `<div class="muted edit-hint">M1 COLOR / PITCH CHARACTER<br>M2 TUNING (±OCT) · HIT PAD</div>`
+    }
+  },
+  "edit-drum-decay": {
+    title: "DECAY",
+    m1: "DECAY",
+    m2: "NOISE",
+    soft: "DECAY",
+    body(p) {
+      return meter("DECAY", meterPct(p.decay ?? 0.4), p.decay ?? 0.4)
+        + meter("NOISE", meterPct(p.noise ?? 0.5), p.noise ?? 0.5)
+        + `<div class="muted edit-hint">M1 LENGTH · M2 NOISE / AIR<br>HIT PAD TO AUDITION</div>`
+    }
+  },
+  "edit-drum-snap": {
+    title: "SNAP",
+    m1: "SNAP",
+    m2: "DRIVE",
+    soft: "SNAP",
+    body(p) {
+      return meter("SNAP", meterPct(p.snap ?? 0.55), p.snap ?? 0.55)
+        + meter("DRIVE", meterPct(p.drive ?? 0.1), p.drive ?? 0.1)
+        + `<div class="muted edit-hint">M1 CLICK / CRACK · M2 DRIVE<br>WORKS ON ALL DRUM TYPES</div>`
+    }
+  },
+  "edit-drum-fx": {
+    title: "FX",
+    m1: "ROOM",
+    m2: "DRIVE",
+    soft: "FX",
+    body(p) {
+      return meter("ROOM", meterPct(p.reverb ?? 0), p.reverb ?? 0)
+        + meter("DRIVE", meterPct(p.drive ?? 0.1), p.drive ?? 0.1)
+        + `<div class="muted edit-hint">M1 PER-HIT REVERB SEND<br>M2 DRIVE + DELAY SPILL</div>`
+    }
+  }
+}
+
 export function renderEdit(state) {
-  const page = PAGES[state.screen] || PAGES["edit-shape"]
+  const drum = state.focusSound?.voice === "drum" || state.sound?.voice === "drum"
+  const pages = drum ? DRUM_PAGES : SYNTH_PAGES
+  const page = pages[state.screen] || (drum ? DRUM_PAGES["edit-drum-tone"] : SYNTH_PAGES["edit-shape"])
   const p = state.editPatch || {}
   const name = state.focusSound?.name || state.sound?.name || "SOUND"
-  const softs = [
-    ["edit-shape", "A", "SHAPE"],
-    ["edit-env", "B", "ENV"],
-    ["edit-eq", "C", "EQ"],
-    ["edit-fx", "D", "FX"]
-  ].map(([id, sk, label]) =>
+  const softs = drum
+    ? [
+        ["edit-drum-tone", "A", "TONE"],
+        ["edit-drum-decay", "B", "DECAY"],
+        ["edit-drum-snap", "C", "SNAP"],
+        ["edit-drum-fx", "D", "FX"]
+      ]
+    : [
+        ["edit-shape", "A", "SHAPE"],
+        ["edit-env", "B", "ENV"],
+        ["edit-eq", "C", "EQ"],
+        ["edit-fx", "D", "FX"]
+      ]
+  const softHtml = softs.map(([id, sk, label]) =>
     `<div class="${state.screen === id ? "soft-active" : ""}"><span class="sk">${sk}</span> <span class="green">${label}</span></div>`
   ).join("")
 
@@ -84,7 +141,7 @@ export function renderEdit(state) {
     <div class="lcd-screen edit-screen">
       <div class="lcd-status">
         <span class="pink">BPM ${state.bpm}</span>
-        <span class="status-mid">SOUND EDIT</span>
+        <span class="status-mid">${drum ? "DRUM EDIT" : "SOUND EDIT"}</span>
         <span class="battery" title="battery"></span>
       </div>
       <div class="lcd-macros">
@@ -96,7 +153,7 @@ export function renderEdit(state) {
         <div class="sound-name">${esc(name)} / ${page.title}</div>
         ${page.body(p)}
       </div>
-      <div class="lcd-soft">${softs}</div>
+      <div class="lcd-soft">${softHtml}</div>
     </div>
   `
 }

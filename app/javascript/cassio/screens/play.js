@@ -25,7 +25,7 @@ export function renderPlay(state) {
         <div class="play-meta"><span class="green">OCT ${state.octave}</span> <span class="green">VOICE ${voice}</span></div>
         <canvas class="viz-wave" data-viz-wave width="256" height="48" aria-hidden="true"></canvas>
         <div class="play-meta"><span class="green">KEY ${keyPc}</span> <span class="green">ROOT ${root}</span> <span class="muted">HOLD ${hold}</span></div>
-        <div class="play-meta muted">◀▶ KEY &nbsp; ▲▼ ROOT OCT &nbsp; PAD BANK A</div>
+        <div class="play-meta muted">◀▶ KEY &nbsp; ▲▼ ROOT OCT &nbsp; ${state.padBank || "PADS"}</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">OCT -</span></div>

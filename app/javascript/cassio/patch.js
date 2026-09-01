@@ -1,4 +1,4 @@
-/** Shared sound patch helpers for Milestone B. */
+/** Shared sound patch helpers. */
 
 export const ROOTS = [
   "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
@@ -7,6 +7,16 @@ export const ROOTS = [
   "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
   "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5"
 ]
+
+const OSC_TYPES = new Set(["sine", "square", "sawtooth", "triangle"])
+const DRUM_TYPES = new Set(["kick", "snare", "hat", "openhat", "clap", "tom"])
+
+const MACRO_ALIASES = {
+  space: "reverb",
+  color: "brightness",
+  decay: "release",
+  cutoff: "brightness"
+}
 
 export function defaultPatch() {
   return {
@@ -18,7 +28,20 @@ export function defaultPatch() {
     bassDb: 0,
     trebleDb: 0,
     reverb: 0.24,
-    delay: 0
+    delay: 0,
+    osc1Type: "triangle",
+    osc2Type: "sawtooth",
+    detuneCents: 2,
+    mixGain: 0.35,
+    drive: 0,
+    pulseWidth: 0.5,
+    motion: 0,
+    drumType: "kick",
+    tone: 0.5,
+    tuning: 0.5,
+    decay: 0.4,
+    snap: 0.55,
+    noise: 0.5
   }
 }
 
@@ -30,13 +53,14 @@ function compact(obj) {
   return out
 }
 
+function num(v, fallback) {
+  const n = Number(v)
+  return Number.isFinite(n) ? n : fallback
+}
+
 export function sanitizePatch(patch) {
   const d = defaultPatch()
   const p = { ...d, ...compact(patch) }
-  const num = (v, fallback) => {
-    const n = Number(v)
-    return Number.isFinite(n) ? n : fallback
-  }
   p.root = ROOTS.includes(p.root) ? p.root : d.root
   p.brightness = Math.min(1, Math.max(0.05, num(p.brightness, d.brightness)))
   p.resonance = Math.min(1, Math.max(0, num(p.resonance, d.resonance)))
@@ -46,18 +70,54 @@ export function sanitizePatch(patch) {
   p.trebleDb = Math.min(12, Math.max(-12, num(p.trebleDb, d.trebleDb)))
   p.reverb = Math.min(1, Math.max(0, num(p.reverb, d.reverb)))
   p.delay = Math.min(1, Math.max(0, num(p.delay, d.delay)))
+  p.osc1Type = OSC_TYPES.has(p.osc1Type) ? p.osc1Type : d.osc1Type
+  p.osc2Type = OSC_TYPES.has(p.osc2Type) ? p.osc2Type : d.osc2Type
+  p.detuneCents = Math.min(40, Math.max(0, num(p.detuneCents, d.detuneCents)))
+  p.mixGain = Math.min(0.8, Math.max(0.1, num(p.mixGain, d.mixGain)))
+  p.drive = Math.min(1, Math.max(0, num(p.drive, d.drive)))
+  p.pulseWidth = Math.min(0.92, Math.max(0.08, num(p.pulseWidth, d.pulseWidth)))
+  p.motion = Math.min(1, Math.max(0, num(p.motion, d.motion)))
+  p.drumType = DRUM_TYPES.has(p.drumType) ? p.drumType : d.drumType
+  p.tone = Math.min(1, Math.max(0, num(p.tone, d.tone)))
+  p.tuning = Math.min(1, Math.max(0, num(p.tuning, d.tuning)))
+  p.decay = Math.min(1, Math.max(0.02, num(p.decay, d.decay)))
+  p.snap = Math.min(1, Math.max(0, num(p.snap, d.snap)))
+  p.noise = Math.min(1, Math.max(0, num(p.noise, d.noise)))
   return p
+}
+
+function applyMacroDefault(base, macro) {
+  if (!macro || macro.default == null) return
+  const raw = macro.param || "brightness"
+  const key = MACRO_ALIASES[raw] || raw
+  if (key === "space") base.reverb = macro.default
+  else if (key in base || ["tone", "tuning", "decay", "snap", "noise", "drive", "pulseWidth", "motion", "brightness", "release", "reverb"].includes(key)) {
+    base[key] = macro.default
+  }
+  if (raw === "decay") {
+    base.decay = macro.default
+    base.release = 0.05 + macro.default * 2.2
+  }
+  if (raw === "color") base.brightness = macro.default
+  if (raw === "space") base.reverb = macro.default
 }
 
 export function patchFromSound(sound, overrides = {}) {
   const base = defaultPatch()
   if (!sound) return sanitizePatch({ ...base, ...compact(overrides) })
-  const macros = sound.macros || {}
   if (sound.root) base.root = sound.root
-  if (macros.m1?.default != null) base.brightness = macros.m1.default
-  if (macros.m2?.default != null) base.reverb = macros.m2.default
+  applyMacroDefault(base, sound.macros?.m1)
+  applyMacroDefault(base, sound.macros?.m2)
   if (sound.patch) Object.assign(base, compact(sound.patch))
   return sanitizePatch({ ...base, ...compact(overrides) })
+}
+
+export function isKit(sound) {
+  return sound?.kind === "kit" || sound?.voice === "kit"
+}
+
+export function isDrum(sound) {
+  return sound?.voice === "drum"
 }
 
 export function nudgeRoot(root, delta) {

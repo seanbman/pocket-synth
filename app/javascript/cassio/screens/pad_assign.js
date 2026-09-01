@@ -7,7 +7,10 @@ function esc(s) {
 export function renderPadAssign(state) {
   const pads = state.pads || []
   const sel = state.padSelect || 1
-  const assignName = state.focusSound?.name || state.sound?.name || "SOUND"
+  const kitEdit = state.kitEditMode
+  const assignName = kitEdit
+    ? (state.kitFocus?.name || state.focusSound?.name || state.padBank || "KIT")
+    : (state.focusSound?.name || state.sound?.name || "SOUND")
   const nameFor = (id) => {
     if (!id) return "EMPTY"
     const f = state.factorySounds?.find((s) => s.id === id)
@@ -25,11 +28,21 @@ export function renderPadAssign(state) {
     </div>`
   }).join("")
 
+  const softs = kitEdit
+    ? `<div><span class="sk">A</span> <span class="green">CLEAR</span></div>
+        <div><span class="sk">B</span> <span class="green">SOUND</span></div>
+        <div><span class="sk">C</span> <span class="green">EDIT</span></div>
+        <div><span class="sk">D</span> <span class="green">DONE</span></div>`
+    : `<div><span class="sk">A</span> <span class="green">CLEAR</span></div>
+        <div><span class="sk">B</span> <span class="green">MODE</span></div>
+        <div><span class="sk">C</span> <span class="green">PREVIEW</span></div>
+        <div><span class="sk">D</span> <span class="green">DONE</span></div>`
+
   return `
     <div class="lcd-screen pad-assign-screen">
       <div class="lcd-status">
         <span class="pink">BPM ${state.bpm}</span>
-        <span class="status-mid">PAD ASSIGN</span>
+        <span class="status-mid">${kitEdit ? "KIT EDIT" : "PAD ASSIGN"}</span>
         <span class="battery" title="battery"></span>
       </div>
       <div class="lcd-macros">
@@ -38,16 +51,11 @@ export function renderPadAssign(state) {
         <span>M3 VOLUME</span>
       </div>
       <div class="pad-assign-body">
-        <div class="sound-name">ASSIGN: ${esc(assignName)}</div>
+        <div class="sound-name">${kitEdit ? "EDIT:" : "ASSIGN:"} ${esc(assignName)}</div>
         <div class="pad-grid">${cells}</div>
-        <div class="muted">PRESS A PHYSICAL PAD TO SELECT IT</div>
+        <div class="muted">${kitEdit ? (state.kitDirty ? "DIRTY · D SAVES KIT" : "B REPLACE · C EDIT PAD · HIT PAD TO HEAR") : "PRESS A PHYSICAL PAD TO SELECT IT"}</div>
       </div>
-      <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">CLEAR</span></div>
-        <div><span class="sk">B</span> <span class="green">MODE</span></div>
-        <div><span class="sk">C</span> <span class="green">PREVIEW</span></div>
-        <div><span class="sk">D</span> <span class="green">DONE</span></div>
-      </div>
+      <div class="lcd-soft">${softs}</div>
     </div>
   `
 }

@@ -15,10 +15,15 @@
       },
       "patch": {
         "root": "C3",
+        "osc1Type": "triangle",
+        "osc2Type": "sawtooth",
+        "detuneCents": 2,
         "brightness": 0.68,
         "resonance": 0.34,
         "attack": 0.018,
         "release": 0.48,
+        "drive": 0,
+        "motion": 0,
         "bassDb": 0,
         "trebleDb": 0,
         "reverb": 0.24,
@@ -30,58 +35,264 @@
       "id": "neon-lead",
       "name": "NEON LEAD",
       "category": "FACTORY / SYNTH",
-      "macros": { "m1": { "label": "CUTOFF" }, "m2": { "label": "DRIVE" } },
-      "playable": false
+      "voice": "poly",
+      "root": "C3",
+      "padMode": "gate",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "CUTOFF", "param": "brightness", "default": 0.72 },
+        "m2": { "label": "DRIVE", "param": "drive", "default": 0.55 }
+      },
+      "patch": {
+        "root": "C3",
+        "osc1Type": "sawtooth",
+        "osc2Type": "sawtooth",
+        "detuneCents": 6,
+        "brightness": 0.72,
+        "resonance": 0.62,
+        "attack": 0.01,
+        "release": 0.28,
+        "drive": 0.55,
+        "motion": 0.08,
+        "reverb": 0.12,
+        "delay": 0.08
+      },
+      "playable": true
     },
     {
       "id": "bit-pluck",
       "name": "BIT PLUCK",
       "category": "FACTORY / SYNTH",
-      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
-      "playable": false
+      "voice": "poly",
+      "root": "C3",
+      "padMode": "gate",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "brightness", "default": 0.58 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.22 }
+      },
+      "patch": {
+        "root": "C3",
+        "osc1Type": "square",
+        "osc2Type": "triangle",
+        "detuneCents": 1,
+        "brightness": 0.58,
+        "resonance": 0.28,
+        "attack": 0.005,
+        "release": 0.22,
+        "drive": 0.15,
+        "motion": 0,
+        "reverb": 0.08,
+        "delay": 0
+      },
+      "playable": true
     },
     {
       "id": "tape-pad",
       "name": "TAPE PAD",
       "category": "FACTORY / SYNTH",
-      "macros": { "m1": { "label": "COLOR" }, "m2": { "label": "SPACE" } },
-      "playable": false
+      "voice": "poly",
+      "root": "C3",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "COLOR", "param": "color", "default": 0.55 },
+        "m2": { "label": "SPACE", "param": "space", "default": 0.48 }
+      },
+      "patch": {
+        "root": "C3",
+        "osc1Type": "triangle",
+        "osc2Type": "sine",
+        "detuneCents": 14,
+        "mixGain": 0.42,
+        "brightness": 0.55,
+        "resonance": 0.28,
+        "attack": 0.08,
+        "release": 1.35,
+        "drive": 0.12,
+        "motion": 0.32,
+        "reverb": 0.48,
+        "delay": 0.14
+      },
+      "playable": true
     },
     {
       "id": "pulse-stack",
       "name": "PULSE STACK",
       "category": "FACTORY / SYNTH",
-      "macros": { "m1": { "label": "WIDTH" }, "m2": { "label": "MOTION" } },
-      "playable": false
+      "voice": "poly",
+      "root": "C3",
+      "padMode": "gate",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "WIDTH", "param": "pulseWidth", "default": 0.35 },
+        "m2": { "label": "MOTION", "param": "motion", "default": 0.4 }
+      },
+      "patch": {
+        "root": "C3",
+        "osc1Type": "square",
+        "osc2Type": "square",
+        "detuneCents": 8,
+        "brightness": 0.55,
+        "resonance": 0.4,
+        "attack": 0.02,
+        "release": 0.4,
+        "drive": 0.2,
+        "pulseWidth": 0.35,
+        "motion": 0.4,
+        "reverb": 0.18,
+        "delay": 0.15
+      },
+      "playable": true
     },
     {
       "id": "kick-01",
       "name": "KICK 01",
       "category": "FACTORY / DRUMS",
-      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
-      "playable": false
+      "voice": "drum",
+      "root": "C2",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.45 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.4 }
+      },
+      "patch": { "drumType": "kick", "tone": 0.45, "decay": 0.4, "reverb": 0.05 },
+      "playable": true
     },
     {
       "id": "snare-01",
       "name": "SNARE 01",
       "category": "FACTORY / DRUMS",
-      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "SNAP" } },
-      "playable": false
+      "voice": "drum",
+      "root": "D3",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.5 },
+        "m2": { "label": "SNAP", "param": "snap", "default": 0.62 }
+      },
+      "patch": { "drumType": "snare", "tone": 0.5, "decay": 0.35, "snap": 0.62, "reverb": 0.08 },
+      "playable": true
     },
     {
       "id": "hat-01",
       "name": "CLOSED HAT",
       "category": "FACTORY / DRUMS",
-      "macros": { "m1": { "label": "TONE" }, "m2": { "label": "DECAY" } },
-      "playable": false
+      "voice": "drum",
+      "root": "F#4",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.55 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.22 }
+      },
+      "patch": { "drumType": "hat", "tone": 0.55, "decay": 0.22, "reverb": 0.02 },
+      "playable": true
+    },
+    {
+      "id": "openhat-01",
+      "name": "OPEN HAT",
+      "category": "FACTORY / DRUMS",
+      "voice": "drum",
+      "root": "G#4",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.5 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.55 }
+      },
+      "patch": { "drumType": "openhat", "tone": 0.5, "decay": 0.55, "reverb": 0.06 },
+      "playable": true
+    },
+    {
+      "id": "clap-01",
+      "name": "CLAP",
+      "category": "FACTORY / DRUMS",
+      "voice": "drum",
+      "root": "D#3",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.48 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.3 }
+      },
+      "patch": { "drumType": "clap", "tone": 0.48, "decay": 0.3, "reverb": 0.1 },
+      "playable": true
+    },
+    {
+      "id": "tom-01",
+      "name": "LOW TOM",
+      "category": "FACTORY / DRUMS",
+      "voice": "drum",
+      "root": "A2",
+      "padMode": "oneshot",
+      "source": "factory",
+      "macros": {
+        "m1": { "label": "TONE", "param": "tone", "default": 0.4 },
+        "m2": { "label": "DECAY", "param": "decay", "default": 0.45 }
+      },
+      "patch": { "drumType": "tom", "tone": 0.4, "decay": 0.45, "reverb": 0.08 },
+      "playable": true
+    },
+    {
+      "id": "kit-tight",
+      "name": "KIT TIGHT",
+      "category": "FACTORY / KITS",
+      "kind": "kit",
+      "voice": "kit",
+      "source": "factory",
+      "playable": true,
+      "pads": [
+        { "pad": 1, "soundId": "kick-01", "mode": "oneshot" },
+        { "pad": 2, "soundId": "clap-01", "mode": "oneshot" },
+        { "pad": 3, "soundId": "snare-01", "mode": "oneshot" },
+        { "pad": 4, "soundId": "tom-01", "mode": "oneshot" },
+        { "pad": 5, "soundId": "hat-01", "mode": "oneshot" },
+        { "pad": 6, "soundId": "openhat-01", "mode": "oneshot" }
+      ]
+    },
+    {
+      "id": "kit-room",
+      "name": "KIT ROOM",
+      "category": "FACTORY / KITS",
+      "kind": "kit",
+      "voice": "kit",
+      "source": "factory",
+      "playable": true,
+      "pads": [
+        { "pad": 1, "soundId": "kick-01", "mode": "oneshot", "patch": { "decay": 0.65, "reverb": 0.35 } },
+        { "pad": 2, "soundId": "clap-01", "mode": "oneshot", "patch": { "decay": 0.45, "reverb": 0.28 } },
+        { "pad": 3, "soundId": "snare-01", "mode": "oneshot", "patch": { "decay": 0.5, "snap": 0.45, "reverb": 0.3 } },
+        { "pad": 4, "soundId": "tom-01", "mode": "oneshot", "patch": { "decay": 0.7, "reverb": 0.32 } },
+        { "pad": 5, "soundId": "hat-01", "mode": "oneshot", "patch": { "decay": 0.35 } },
+        { "pad": 6, "soundId": "openhat-01", "mode": "oneshot", "patch": { "decay": 0.75, "reverb": 0.22 } }
+      ]
+    },
+    {
+      "id": "kit-electro",
+      "name": "KIT ELECTRO",
+      "category": "FACTORY / KITS",
+      "kind": "kit",
+      "voice": "kit",
+      "source": "factory",
+      "playable": true,
+      "pads": [
+        { "pad": 1, "soundId": "kick-01", "mode": "oneshot", "patch": { "tone": 0.75, "decay": 0.35 } },
+        { "pad": 2, "soundId": "hat-01", "mode": "oneshot", "patch": { "tone": 0.8, "decay": 0.15 } },
+        { "pad": 3, "soundId": "snare-01", "mode": "oneshot", "patch": { "tone": 0.7, "snap": 0.85 } },
+        { "pad": 4, "soundId": "clap-01", "mode": "oneshot", "patch": { "tone": 0.65 } },
+        { "pad": 5, "soundId": "openhat-01", "mode": "oneshot", "patch": { "tone": 0.7, "decay": 0.4 } },
+        { "pad": 6, "soundId": "tom-01", "mode": "oneshot", "patch": { "tone": 0.85, "decay": 0.35 } }
+      ]
     }
   ],
   "defaultPads": [
-    { "pad": 1, "soundId": "kick-01" },
-    { "pad": 2, "soundId": null },
-    { "pad": 3, "soundId": "snare-01" },
-    { "pad": 4, "soundId": null },
-    { "pad": 5, "soundId": "hat-01" },
-    { "pad": 6, "soundId": null }
+    { "pad": 1, "soundId": "kick-01", "mode": "oneshot" },
+    { "pad": 2, "soundId": "clap-01", "mode": "oneshot" },
+    { "pad": 3, "soundId": "snare-01", "mode": "oneshot" },
+    { "pad": 4, "soundId": "tom-01", "mode": "oneshot" },
+    { "pad": 5, "soundId": "hat-01", "mode": "oneshot" },
+    { "pad": 6, "soundId": "openhat-01", "mode": "oneshot" }
   ]
 }

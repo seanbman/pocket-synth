@@ -2406,6 +2406,102 @@
       "meta": {},
       "created_at": "2026-09-01T08:57:16+00:00",
       "updated_at": "2026-09-01T08:57:16+00:00"
+    },
+    "finding-rails-milestone-bplus": {
+      "id": "finding-rails-milestone-bplus",
+      "type": "finding",
+      "title": "Milestone B+: factory voices, drums, kits",
+      "content": "B+ unlocks all factory stubs: SynthVoice character patches (Neon Lead, Bit Pluck, Tape Pad, Pulse Stack) on GlassPolyVoice; DrumVoice for kick/snare/hat/openhat/clap/tom; pads fire drums without stomping keyboard synth. Three kit presets (TIGHT/ROOM/ELECTRO) load pad maps via Detail A USE PADS; keyboard sound unchanged. PLAY shows active padBank. sounds.json playable:true; patch.js macros for drive/width/motion/tone/decay/snap.",
+      "path": null,
+      "tags": [
+        "rails",
+        "milestone",
+        "factory",
+        "voices",
+        "drums",
+        "kits"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T09:07:27+00:00",
+      "updated_at": "2026-09-01T09:07:27+00:00"
+    },
+    "finding-ui-kits-tab-edit-save": {
+      "id": "finding-ui-kits-tab-edit-save",
+      "type": "finding",
+      "title": "KITS tab, padSynth, kit edit/save",
+      "content": "Library soft keys A FACTORY B KITS C USER D FAV (kits no longer buried under category swipe). padSynth engine plays assigned synth pads without stomping keyboard GlassPoly. Empty pads toast EMPTY. Kit detail: A USE PADS, B EDIT (kit editor: clear/pick sound/preview/done), C SAVE AS → user kit in IndexedDB userSounds (kind:kit). User kits appear on KITS tab.",
+      "path": null,
+      "tags": [
+        "ui",
+        "kits",
+        "pads",
+        "library"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T09:20:36+00:00",
+      "updated_at": "2026-09-01T09:20:36+00:00"
+    },
+    "finding-ui-kit-save-drum-bend": {
+      "id": "finding-ui-kit-save-drum-bend",
+      "type": "finding",
+      "title": "User kits, drum edit, pad pitch bend",
+      "content": "USER tab lists user kits (USER / KITS). Kit Save As loads kit pads if needed, persists, toast SEE USER / KITS; dirty kit edit DONE opens Save As. Pick-mode soft keys A FACTORY B USER C FAV D BACK (no duplicate FAV). Kit edit C EDIT opens drum/synth editor for selected pad; return to kit edit. Drum edit TONE/DECAY/SNAP/FX wired to DrumVoice; Save As → USER / DRUMS. Pitch wheel fans to synth+padSynth+drums with bend ratio on one-shots.",
+      "path": null,
+      "tags": [
+        "ui",
+        "kits",
+        "drums",
+        "pitch"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T10:14:52+00:00",
+      "updated_at": "2026-09-01T10:14:52+00:00"
+    },
+    "finding-fix-kit-pad-save-dup": {
+      "id": "finding-fix-kit-pad-save-dup",
+      "type": "finding",
+      "title": "Kit pad TO PAD, in-place kit save, no dup",
+      "content": "Kit pad edit BACK → SAVE PAD SOUND: D TO PAD writes slot.patch (factory) or D SAVE updates user sound; C SAVE AS still makes library sound. Pads audition editPatch live. User kit detail C SAVE / dirty DONE saves in place (same id) — no more duplicate USER kits. kitFocus tracks the kit while editing pads. Factory kits still SAVE AS.",
+      "path": null,
+      "tags": [
+        "ui",
+        "kits",
+        "drums",
+        "save"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T10:46:23+00:00",
+      "updated_at": "2026-09-01T10:46:23+00:00"
+    },
+    "finding-fix-tape-pad-silent": {
+      "id": "finding-fix-tape-pad-silent",
+      "type": "finding",
+      "title": "Tape Pad audible; synth pad oneshot",
+      "content": "TAPE PAD was effectively silent: attack 0.35s + gate padUp + 280ms library preview cut the swell before it spoke. Patch: faster attack, more body, padMode oneshot. Synth pad oneshots now hold for attack+body+release and ignore padUp; library/pad previews use #synthHoldMs.",
+      "path": null,
+      "tags": [
+        "ui",
+        "sounds",
+        "pads"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T10:48:38+00:00",
+      "updated_at": "2026-09-01T10:48:38+00:00"
+    },
+    "finding-drum-params-audible": {
+      "id": "finding-drum-params-audible",
+      "type": "finding",
+      "title": "Drum knobs: TONE/TUNE DECAY/NOISE SNAP/DRIVE ROOM",
+      "content": "Reworked DrumVoice so edits are clearly audible. Pages: TONE+TUNE (±oct), DECAY+NOISE, SNAP+DRIVE (click on all types), ROOM+DRIVE (per-hit reverb send into convolver, not dead global store). Knob tweak auto-auditions. M2 was previously dead on all drum pages; FX reverb never reached the bus.",
+      "path": null,
+      "tags": [
+        "drums",
+        "edit",
+        "audio"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T10:54:22+00:00",
+      "updated_at": "2026-09-01T10:54:22+00:00"
     }
   },
   "edges": [
@@ -4174,6 +4270,78 @@
       "to": "concept-area-sound",
       "rel": "related",
       "created_at": "2026-09-01T08:57:18+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-bplus",
+      "to": "finding-roadmap-bplus-then-c",
+      "rel": "related",
+      "created_at": "2026-09-01T09:07:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-bplus",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T09:07:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-bplus",
+      "to": "concept-factory-library",
+      "rel": "related",
+      "created_at": "2026-09-01T09:07:29+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-bplus",
+      "to": "finding-rails-milestone-b",
+      "rel": "related",
+      "created_at": "2026-09-01T09:07:29+00:00"
+    },
+    {
+      "from": "finding-ui-kits-tab-edit-save",
+      "to": "finding-rails-milestone-bplus",
+      "rel": "related",
+      "created_at": "2026-09-01T09:20:38+00:00"
+    },
+    {
+      "from": "finding-ui-kits-tab-edit-save",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T09:20:38+00:00"
+    },
+    {
+      "from": "finding-ui-kit-save-drum-bend",
+      "to": "finding-ui-kits-tab-edit-save",
+      "rel": "related",
+      "created_at": "2026-09-01T10:14:54+00:00"
+    },
+    {
+      "from": "finding-ui-kit-save-drum-bend",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T10:14:54+00:00"
+    },
+    {
+      "from": "finding-fix-kit-pad-save-dup",
+      "to": "finding-ui-kit-save-drum-bend",
+      "rel": "related",
+      "created_at": "2026-09-01T10:46:42+00:00"
+    },
+    {
+      "from": "finding-fix-kit-pad-save-dup",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T10:46:42+00:00"
+    },
+    {
+      "from": "finding-fix-tape-pad-silent",
+      "to": "finding-rails-milestone-bplus",
+      "rel": "related",
+      "created_at": "2026-09-01T10:48:40+00:00"
+    },
+    {
+      "from": "finding-drum-params-audible",
+      "to": "finding-ui-kit-save-drum-bend",
+      "rel": "related",
+      "created_at": "2026-09-01T10:54:24+00:00"
     }
   ]
 }

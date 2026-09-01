@@ -1,11 +1,12 @@
 import { AudioEngine } from "cassio/audio_engine"
 import { GlassPolyVoice, noteNameToMidi } from "cassio/voices/glass_poly"
+import { DrumVoice } from "cassio/voices/drum"
 import { Transport } from "cassio/transport"
 import {
   loadRecovery, saveRecovery, defaultProject, defaultPads,
   listUserSounds, putUserSound, deleteUserSound, loadFavorites, saveFavorites
 } from "cassio/store"
-import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound } from "cassio/patch"
+import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum } from "cassio/patch"
 import { renderBoot, renderBootError, renderSplash } from "cassio/screens/boot"
 import { renderPlay } from "cassio/screens/play"
 import { renderMenu, AREAS } from "cassio/screens/menu"
@@ -27,7 +28,13 @@ const KNOB_MIN_DEG = -135
 const KNOB_MAX_DEG = 135
 const VIZ_SILENCE = 0.006
 const VIZ_GAIN = 2.8
-const EDIT_SCREENS = new Set(["edit-shape", "edit-env", "edit-eq", "edit-fx"])
+const EDIT_SCREENS = new Set([
+  "edit-shape", "edit-env", "edit-eq", "edit-fx",
+  "edit-drum-tone", "edit-drum-decay", "edit-drum-snap", "edit-drum-fx"
+])
+const DRUM_EDIT_SCREENS = new Set([
+  "edit-drum-tone", "edit-drum-decay", "edit-drum-snap", "edit-drum-fx"
+])
 const PAD_DEG = [0, 2, 4, 5, 7, 9]
 
 export class CassioApp {
@@ -38,7 +45,10 @@ export class CassioApp {
     this.keyboardEl = root.querySelector(".keyboard")
     this.portraitGate = root.querySelector("[data-portrait-gate]")
     this.engine = new AudioEngine()
-    this.voice = new GlassPolyVoice(this.engine)
+    this.synth = new GlassPolyVoice(this.engine)
+    this.padSynth = new GlassPolyVoice(this.engine)
+    this.drums = new DrumVoice(this.engine)
+    this.voice = this.synth
     this.transport = new Transport()
     this.factory = null
     this.userSounds = []
@@ -59,6 +69,10 @@ export class CassioApp {
     this.libCategory = null
     this.libIndex = 0
     this.padSelect = 1
+    this.kitEditMode = false
+    this.kitDirty = false
+    this.kitFocus = null
+    this.libPickMode = false
     this.librarySnapshot = null
     this.nameDraft = ""
     this.nameMode = null
@@ -107,6 +121,16 @@ export class CassioApp {
       if (recovered) {
         Object.assign(this.project, recovered)
         if (!this.project.pads?.length) this.project.pads = defaultPads()
+      } else if (this.factory?.defaultPads?.length) {
+        this.project.pads = this.factory.defaultPads.map((p) => ({
+          pad: p.pad,
+          soundId: p.soundId,
+          level: p.level ?? 1,
+          pan: p.pan ?? 0,
+          mode: p.mode || "oneshot",
+          patch: p.patch || null
+        }))
+        this.project.padBank = "KIT TIGHT"
       }
       this.transport.bpm = this.project.bpm
       this.#setBootProgress(0.8, "LOADING AUDIO…")
@@ -154,8 +178,25 @@ export class CassioApp {
   }
 
   #applyProjectPatch() {
-    const patch = {
-      root: this.project.root || this.sound?.root || "C3",
+    const s = this.sound
+    const fromSound = s && !isKit(s) ? patchFromSound(s, {
+      root: this.project.root || s.root,
+      brightness: this.project.brightness,
+      resonance: this.project.resonance ?? 0.34,
+      attack: this.project.attack ?? 0.018,
+      release: this.project.release ?? 0.48,
+      bassDb: this.project.bassDb ?? 0,
+      trebleDb: this.project.trebleDb ?? 0,
+      reverb: this.project.space,
+      delay: this.project.delay ?? 0,
+      drive: this.project.drive,
+      pulseWidth: this.project.pulseWidth,
+      motion: this.project.motion,
+      tone: this.project.tone,
+      decay: this.project.decay,
+      snap: this.project.snap
+    }) : sanitizePatch({
+      root: this.project.root || "C3",
       brightness: this.project.brightness,
       resonance: this.project.resonance ?? 0.34,
       attack: this.project.attack ?? 0.018,
@@ -164,22 +205,38 @@ export class CassioApp {
       trebleDb: this.project.trebleDb ?? 0,
       reverb: this.project.space,
       delay: this.project.delay ?? 0
+    })
+    if (isDrum(s)) {
+      this.drums.applyPatch(fromSound)
+    } else {
+      this.synth.applyPatch(fromSound)
     }
-    this.voice.applyPatch(patch)
-    this.project.root = patch.root
+    this.project.root = fromSound.root
   }
 
   #commitPatchToProject(patch) {
-    this.project.root = patch.root
-    this.project.brightness = patch.brightness
-    this.project.resonance = patch.resonance
-    this.project.attack = patch.attack
-    this.project.release = patch.release
-    this.project.bassDb = patch.bassDb
-    this.project.trebleDb = patch.trebleDb
-    this.project.space = patch.reverb
-    this.project.delay = patch.delay
-    this.voice.applyPatch(patch)
+    const p = sanitizePatch(patch)
+    this.project.root = p.root
+    this.project.brightness = p.brightness
+    this.project.resonance = p.resonance
+    this.project.attack = p.attack
+    this.project.release = p.release
+    this.project.bassDb = p.bassDb
+    this.project.trebleDb = p.trebleDb
+    this.project.space = p.reverb
+    this.project.delay = p.delay
+    this.project.drive = p.drive
+    this.project.pulseWidth = p.pulseWidth
+    this.project.motion = p.motion
+    this.project.tone = p.tone
+    this.project.decay = p.decay
+    this.project.snap = p.snap
+    if (isDrum(this.sound)) this.drums.applyPatch(p)
+    else this.synth.applyPatch(p)
+  }
+
+  #keyboardIsDrum() {
+    return isDrum(this.sound)
   }
 
   #soundById(id) {
@@ -217,6 +274,12 @@ export class CassioApp {
       isFavorite: this.#isFavorite((this.focusSound || this.sound)?.id),
       pads: this.project.pads,
       padSelect: this.padSelect,
+      padBank: this.project.padBank || "PADS",
+      kitEditMode: this.kitEditMode,
+      kitDirty: this.kitDirty,
+      kitFocus: this.kitFocus,
+      editReturnScreen: this.editReturnScreen,
+      libPickMode: this.libPickMode,
       factorySounds: this.#factorySounds(),
       userSounds: this.userSounds,
       nameDraft: this.nameDraft,
@@ -267,6 +330,10 @@ export class CassioApp {
   }
 
   #m1Value() {
+    if (this.screen === "edit-drum-tone") return this.editPatch?.tone ?? 0.5
+    if (this.screen === "edit-drum-decay") return this.editPatch?.decay ?? 0.4
+    if (this.screen === "edit-drum-snap") return this.editPatch?.snap ?? 0.55
+    if (this.screen === "edit-drum-fx") return this.editPatch?.reverb ?? 0
     if (this.screen === "edit-shape") return this.editPatch?.brightness ?? 0.68
     if (this.screen === "edit-env") return Math.min(1, (this.editPatch?.attack ?? 0.018) / 1.2)
     if (this.screen === "edit-eq") return ((this.editPatch?.bassDb ?? 0) + 12) / 24
@@ -275,6 +342,10 @@ export class CassioApp {
   }
 
   #m2Value() {
+    if (this.screen === "edit-drum-tone") return this.editPatch?.tuning ?? 0.5
+    if (this.screen === "edit-drum-decay") return this.editPatch?.noise ?? 0.5
+    if (this.screen === "edit-drum-snap") return this.editPatch?.drive ?? 0.1
+    if (this.screen === "edit-drum-fx") return this.editPatch?.drive ?? 0.1
     if (this.screen === "edit-shape") return this.editPatch?.resonance ?? 0.34
     if (this.screen === "edit-env") return Math.min(1, (this.editPatch?.release ?? 0.48) / 2.5)
     if (this.screen === "edit-eq") return ((this.editPatch?.trebleDb ?? 0) + 12) / 24
@@ -314,7 +385,8 @@ export class CassioApp {
       const rms = this.engine.getRms()
       const wave = this.engine.getWaveform()
       const vol = this.project.masterVolume ?? 0.7
-      const active = this.voice.voices.size > 0 || rms > VIZ_SILENCE
+      const active = this.synth.voices.size > 0 || this.padSynth.voices.size > 0
+        || this.drums.activeCount > 0 || rms > VIZ_SILENCE
 
       ctx2d.strokeStyle = "#ff2e7e"
       ctx2d.lineWidth = 1.5
@@ -465,6 +537,7 @@ export class CassioApp {
       space: this.project.space,
       delay: this.project.delay,
       root: this.project.root,
+      padBank: this.project.padBank,
       pads: this.project.pads
     })
   }
@@ -529,7 +602,9 @@ export class CassioApp {
 
     const setBend = (semitones, spring = false) => {
       const v = Math.min(2, Math.max(-2, semitones))
-      this.voice.setPitchBend(v)
+      this.synth.setPitchBend(v)
+      this.padSynth.setPitchBend(v)
+      this.drums.setPitchBend(v)
       if (spring) wheel.classList.remove("is-dragging")
       else wheel.classList.add("is-dragging")
       applyVisual(v)
@@ -545,11 +620,11 @@ export class CassioApp {
       maxAbsDy = 0
 
       if (this.project.hold) {
-        if (tapped && Math.abs(this.voice.pitchBend || 0) > 0.01) {
+        if (tapped && Math.abs(this.synth.pitchBend || 0) > 0.01) {
           setBend(0, true)
         } else {
           wheel.classList.remove("is-dragging")
-          applyVisual(this.voice.pitchBend || 0)
+          applyVisual(this.synth.pitchBend || 0)
         }
         return
       }
@@ -562,7 +637,7 @@ export class CassioApp {
       this.#ensureAudioRunning()
       dragging = true
       startY = e.clientY
-      startBend = this.voice.pitchBend || 0
+      startBend = this.synth.pitchBend || 0
       maxAbsDy = 0
       wheel.setPointerCapture(e.pointerId)
       wheel.classList.add("is-dragging")
@@ -645,24 +720,74 @@ export class CassioApp {
     if (EDIT_SCREENS.has(this.screen) && this.editPatch) {
       this.editPatch = sanitizePatch(this.editPatch)
       this.editDirty = true
+      const synthEng = this.editReturnScreen === "pad-assign" ? this.padSynth : this.synth
+      if (DRUM_EDIT_SCREENS.has(this.screen)) {
+        if (this.screen === "edit-drum-tone") {
+          if (which === "m1") {
+            this.editPatch.tone = Math.min(1, Math.max(0, (this.editPatch.tone ?? 0.5) + delta))
+            this.drums.setTone(this.editPatch.tone)
+            this.toast(`TONE ${Math.round(this.editPatch.tone * 100)}%`)
+          } else {
+            this.editPatch.tuning = Math.min(1, Math.max(0, (this.editPatch.tuning ?? 0.5) + delta))
+            this.drums.setTuning(this.editPatch.tuning)
+            this.toast(`TUNE ${Math.round(this.editPatch.tuning * 100)}%`)
+          }
+        } else if (this.screen === "edit-drum-decay") {
+          if (which === "m1") {
+            this.editPatch.decay = Math.min(1, Math.max(0.02, (this.editPatch.decay ?? 0.4) + delta))
+            this.drums.setDecay(this.editPatch.decay)
+            this.toast(`DECAY ${Math.round(this.editPatch.decay * 100)}%`)
+          } else {
+            this.editPatch.noise = Math.min(1, Math.max(0, (this.editPatch.noise ?? 0.5) + delta))
+            this.drums.setNoise(this.editPatch.noise)
+            this.toast(`NOISE ${Math.round(this.editPatch.noise * 100)}%`)
+          }
+        } else if (this.screen === "edit-drum-snap") {
+          if (which === "m1") {
+            this.editPatch.snap = Math.min(1, Math.max(0, (this.editPatch.snap ?? 0.55) + delta))
+            this.drums.setSnap(this.editPatch.snap)
+            this.toast(`SNAP ${Math.round(this.editPatch.snap * 100)}%`)
+          } else {
+            this.editPatch.drive = Math.min(1, Math.max(0, (this.editPatch.drive ?? 0.1) + delta))
+            this.drums.setDrive(this.editPatch.drive)
+            this.toast(`DRIVE ${Math.round(this.editPatch.drive * 100)}%`)
+          }
+        } else if (this.screen === "edit-drum-fx") {
+          if (which === "m1") {
+            this.editPatch.reverb = Math.min(1, Math.max(0, (this.editPatch.reverb ?? 0) + delta))
+            this.drums.setReverb(this.editPatch.reverb)
+            this.toast(`ROOM ${Math.round(this.editPatch.reverb * 100)}%`)
+          } else {
+            this.editPatch.drive = Math.min(1, Math.max(0, (this.editPatch.drive ?? 0.1) + delta))
+            this.drums.setDrive(this.editPatch.drive)
+            this.toast(`DRIVE ${Math.round(this.editPatch.drive * 100)}%`)
+          }
+        }
+        this.editPatch = sanitizePatch(this.editPatch)
+        this.drums.applyPatch(this.editPatch)
+        this.#syncKnobVisual(which)
+        this.render()
+        this.#auditionDrumEdit()
+        return
+      }
       if (this.screen === "edit-shape") {
         if (which === "m1") {
           this.editPatch.brightness = Math.min(1, Math.max(0.05, this.editPatch.brightness + delta))
-          this.voice.setBrightness(this.editPatch.brightness)
+          synthEng.setBrightness(this.editPatch.brightness)
           this.toast(`CUTOFF ${Math.round(this.editPatch.brightness * 100)}%`)
         } else {
           this.editPatch.resonance = Math.min(1, Math.max(0, this.editPatch.resonance + delta))
-          this.voice.setResonance(this.editPatch.resonance)
+          synthEng.setResonance(this.editPatch.resonance)
           this.toast(`RES ${Math.round(this.editPatch.resonance * 100)}%`)
         }
       } else if (this.screen === "edit-env") {
         if (which === "m1") {
           this.editPatch.attack = Math.min(1.2, Math.max(0.005, this.editPatch.attack + delta * 0.6))
-          this.voice.setAttack(this.editPatch.attack)
+          synthEng.setAttack(this.editPatch.attack)
           this.toast(`ATK ${Math.round(this.editPatch.attack * 1000)}ms`)
         } else {
           this.editPatch.release = Math.min(2.5, Math.max(0.02, this.editPatch.release + delta * 0.8))
-          this.voice.setRelease(this.editPatch.release)
+          synthEng.setRelease(this.editPatch.release)
           this.toast(`REL ${Math.round(this.editPatch.release * 1000)}ms`)
         }
       } else if (this.screen === "edit-eq") {
@@ -693,16 +818,73 @@ export class CassioApp {
     }
 
     if (which === "m1") {
-      this.project.brightness = Math.min(1, Math.max(0.05, this.project.brightness + delta))
-      this.voice.setBrightness(this.project.brightness)
-      this.toast(`TONE ${Math.round(this.project.brightness * 100)}%`)
+      this.#rideMacro("m1", delta)
     } else if (which === "m2") {
-      this.project.space = Math.min(1, Math.max(0, this.project.space + delta))
-      this.engine.setSpace(this.project.space)
-      this.toast(`FX ${Math.round(this.project.space * 100)}%`)
+      this.#rideMacro("m2", delta)
     }
     this.#syncKnobVisual(which)
     this.#persist()
+  }
+
+  #rideMacro(slot, delta) {
+    const s = this.sound
+    const macro = s?.macros?.[slot]
+    const param = macro?.param || (slot === "m1" ? "brightness" : "space")
+    const label = macro?.label || (slot === "m1" ? "TONE" : "FX")
+
+    const nudge01 = (key, projectKey = key) => {
+      const cur = this.project[projectKey] ?? 0.5
+      const next = Math.min(1, Math.max(key === "brightness" ? 0.05 : 0, cur + delta))
+      this.project[projectKey] = next
+      return next
+    }
+
+    if (this.#keyboardIsDrum()) {
+      if (param === "tone" || param === "brightness" || param === "color") {
+        const v = nudge01("tone", "tone")
+        this.project.brightness = v
+        this.drums.setTone(v)
+        this.toast(`${label} ${Math.round(v * 100)}%`)
+      } else if (param === "snap") {
+        const v = nudge01("snap", "snap")
+        this.drums.setSnap(v)
+        this.toast(`${label} ${Math.round(v * 100)}%`)
+      } else {
+        const v = nudge01("decay", "decay")
+        this.project.release = 0.05 + v * 2.2
+        this.drums.setDecay(v)
+        this.toast(`${label} ${Math.round(v * 100)}%`)
+      }
+      return
+    }
+
+    if (param === "drive") {
+      const v = nudge01("drive", "drive")
+      this.synth.setDrive(v)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    } else if (param === "pulseWidth" || param === "width") {
+      const v = Math.min(0.92, Math.max(0.08, (this.project.pulseWidth ?? 0.5) + delta))
+      this.project.pulseWidth = v
+      this.synth.setPulseWidth(v)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    } else if (param === "motion") {
+      const v = nudge01("motion", "motion")
+      this.synth.setMotion(v)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    } else if (param === "decay") {
+      const v = nudge01("decay", "decay")
+      this.project.release = 0.05 + v * 2.2
+      this.synth.setRelease(this.project.release)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    } else if (param === "space" || param === "reverb") {
+      const v = nudge01("space", "space")
+      this.engine.setSpace(v)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    } else {
+      const v = nudge01("brightness", "brightness")
+      this.synth.setBrightness(v)
+      this.toast(`${label} ${Math.round(v * 100)}%`)
+    }
   }
 
   #handleAction(action, el, phase, event) {
@@ -744,7 +926,9 @@ export class CassioApp {
       case "stop":
         this._stopHoldTimer = setTimeout(() => {
           this._stopHoldTimer = null
-          this.voice.allNotesOff()
+          this.synth.allNotesOff()
+          this.padSynth.allNotesOff()
+          this.drums.allNotesOff()
           this.engine.panic()
           this.toast("PANIC")
         }, 450)
@@ -794,6 +978,13 @@ export class CassioApp {
       return
     }
     if (this.screen === "library") {
+      if (this.libPickMode) {
+        this.libPickMode = false
+        this.kitEditMode = true
+        this.screen = "pad-assign"
+        this.render()
+        return
+      }
       this.#exitLibrary(false)
       return
     }
@@ -806,6 +997,8 @@ export class CassioApp {
       if (this.editDirty) {
         this.saveName = this.focusSound?.name || "USER SOUND"
         this.screen = "save-sound"
+      } else if (this.editReturnScreen === "pad-assign" || this.kitEditMode) {
+        this.#returnToKitEdit()
       } else {
         this.screen = "detail"
         this.#applyProjectPatch()
@@ -819,7 +1012,13 @@ export class CassioApp {
       return
     }
     if (this.screen === "pad-assign") {
-      this.screen = "detail"
+      if (this.kitEditMode) {
+        this.kitEditMode = false
+        this.focusSound = this.kitFocus || this.focusSound
+        this.screen = "detail"
+      } else {
+        this.screen = "detail"
+      }
       this.render()
       return
     }
@@ -856,19 +1055,45 @@ export class CassioApp {
     }
 
     if (this.screen === "library") {
+      if (this.libPickMode) {
+        if (key === "a") this.#setLibTab("factory")
+        if (key === "b") this.#setLibTab("user")
+        if (key === "c") this.#setLibTab("fav")
+        if (key === "d") {
+          this.libPickMode = false
+          this.kitEditMode = true
+          this.screen = "pad-assign"
+          this.render()
+        }
+        return
+      }
       if (key === "a") this.#setLibTab("factory")
-      if (key === "b") this.#setLibTab("user")
-      if (key === "c") this.#setLibTab("rec")
+      if (key === "b") this.#setLibTab("kits")
+      if (key === "c") this.#setLibTab("user")
       if (key === "d") this.#setLibTab("fav")
       return
     }
 
     if (this.screen === "detail") {
-      if (key === "a") this.#useKeys()
-      if (key === "b") this.#openEdit()
-      if (key === "c") this.#openPadAssign()
+      const focus = this.focusSound || this.sound
+      if (key === "a") {
+        if (isKit(focus)) this.#useKit()
+        else this.#useKeys()
+      }
+      if (key === "b") {
+        if (isKit(focus)) this.#openKitEdit()
+        else this.#openEdit()
+      }
+      if (key === "c") {
+        if (isKit(focus)) {
+          if (isUserSound(focus)) this.#saveKitInPlace()
+          else this.#saveKitAs()
+        } else {
+          this.#openPadAssign()
+        }
+      }
       if (key === "d") {
-        if (isUserSound(this.focusSound || this.sound)) {
+        if (isUserSound(focus)) {
           this.screen = "sound-manage"
           this.render()
         } else {
@@ -909,10 +1134,18 @@ export class CassioApp {
     }
 
     if (EDIT_SCREENS.has(this.screen)) {
-      if (key === "a") this.screen = "edit-shape"
-      if (key === "b") this.screen = "edit-env"
-      if (key === "c") this.screen = "edit-eq"
-      if (key === "d") this.screen = "edit-fx"
+      const drum = isDrum(this.focusSound || this.sound)
+      if (drum) {
+        if (key === "a") this.screen = "edit-drum-tone"
+        if (key === "b") this.screen = "edit-drum-decay"
+        if (key === "c") this.screen = "edit-drum-snap"
+        if (key === "d") this.screen = "edit-drum-fx"
+      } else {
+        if (key === "a") this.screen = "edit-shape"
+        if (key === "b") this.screen = "edit-env"
+        if (key === "c") this.screen = "edit-eq"
+        if (key === "d") this.screen = "edit-fx"
+      }
       this.render()
       return
     }
@@ -920,8 +1153,12 @@ export class CassioApp {
     if (this.screen === "save-sound") {
       if (key === "a") {
         this.editDirty = false
-        this.screen = "detail"
-        this.#applyProjectPatch()
+        if (this.editReturnScreen === "pad-assign") {
+          this.#returnToKitEdit()
+        } else {
+          this.screen = "detail"
+          this.#applyProjectPatch()
+        }
         this.render()
       }
       if (key === "b") this.#askName({
@@ -930,25 +1167,43 @@ export class CassioApp {
         returnScreen: "save-sound"
       })
       if (key === "c") this.#saveAs()
-      if (key === "d") this.#saveInPlace()
+      if (key === "d") {
+        if (this.editReturnScreen === "pad-assign") {
+          if (isUserSound(this.focusSound)) this.#saveInPlace()
+          else this.#applyEditToSelectedPad()
+        } else {
+          this.#saveInPlace()
+        }
+      }
       return
     }
 
     if (this.screen === "pad-assign") {
       if (key === "a") this.#clearPad()
       if (key === "b") {
-        const p = this.project.pads.find((x) => x.pad === this.padSelect)
-        if (p) {
-          p.mode = p.mode === "gate" ? "one-shot" : "gate"
-          this.toast(`PAD ${this.padSelect} ${p.mode.toUpperCase()}`)
-          this.#persist()
-          this.render()
+        if (this.kitEditMode) {
+          this.#openLibPickForPad()
+        } else {
+          const p = this.project.pads.find((x) => x.pad === this.padSelect)
+          if (p) {
+            p.mode = p.mode === "gate" || p.mode === "oneshot" ? (p.mode === "gate" ? "oneshot" : "gate") : "gate"
+            this.toast(`PAD ${this.padSelect} ${p.mode.toUpperCase()}`)
+            this.#persist()
+            this.render()
+          }
         }
       }
-      if (key === "c") this.#previewFocus()
+      if (key === "c") {
+        if (this.kitEditMode) this.#editSelectedPadSound()
+        else this.#previewPadSlot()
+      }
       if (key === "d") {
-        this.screen = "play"
-        this.render()
+        if (this.kitEditMode) {
+          this.#finishKitEditDone()
+        } else {
+          this.screen = "play"
+          this.render()
+        }
       }
       return
     }
@@ -969,13 +1224,19 @@ export class CassioApp {
     if (key === "c") {
       this.project.hold = !this.project.hold
       if (!this.project.hold) {
-        this.voice.allNotesOff()
+        this.synth.allNotesOff()
+        this.padSynth.allNotesOff()
+        this.drums.allNotesOff()
         this.heldKeys.clear()
         this.heldPads.clear()
         this.#syncLeds()
         this.root.querySelectorAll(".key.active").forEach((el) => el.classList.remove("active"))
         if (this._setPitchBendVisual) this._setPitchBendVisual(0, true)
-        else this.voice.setPitchBend(0)
+        else {
+          this.synth.setPitchBend(0)
+          this.padSynth.setPitchBend(0)
+          this.drums.setPitchBend(0)
+        }
       }
       this.render()
       this.#persist()
@@ -1009,27 +1270,36 @@ export class CassioApp {
   #libraryCategories() {
     const sounds = this.#libraryListRaw()
     const cats = [...new Set(sounds.map((s) => s.category || "FACTORY / SYNTH"))]
-    return cats.length ? cats : ["FACTORY / SYNTH"]
+    return cats.length ? cats : [this.libTab === "kits" ? "FACTORY / KITS" : "FACTORY / SYNTH"]
   }
 
   #libraryListRaw() {
-    if (this.libTab === "factory") return this.#factorySounds()
-    if (this.libTab === "user") return this.userSounds
-    if (this.libTab === "rec") {
-      return this.userSounds.filter((s) => s.origin === "rec" || s.origin === "import")
+    if (this.libTab === "factory") {
+      return this.#factorySounds().filter((s) => !isKit(s))
+    }
+    if (this.libTab === "kits") {
+      const fac = this.#factorySounds().filter((s) => isKit(s))
+      const user = this.userSounds.filter((s) => isKit(s))
+      return [...fac, ...user]
+    }
+    if (this.libTab === "user") {
+      return this.userSounds
     }
     if (this.libTab === "fav") {
       return this.favorites.map((id) => this.#soundById(id)).filter(Boolean)
     }
-    return []
+    // legacy / pick mode: treat unknown as factory non-kits
+    return this.#factorySounds().filter((s) => !isKit(s))
   }
 
   #libraryList() {
     const raw = this.#libraryListRaw()
-    if (this.libTab !== "factory") return raw
+    if (this.libTab === "fav") return raw
     const cats = this.#libraryCategories()
+    if (!cats.length) return raw
     if (!this.libCategory || !cats.includes(this.libCategory)) this.libCategory = cats[0]
-    return raw.filter((s) => (s.category || "FACTORY / SYNTH") === this.libCategory)
+    if (cats.length === 1) return raw.filter((s) => (s.category || cats[0]) === this.libCategory)
+    return raw.filter((s) => (s.category || cats[0]) === this.libCategory)
   }
 
   #setLibTab(tab) {
@@ -1041,6 +1311,8 @@ export class CassioApp {
   }
 
   #openLibrary() {
+    this.libPickMode = false
+    this.kitEditMode = false
     this.librarySnapshot = {
       soundId: this.project.soundId,
       root: this.project.root,
@@ -1072,19 +1344,41 @@ export class CassioApp {
     this.render()
   }
 
+  #synthHoldMs(patch) {
+    const atk = Number(patch?.attack) || 0.02
+    const rel = Number(patch?.release) || 0.4
+    return Math.round(Math.min(2800, Math.max(450, (atk + 0.35 + rel * 0.45) * 1000)))
+  }
+
   #previewHighlight() {
     const list = this.#libraryList()
     const s = list[this.libIndex]
     if (!s) return
     this.focusSound = s
     if (s.playable === false) return
-    const patch = patchFromSound(s, s.patch || {})
-    this.voice.applyPatch(patch)
     this.#ensureAudioRunning()
+    if (isKit(s)) {
+      const first = s.pads?.find((p) => p.soundId)
+      const drum = first ? this.#soundById(first.soundId) : null
+      if (drum) {
+        const patch = patchFromSound(drum, { ...(drum.patch || {}), ...(first.patch || {}) })
+        this.drums.applyPatch(patch)
+        this.drums.noteOn(noteNameToMidi(drum.root || "C2"), 0.75)
+      }
+      return
+    }
+    const patch = patchFromSound(s, s.patch || {})
+    if (isDrum(s)) {
+      this.drums.applyPatch(patch)
+      this.drums.noteOn(noteNameToMidi(patch.root || "C3"), 0.75)
+      return
+    }
+    this.synth.applyPatch(patch)
     const midi = noteNameToMidi(patch.root || "C3")
-    this.voice.noteOff(midi, true)
-    this.voice.noteOn(midi, 0.7)
-    setTimeout(() => this.voice.noteOff(midi), 280)
+    this.synth.noteOff(midi, true)
+    this.synth.noteOn(midi, 0.7)
+    const ms = this.#synthHoldMs(patch)
+    setTimeout(() => this.synth.noteOff(midi), ms)
   }
 
   #shiftPlayRoot(delta) {
@@ -1125,7 +1419,8 @@ export class CassioApp {
       }
       if (dir === "left" || dir === "right") {
         const cats = this.#libraryCategories()
-        if (this.libTab !== "factory" || cats.length < 2) return
+        if (cats.length < 2) return
+        if (this.libTab !== "factory" && this.libTab !== "kits" && this.libTab !== "user") return
         const i = cats.indexOf(this.libCategory)
         const next = (i + (dir === "right" ? 1 : cats.length - 1)) % cats.length
         this.libCategory = cats[next]
@@ -1136,16 +1431,17 @@ export class CassioApp {
       return
     }
     if (this.screen === "detail") {
+      const focus = this.focusSound || this.sound
+      if (isKit(focus)) return
       if (!this.editPatch) {
-        const s = this.focusSound || this.sound
-        this.editPatch = patchFromSound(s, s?.patch || {})
+        this.editPatch = patchFromSound(focus, focus?.patch || {})
       }
       const delta = dir === "left" ? -1 : dir === "right" ? 1 : dir === "up" ? 12 : dir === "down" ? -12 : 0
       if (!delta) return
       this.editPatch.root = nudgeRoot(this.editPatch.root, delta)
       this.editDirty = true
       this.toast(`ROOT ${this.editPatch.root}`)
-      if (this.project.soundId === (this.focusSound || this.sound)?.id) {
+      if (this.project.soundId === focus?.id) {
         this.project.root = this.editPatch.root
         this.#remapHeldNotes()
         this.#persist()
@@ -1178,14 +1474,34 @@ export class CassioApp {
       const list = this.#libraryList()
       const s = list[this.libIndex]
       if (!s) return
+      if (this.libPickMode) {
+        if (isKit(s)) {
+          this.toast("PICK A SOUND")
+          return
+        }
+        this.#assignSoundToSelectedPad(s)
+        this.libPickMode = false
+        this.kitEditMode = true
+        this.kitDirty = true
+        this.project.padBank = "PADS CUSTOM"
+        this.screen = "pad-assign"
+        this.render()
+        this.#persist()
+        this.toast(`PAD ${this.padSelect} ← ${s.name}`)
+        return
+      }
       this.focusSound = s
-      this.editPatch = patchFromSound(s, s.patch || {})
+      this.editPatch = isKit(s) ? null : patchFromSound(s, s.patch || {})
       this.editDirty = false
       this.screen = "detail"
       this.render()
       return
     }
     if (this.screen === "pad-assign") {
+      if (this.kitEditMode) {
+        this.#openLibPickForPad()
+        return
+      }
       this.#assignPad()
       return
     }
@@ -1206,6 +1522,10 @@ export class CassioApp {
       this.toast("NO ENGINE")
       return
     }
+    if (isKit(s)) {
+      this.#useKit()
+      return
+    }
     const patch = this.editPatch || patchFromSound(s, s.patch || {})
     this.project.soundId = s.id
     this.sound = s
@@ -1218,14 +1538,307 @@ export class CassioApp {
     this.toast(`KEYS ← ${s.name}`)
   }
 
-  #openEdit() {
+  #useKit() {
     const s = this.focusSound || this.sound
-    if (!s || s.playable === false) {
-      this.toast("NO ENGINE")
+    if (!s || !isKit(s) || !s.pads?.length) {
+      this.toast("NO KIT")
+      return
+    }
+    this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => {
+      const slot = s.pads.find((p) => p.pad === n) || {}
+      return {
+        pad: n,
+        soundId: slot.soundId ?? null,
+        level: slot.level ?? 1,
+        pan: slot.pan ?? 0,
+        mode: slot.mode || "oneshot",
+        patch: slot.patch || null
+      }
+    })
+    this.project.padBank = s.name
+    this.kitDirty = false
+    this.kitFocus = s
+    this.librarySnapshot = null
+    this.screen = "play"
+    this.render()
+    this.#persist()
+    this.toast(`${s.name} → PADS`)
+  }
+
+  #openKitEdit() {
+    const s = this.focusSound || this.sound
+    if (!isKit(s)) return
+    // Ensure pads match this kit if bank name matches, else edit current pads
+    if (this.project.padBank !== s.name && s.pads?.length) {
+      this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => {
+        const slot = s.pads.find((p) => p.pad === n) || {}
+        return {
+          pad: n,
+          soundId: slot.soundId ?? null,
+          level: slot.level ?? 1,
+          pan: slot.pan ?? 0,
+          mode: slot.mode || "oneshot",
+          patch: slot.patch || null
+        }
+      })
+      this.project.padBank = s.name
+    }
+    this.kitFocus = s
+    this.focusSound = s
+    this.kitEditMode = true
+    this.kitDirty = false
+    this.padSelect = 1
+    this.screen = "pad-assign"
+    this.render()
+  }
+
+  #returnToKitEdit() {
+    this.kitEditMode = true
+    this.focusSound = this.kitFocus || this.focusSound
+    this.editReturnScreen = "detail"
+    this.screen = "pad-assign"
+    this.#applyProjectPatch()
+  }
+
+  #finishKitEditDone() {
+    this.kitEditMode = false
+    this.focusSound = this.kitFocus || this.focusSound
+    if (!this.kitDirty) {
+      this.screen = "detail"
+      this.render()
+      return
+    }
+    if (isUserSound(this.focusSound) && isKit(this.focusSound)) {
+      this.#saveKitInPlace()
+    } else {
+      this.screen = "detail"
+      this.render()
+      this.#saveKitAs()
+    }
+  }
+
+  #openLibPickForPad() {
+    this.libPickMode = true
+    this.kitEditMode = false
+    this.libTab = "factory"
+    this.libCategory = null
+    this.libIndex = 0
+    this.screen = "library"
+    this.render()
+    this.#previewHighlight()
+  }
+
+  #assignSoundToSelectedPad(s) {
+    if (!s || isKit(s)) return
+    const p = this.project.pads.find((x) => x.pad === this.padSelect)
+    if (!p) return
+    p.soundId = s.id
+    p.mode = s.padMode || "oneshot"
+    p.patch = null
+  }
+
+  #auditionDrumEdit() {
+    if (!this.editPatch || !isDrum(this.focusSound || this.sound)) return
+    this.#ensureAudioRunning()
+    this.drums.applyPatch(this.editPatch)
+    const midi = this.#padMidi(this.padSelect || 1)
+    this.drums.noteOn(midi, 0.9)
+  }
+
+  #previewPadSlot() {
+    const slot = this.project.pads?.find((p) => p.pad === this.padSelect)
+    const assigned = slot?.soundId ? this.#soundById(slot.soundId) : null
+    if (!assigned) {
+      this.toast("EMPTY")
+      return
+    }
+    this.#ensureAudioRunning()
+    const midi = this.#padMidi(this.padSelect)
+    if (isDrum(assigned)) {
+      const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
+      this.drums.applyPatch(patch)
+      this.drums.noteOn(midi, 0.85)
+      return
+    }
+    const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
+    this.padSynth.applyPatch(patch)
+    this.padSynth.noteOn(midi, 0.75)
+    setTimeout(() => this.padSynth.noteOff(midi), this.#synthHoldMs(patch))
+  }
+
+  #kitPadsSnapshot() {
+    return (this.project.pads || []).map((p) => ({
+      pad: p.pad,
+      soundId: p.soundId,
+      level: p.level ?? 1,
+      pan: p.pan ?? 0,
+      mode: p.mode || "oneshot",
+      patch: p.patch || null
+    }))
+  }
+
+  #saveKitAs() {
+    const focus = this.kitFocus || this.focusSound
+    if (
+      isKit(focus)
+      && !this.kitDirty
+      && this.project.padBank !== focus.name
+      && focus.pads?.length
+    ) {
+      this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => {
+        const slot = focus.pads.find((p) => p.pad === n) || {}
+        return {
+          pad: n,
+          soundId: slot.soundId ?? null,
+          level: slot.level ?? 1,
+          pan: slot.pan ?? 0,
+          mode: slot.mode || "oneshot",
+          patch: slot.patch || null
+        }
+      })
+      this.project.padBank = focus.name
+    }
+    this.focusSound = focus
+    const base = focus?.name || this.project.padBank || "USER KIT"
+    this.#askName({
+      initial: String(base).replace(/^KIT\s+/i, "") || "MY KIT",
+      mode: "kit-save",
+      returnScreen: "detail"
+    })
+  }
+
+  async #saveKitInPlace() {
+    const kit = this.kitFocus || this.focusSound
+    if (!isKit(kit) || !isUserSound(kit)) {
+      this.#saveKitAs()
+      return
+    }
+    kit.pads = this.#kitPadsSnapshot()
+    kit.kind = "kit"
+    kit.voice = "kit"
+    kit.source = "user"
+    kit.category = "USER / KITS"
+    kit.playable = true
+    await putUserSound(kit)
+    this.userSounds = await listUserSounds()
+    this.focusSound = this.userSounds.find((u) => u.id === kit.id) || kit
+    this.kitFocus = this.focusSound
+    this.project.padBank = this.focusSound.name
+    this.kitDirty = false
+    this.kitEditMode = false
+    this.#persist()
+    this.toast("KIT SAVED")
+    this.screen = "detail"
+    this.render()
+  }
+
+  async #finishKitSave(name) {
+    const pads = this.#kitPadsSnapshot()
+    const id = `user-kit-${Date.now().toString(36)}`
+    const kit = {
+      id,
+      name: name.startsWith("KIT ") ? name : `KIT ${name}`,
+      kind: "kit",
+      voice: "kit",
+      source: "user",
+      category: "USER / KITS",
+      pads,
+      playable: true
+    }
+    await putUserSound(kit)
+    this.userSounds = await listUserSounds()
+    this.focusSound = kit
+    this.kitFocus = kit
+    this.project.padBank = kit.name
+    this.kitDirty = false
+    this.kitEditMode = false
+    this.#persist()
+    this.toast("SAVED · SEE USER / KITS")
+    this.libTab = "user"
+    this.libCategory = "USER / KITS"
+    this.screen = "detail"
+    this.render()
+  }
+
+  #padPatchFromEdit(src, editPatch) {
+    const p = sanitizePatch(editPatch || {})
+    if (isDrum(src)) {
+      return {
+        drumType: p.drumType || src?.patch?.drumType || "kick",
+        tone: p.tone,
+        tuning: p.tuning,
+        decay: p.decay,
+        snap: p.snap,
+        noise: p.noise,
+        reverb: p.reverb,
+        drive: p.drive
+      }
+    }
+    return {
+      root: p.root,
+      brightness: p.brightness,
+      resonance: p.resonance,
+      attack: p.attack,
+      release: p.release,
+      bassDb: p.bassDb,
+      trebleDb: p.trebleDb,
+      reverb: p.reverb,
+      delay: p.delay,
+      osc1Type: p.osc1Type,
+      osc2Type: p.osc2Type,
+      detuneCents: p.detuneCents,
+      mixGain: p.mixGain,
+      drive: p.drive,
+      pulseWidth: p.pulseWidth,
+      motion: p.motion
+    }
+  }
+
+  #applyEditToSelectedPad() {
+    const p = this.project.pads.find((x) => x.pad === this.padSelect)
+    if (!p || !this.editPatch) {
+      this.toast("NO EDIT")
+      return
+    }
+    const src = this.focusSound
+    p.patch = this.#padPatchFromEdit(src, this.editPatch)
+    this.kitDirty = true
+    if (this.kitFocus && isUserSound(this.kitFocus)) {
+      this.project.padBank = this.kitFocus.name
+    } else {
+      this.project.padBank = "PADS CUSTOM"
+    }
+    this.editDirty = false
+    this.#persist()
+    this.toast(`PAD ${this.padSelect} UPDATED`)
+    this.#returnToKitEdit()
+    this.render()
+  }
+
+  #editSelectedPadSound() {
+    const slot = this.project.pads?.find((p) => p.pad === this.padSelect)
+    const assigned = slot?.soundId ? this.#soundById(slot.soundId) : null
+    if (!assigned) {
+      this.toast("EMPTY")
+      return
+    }
+    if (isKit(assigned)) {
+      this.toast("PICK A SOUND")
+      return
+    }
+    this.focusSound = assigned
+    this.editReturnScreen = "pad-assign"
+    this.#openEdit({ padSlotPatch: slot?.patch || null })
+  }
+
+  #openEdit({ padSlotPatch = null } = {}) {
+    const s = this.focusSound || this.sound
+    if (!s || s.playable === false || isKit(s)) {
+      this.toast(isKit(s) ? "USE KIT EDIT" : "NO ENGINE")
       return
     }
     this.focusSound = s
-    const live = this.project.soundId === s.id
+    const live = this.project.soundId === s.id && this.editReturnScreen !== "pad-assign"
     this.editPatch = patchFromSound(s, {
       root: this.editPatch?.root || s.root || this.project.root,
       ...(live ? {
@@ -1237,20 +1850,68 @@ export class CassioApp {
         bassDb: this.project.bassDb,
         trebleDb: this.project.trebleDb,
         reverb: this.project.space,
-        delay: this.project.delay
-      } : {})
+        delay: this.project.delay,
+        drive: this.project.drive,
+        pulseWidth: this.project.pulseWidth,
+        motion: this.project.motion,
+        tone: this.project.tone,
+        decay: this.project.decay,
+        snap: this.project.snap
+      } : {}),
+      ...(padSlotPatch || {})
     })
     this.editDirty = false
-    this.editReturnScreen = "edit-shape"
-    this.voice.applyPatch(this.editPatch)
-    this.screen = "edit-shape"
+    if (this.editReturnScreen !== "pad-assign") this.editReturnScreen = "detail"
+    if (isDrum(s)) {
+      this.drums.applyPatch(this.editPatch)
+      this.screen = "edit-drum-tone"
+    } else if (this.editReturnScreen === "pad-assign") {
+      this.padSynth.applyPatch(this.editPatch)
+      this.screen = "edit-shape"
+    } else {
+      this.synth.applyPatch(this.editPatch)
+      this.screen = "edit-shape"
+    }
     this.render()
   }
 
   #openPadAssign() {
-    this.focusSound = this.focusSound || this.sound
+    const s = this.focusSound || this.sound
+    if (isKit(s)) {
+      this.#openKitEdit()
+      return
+    }
+    this.focusSound = s || this.sound
+    this.kitEditMode = false
     this.padSelect = 1
     this.screen = "pad-assign"
+    this.render()
+  }
+
+  #assignPad() {
+    const s = this.focusSound || this.sound
+    if (!s || isKit(s)) return
+    const p = this.project.pads.find((x) => x.pad === this.padSelect)
+    if (!p) return
+    p.soundId = s.id
+    p.mode = s.padMode || p.mode || "gate"
+    p.patch = null
+    this.project.padBank = "PADS CUSTOM"
+    this.kitDirty = true
+    this.toast(`PAD ${this.padSelect} ← ${s.name}`)
+    this.#persist()
+    this.render()
+  }
+
+  #clearPad() {
+    const p = this.project.pads.find((x) => x.pad === this.padSelect)
+    if (!p) return
+    p.soundId = null
+    p.patch = null
+    this.project.padBank = "PADS CUSTOM"
+    this.kitDirty = true
+    this.toast(`PAD ${this.padSelect} CLEAR`)
+    this.#persist()
     this.render()
   }
 
@@ -1340,6 +2001,11 @@ export class CassioApp {
       return
     }
 
+    if (mode === "kit-save") {
+      await this.#finishKitSave(v)
+      return
+    }
+
     // save / save-as naming
     this.screen = "save-sound"
     this.render()
@@ -1358,20 +2024,37 @@ export class CassioApp {
     const src = this.focusSound || this.sound
     const patch = sanitizePatch(this.editPatch || patchFromSound(src))
     const id = `user-${Date.now().toString(36)}`
+    const drum = isDrum(src)
     const sound = {
       id,
       name: this.saveName,
-      category: "USER / SYNTH",
-      voice: src?.voice || "poly",
-      root: patch.root,
-      padMode: src?.padMode || "gate",
+      category: drum ? "USER / DRUMS" : "USER / SYNTH",
+      voice: drum ? "drum" : (src?.voice || "poly"),
+      root: patch.root || src?.root || "C3",
+      padMode: src?.padMode || (drum ? "oneshot" : "gate"),
       source: "user",
       sourceId: src?.sourceId || src?.id,
-      macros: src?.macros || {
-        m1: { label: "TONE", param: "brightness" },
-        m2: { label: "FX", param: "space" }
-      },
-      patch,
+      macros: src?.macros || (drum
+        ? {
+            m1: { label: "TONE", param: "tone" },
+            m2: { label: "DECAY", param: "decay" }
+          }
+        : {
+            m1: { label: "TONE", param: "brightness" },
+            m2: { label: "FX", param: "space" }
+          }),
+      patch: drum
+        ? {
+            drumType: patch.drumType || src?.patch?.drumType || "kick",
+            tone: patch.tone,
+            tuning: patch.tuning,
+            decay: patch.decay,
+            snap: patch.snap,
+            noise: patch.noise,
+            reverb: patch.reverb,
+            drive: patch.drive
+          }
+        : patch,
       playable: true
     }
     await putUserSound(sound)
@@ -1379,25 +2062,70 @@ export class CassioApp {
     this.focusSound = sound
     this.editPatch = patch
     this.editDirty = false
-    this.toast("SAVED USER")
-    this.screen = "detail"
+    this.toast(drum ? "SAVED DRUM" : "SAVED USER")
+    if (this.editReturnScreen === "pad-assign") {
+      const p = this.project.pads.find((x) => x.pad === this.padSelect)
+      if (p) {
+        p.soundId = sound.id
+        p.patch = null
+        this.kitDirty = true
+        if (this.kitFocus && isUserSound(this.kitFocus)) {
+          this.project.padBank = this.kitFocus.name
+        } else {
+          this.project.padBank = "PADS CUSTOM"
+        }
+      }
+      this.#returnToKitEdit()
+      this.#persist()
+    } else {
+      this.screen = "detail"
+    }
     this.render()
   }
 
   async #saveInPlace() {
     const s = this.focusSound
     if (!s || !isUserSound(s)) {
+      if (this.editReturnScreen === "pad-assign") {
+        this.#applyEditToSelectedPad()
+        return
+      }
       this.toast("USE SAVE AS")
       return
     }
     if (this.saveName) s.name = this.saveName
     const patch = sanitizePatch(this.editPatch || patchFromSound(s))
     s.root = patch.root
-    s.patch = { ...patch }
+    if (isDrum(s)) {
+      s.voice = "drum"
+      s.category = s.category || "USER / DRUMS"
+      s.patch = {
+        drumType: patch.drumType || s.patch?.drumType || "kick",
+        tone: patch.tone,
+        tuning: patch.tuning,
+        decay: patch.decay,
+        snap: patch.snap,
+        noise: patch.noise,
+        reverb: patch.reverb,
+        drive: patch.drive
+      }
+    } else {
+      s.patch = { ...patch }
+    }
     await putUserSound(s)
     this.userSounds = await listUserSounds()
     this.focusSound = this.userSounds.find((u) => u.id === s.id) || s
     if (this.project.soundId === s.id) this.#commitPatchToProject(patch)
+    if (this.editReturnScreen === "pad-assign") {
+      const p = this.project.pads.find((x) => x.pad === this.padSelect)
+      if (p) p.patch = null
+      this.editDirty = false
+      this.toast("PAD SOUND SAVED")
+      this.#returnToKitEdit()
+      this.#persist()
+      this.render()
+      return
+    }
     this.editDirty = false
     this.toast("SAVED")
     this.screen = "detail"
@@ -1412,7 +2140,7 @@ export class CassioApp {
       return
     }
     const base = (s.name || "SOUND").replace(/\s+COPY$/, "")
-    this.editPatch = sanitizePatch(s.patch || patchFromSound(s))
+    if (!isKit(s)) this.editPatch = sanitizePatch(s.patch || patchFromSound(s))
     this.#askName({
       initial: `${base} COPY`.slice(0, 18),
       mode: "duplicate",
@@ -1422,6 +2150,27 @@ export class CassioApp {
 
   async #finishDuplicate(name) {
     const src = this.focusSound || this.sound
+    if (isKit(src)) {
+      const id = `user-kit-${Date.now().toString(36)}`
+      const kit = {
+        ...src,
+        id,
+        name,
+        source: "user",
+        kind: "kit",
+        voice: "kit",
+        category: "USER / KITS",
+        pads: structuredClone(src.pads || this.project.pads || []),
+        playable: true
+      }
+      await putUserSound(kit)
+      this.userSounds = await listUserSounds()
+      this.focusSound = kit
+      this.toast("DUPLICATED")
+      this.screen = "detail"
+      this.render()
+      return
+    }
     const patch = sanitizePatch(this.editPatch || src?.patch || patchFromSound(src))
     const id = `user-${Date.now().toString(36)}`
     const sound = {
@@ -1450,7 +2199,7 @@ export class CassioApp {
       this.toast("USER ONLY")
       return
     }
-    this.confirmTitle = "DELETE USER SOUND?"
+    this.confirmTitle = isKit(s) ? "DELETE USER KIT?" : "DELETE USER SOUND?"
     this.confirmLines = [
       { text: s.name, tone: "green" },
       { text: "THIS CANNOT BE UNDONE.", tone: "muted" },
@@ -1487,30 +2236,9 @@ export class CassioApp {
     this.editPatch = null
     this.#persist()
     this.toast("DELETED")
-    this.libTab = "user"
+    this.libTab = isKit(s) ? "kits" : "user"
     this.libIndex = 0
     this.screen = "library"
-    this.render()
-  }
-
-  #assignPad() {
-    const s = this.focusSound || this.sound
-    if (!s) return
-    const p = this.project.pads.find((x) => x.pad === this.padSelect)
-    if (!p) return
-    p.soundId = s.id
-    p.mode = s.padMode || p.mode || "gate"
-    this.toast(`PAD ${this.padSelect} ← ${s.name}`)
-    this.#persist()
-    this.render()
-  }
-
-  #clearPad() {
-    const p = this.project.pads.find((x) => x.pad === this.padSelect)
-    if (!p) return
-    p.soundId = null
-    this.toast(`PAD ${this.padSelect} CLEAR`)
-    this.#persist()
     this.render()
   }
 
@@ -1520,12 +2248,26 @@ export class CassioApp {
       this.toast("NO ENGINE")
       return
     }
-    const patch = patchFromSound(s, s.patch || this.editPatch || {})
-    this.voice.applyPatch(patch)
     this.#ensureAudioRunning()
+    if (isKit(s)) {
+      const first = s.pads?.find((p) => p.soundId)
+      const drum = first ? this.#soundById(first.soundId) : null
+      if (!drum) return
+      const patch = patchFromSound(drum, { ...(drum.patch || {}), ...(first.patch || {}) })
+      this.drums.applyPatch(patch)
+      this.drums.noteOn(noteNameToMidi(drum.root || "C2"), 0.8)
+      return
+    }
+    const patch = patchFromSound(s, s.patch || this.editPatch || {})
+    if (isDrum(s)) {
+      this.drums.applyPatch(patch)
+      this.drums.noteOn(noteNameToMidi(patch.root || "C3"), 0.8)
+      return
+    }
+    this.synth.applyPatch(patch)
     const midi = noteNameToMidi(patch.root || "C3")
-    this.voice.noteOn(midi, 0.75)
-    setTimeout(() => this.voice.noteOff(midi), 320)
+    this.synth.noteOn(midi, 0.75)
+    setTimeout(() => this.synth.noteOff(midi), this.#synthHoldMs(patch))
   }
 
   #baseMidi() {
@@ -1542,17 +2284,25 @@ export class CassioApp {
       const oldMidi = this.heldKeys.get(degree)
       const newMidi = this.#baseMidi() + degree
       if (oldMidi === newMidi) continue
-      this.voice.noteOff(oldMidi, true)
-      this.voice.noteOn(newMidi)
+      if (this.#keyboardIsDrum()) {
+        this.drums.noteOff(oldMidi, true)
+        this.drums.noteOn(newMidi)
+      } else {
+        this.synth.noteOff(oldMidi, true)
+        this.synth.noteOn(newMidi)
+      }
       this.heldKeys.set(degree, newMidi)
     }
     for (const n of [...this.heldPads.keys()]) {
-      const oldMidi = this.heldPads.get(n)
+      const entry = this.heldPads.get(n)
+      if (!entry || entry.engine === "drum") continue
+      const oldMidi = entry.midi
       const newMidi = this.#padMidi(n)
       if (oldMidi === newMidi) continue
-      this.voice.noteOff(oldMidi, true)
-      this.voice.noteOn(newMidi)
-      this.heldPads.set(n, newMidi)
+      const eng = entry.engine === "padSynth" ? this.padSynth : this.synth
+      eng.noteOff(oldMidi, true)
+      eng.noteOn(newMidi)
+      this.heldPads.set(n, { midi: newMidi, engine: entry.engine })
     }
   }
 
@@ -1561,16 +2311,26 @@ export class CassioApp {
     if (this.project.hold && this.heldKeys.has(degree)) {
       const midi = this.heldKeys.get(degree)
       this.heldKeys.delete(degree)
-      if (midi != null) this.voice.noteOff(midi, true)
+      if (midi != null) {
+        if (this.#keyboardIsDrum()) this.drums.noteOff(midi, true)
+        else this.synth.noteOff(midi, true)
+      }
       this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.remove("active")
       return
     }
     const midi = this.#baseMidi() + degree
     if (this.heldKeys.has(degree)) {
-      this.voice.noteOff(this.heldKeys.get(degree), true)
+      const prev = this.heldKeys.get(degree)
+      if (this.#keyboardIsDrum()) this.drums.noteOff(prev, true)
+      else this.synth.noteOff(prev, true)
     }
     this.heldKeys.set(degree, midi)
-    this.voice.noteOn(midi)
+    if (this.#keyboardIsDrum()) {
+      this.drums.applyPatch(patchFromSound(this.sound, this.sound?.patch || {}))
+      this.drums.noteOn(midi)
+    } else {
+      this.synth.noteOn(midi)
+    }
     this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
   }
 
@@ -1584,7 +2344,10 @@ export class CassioApp {
     this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.remove("active")
     const midi = this.heldKeys.get(degree)
     this.heldKeys.delete(degree)
-    if (midi != null) this.voice.noteOff(midi)
+    if (midi != null) {
+      if (this.#keyboardIsDrum()) this.drums.noteOff(midi)
+      else this.synth.noteOff(midi)
+    }
   }
 
   #releaseAllPointerKeys() {
@@ -1600,45 +2363,116 @@ export class CassioApp {
     if (this.screen === "pad-assign") {
       this.padSelect = n
       this.render()
+      if (this.kitEditMode) this.#previewPadSlot()
+      return
+    }
+    if (EDIT_SCREENS.has(this.screen) && this.editPatch) {
+      this.#ensureAudioRunning()
+      const midi = this.#padMidi(n)
+      const focus = this.focusSound || this.sound
+      if (isDrum(focus)) {
+        this.drums.applyPatch(this.editPatch)
+        this.drums.noteOn(midi, 0.9)
+      } else {
+        const eng = this.editReturnScreen === "pad-assign" ? this.padSynth : this.synth
+        eng.applyPatch(this.editPatch)
+        if (this.heldPads.has(n)) {
+          const prev = this.heldPads.get(n)
+          if (prev?.engine === "padSynth" && prev.midi != null) this.padSynth.noteOff(prev.midi, true)
+          else if (prev?.midi != null) this.synth.noteOff(prev.midi, true)
+        }
+        const engine = this.editReturnScreen === "pad-assign" ? "padSynth" : "synth"
+        this.heldPads.set(n, { midi, engine })
+        eng.noteOn(midi)
+      }
+      this.#syncLeds()
       return
     }
     this.#ensureAudioRunning()
     if (this.project.hold && this.heldPads.has(n)) {
-      const midi = this.heldPads.get(n)
+      const entry = this.heldPads.get(n)
       this.heldPads.delete(n)
-      if (midi != null) this.voice.noteOff(midi, true)
+      if (entry?.engine === "padSynth" && entry.midi != null) this.padSynth.noteOff(entry.midi, true)
       this.#syncLeds()
       return
     }
     const slot = this.project.pads?.find((p) => p.pad === n)
     const assigned = slot?.soundId ? this.#soundById(slot.soundId) : null
-    // Non-playable assigned sounds: still trigger glass poly at pad pitch (stand-in until engines exist)
-    if (assigned?.playable !== false && assigned && this.project.soundId !== assigned.id) {
-      const patch = patchFromSound(assigned, assigned.patch || {})
-      this.voice.applyPatch(patch)
-    } else {
-      this.#applyProjectPatch()
-    }
     const midi = this.#padMidi(n)
-    if (this.heldPads.has(n)) {
-      this.voice.noteOff(this.heldPads.get(n), true)
+
+    if (!assigned) {
+      this.toast("EMPTY")
+      return
     }
-    this.heldPads.set(n, midi)
-    this.voice.noteOn(midi)
+    if (isKit(assigned)) {
+      this.toast("LOAD KIT FIRST")
+      return
+    }
+
+    if (isDrum(assigned)) {
+      const patch = patchFromSound(assigned, {
+        ...(assigned.patch || {}),
+        ...(slot.patch || {})
+      })
+      this.drums.applyPatch(patch)
+      this.heldPads.set(n, { midi, engine: "drum" })
+      this.drums.noteOn(midi)
+      this.#syncLeds()
+      return
+    }
+
+    if (assigned.playable === false) {
+      this.toast("NO ENGINE")
+      return
+    }
+
+    const patch = patchFromSound(assigned, {
+      ...(assigned.patch || {}),
+      ...(slot.patch || {})
+    })
+    this.padSynth.applyPatch(patch)
+    if (this.heldPads.has(n)) {
+      const prev = this.heldPads.get(n)
+      if (prev?.timer) clearTimeout(prev.timer)
+      if (prev?.engine === "padSynth" && prev.midi != null) this.padSynth.noteOff(prev.midi, true)
+    }
+    const mode = slot.mode || assigned.padMode || "gate"
+    const oneshot = mode === "oneshot"
+    const entry = { midi, engine: "padSynth", oneshot }
+    if (oneshot) {
+      entry.timer = setTimeout(() => {
+        const cur = this.heldPads.get(n)
+        if (cur?.midi === midi && cur.engine === "padSynth") {
+          this.heldPads.delete(n)
+          this.padSynth.noteOff(midi)
+          this.#syncLeds()
+        }
+      }, this.#synthHoldMs(patch))
+    }
+    this.heldPads.set(n, entry)
+    this.padSynth.noteOn(midi)
     this.#syncLeds()
   }
 
   #padUp(n, { force = false } = {}) {
     if (this.screen === "pad-assign") return
+    if (EDIT_SCREENS.has(this.screen) && isDrum(this.focusSound || this.sound)) {
+      this.#syncLeds()
+      return
+    }
     if (this.project.hold && !force) {
       this.#syncLeds()
       return
     }
-    const midi = this.heldPads.get(n)
+    const entry = this.heldPads.get(n)
+    if (entry?.oneshot && !force) {
+      this.#syncLeds()
+      return
+    }
     this.heldPads.delete(n)
-    if (midi != null) this.voice.noteOff(midi)
-    // Restore keyboard voice patch after pad preview
-    if (!this.heldPads.size) this.#applyProjectPatch()
+    if (entry?.timer) clearTimeout(entry.timer)
+    if (entry?.engine === "padSynth" && entry.midi != null) this.padSynth.noteOff(entry.midi)
+    else if (entry?.engine === "synth" && entry.midi != null) this.synth.noteOff(entry.midi)
     this.#syncLeds()
   }
 

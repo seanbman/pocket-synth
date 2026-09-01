@@ -7,10 +7,11 @@ function esc(s) {
 export function renderLibrary(state) {
   const tab = state.libTab || "factory"
   const cats = state.libCategories || []
-  const cat = state.libCategory || cats[0] || "FACTORY / SYNTH"
+  const cat = state.libCategory || cats[0] || (tab === "kits" ? "KITS" : "FACTORY / SYNTH")
   const list = state.libList || []
   const idx = Math.min(list.length - 1, Math.max(0, state.libIndex || 0))
   const sel = list[idx]
+  const pick = state.libPickMode
   const m1 = sel?.macros?.m1?.label || "TONE"
   const m2 = sel?.macros?.m2?.label || "FX"
   const rows = list.map((s, i) =>
@@ -20,29 +21,37 @@ export function renderLibrary(state) {
   const detail = sel ? `
     <div class="lib-detail-box">
       <div class="lib-detail-name">${esc(sel.name)}</div>
-      <div class="muted">${esc(sel.voice || "—").toUpperCase()} / ${esc(sel.root || "C3")}</div>
-      <div class="green">M1 ${esc(sel.macros?.m1?.label || "—")}</div>
-      <div class="green">M2 ${esc(sel.macros?.m2?.label || "—")}</div>
-      <div class="lib-hint">${sel.playable === false ? "NO ENGINE" : "OK DETAIL"}</div>
-      <div class="muted">KEYS/PADS PREVIEW</div>
+      <div class="muted">${esc(sel.kind === "kit" || sel.voice === "kit" ? "KIT" : (sel.voice || "—")).toUpperCase()} / ${esc(sel.kind === "kit" ? "PADS" : (sel.root || "C3"))}</div>
+      <div class="green">M1 ${esc(sel.kind === "kit" ? "BANK" : (sel.macros?.m1?.label || "—"))}</div>
+      <div class="green">M2 ${esc(sel.kind === "kit" ? "LOAD" : (sel.macros?.m2?.label || "—"))}</div>
+      <div class="lib-hint">${sel.playable === false ? "NO ENGINE" : pick ? "OK → ASSIGN PAD" : sel.kind === "kit" || sel.voice === "kit" ? "OK → KIT DETAIL" : "OK DETAIL"}</div>
+      <div class="muted">${pick ? `PAD ${state.padSelect || 1}` : sel.kind === "kit" || sel.voice === "kit" ? "A USE PADS ON DETAIL" : "KEYS/PADS PREVIEW"}</div>
     </div>` : `<div class="lib-detail-box muted">EMPTY</div>`
 
-  const tabs = [
-    ["factory", "FACTORY"],
-    ["user", "USER"],
-    ["rec", "REC"],
-    ["fav", "FAV"]
-  ].map(([id, label]) =>
-    `<div class="${tab === id ? "soft-active" : ""}"><span class="sk">`
-    + `${id === "factory" ? "A" : id === "user" ? "B" : id === "rec" ? "C" : "D"}`
-    + `</span> <span class="green">${label}</span></div>`
-  ).join("")
+  const tabs = pick
+    ? [
+        ["factory", "A", "FACTORY"],
+        ["user", "B", "USER"],
+        ["fav", "C", "FAV"],
+        ["back", "D", "BACK"]
+      ].map(([id, sk, label]) => {
+        const active = id !== "back" && tab === id
+        return `<div class="${active ? "soft-active" : ""}"><span class="sk">${sk}</span> <span class="green">${label}</span></div>`
+      }).join("")
+    : [
+        ["factory", "A", "FACTORY"],
+        ["kits", "B", "KITS"],
+        ["user", "C", "USER"],
+        ["fav", "D", "FAV"]
+      ].map(([id, sk, label]) =>
+        `<div class="${tab === id ? "soft-active" : ""}"><span class="sk">${sk}</span> <span class="green">${label}</span></div>`
+      ).join("")
 
   return `
     <div class="lcd-screen library-screen">
       <div class="lcd-status">
         <span class="pink">BPM ${state.bpm}</span>
-        <span class="status-mid">SOUND LIBRARY</span>
+        <span class="status-mid">${pick ? "PICK FOR PAD" : "SOUND LIBRARY"}</span>
         <span class="battery" title="battery"></span>
       </div>
       <div class="lcd-macros">

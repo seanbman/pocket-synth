@@ -126,12 +126,12 @@ export async function saveFavorites(ids) {
 
 export function defaultPads() {
   return [
-    { pad: 1, soundId: "kick-01", level: 1, pan: 0, mode: "gate" },
-    { pad: 2, soundId: null, level: 1, pan: 0, mode: "gate" },
-    { pad: 3, soundId: "snare-01", level: 1, pan: 0, mode: "gate" },
-    { pad: 4, soundId: null, level: 1, pan: 0, mode: "gate" },
-    { pad: 5, soundId: "hat-01", level: 1, pan: 0, mode: "gate" },
-    { pad: 6, soundId: null, level: 1, pan: 0, mode: "gate" }
+    { pad: 1, soundId: "kick-01", level: 1, pan: 0, mode: "oneshot" },
+    { pad: 2, soundId: "clap-01", level: 1, pan: 0, mode: "oneshot" },
+    { pad: 3, soundId: "snare-01", level: 1, pan: 0, mode: "oneshot" },
+    { pad: 4, soundId: "tom-01", level: 1, pan: 0, mode: "oneshot" },
+    { pad: 5, soundId: "hat-01", level: 1, pan: 0, mode: "oneshot" },
+    { pad: 6, soundId: "openhat-01", level: 1, pan: 0, mode: "oneshot" }
   ]
 }
 
@@ -151,6 +151,7 @@ export function defaultProject() {
     space: 0.24,
     delay: 0,
     root: "C3",
+    padBank: "KIT TIGHT",
     pads: defaultPads()
   }
 }
