@@ -1,0 +1,57 @@
+---
+description: Use grapher before acting; ingest dirs with LLM understanding of files/images
+alwaysApply: true
+---
+
+# grapher — shared agent knowledge
+
+## Before acting
+
+```bash
+grapher search "<what you need>"
+grapher get <id>
+grapher neighbors <id> --depth 2
+```
+
+## Ingest a directory (LLM does the understanding)
+
+grapher does **not** OCR or vision — **you** read/view files, then write grounded summaries into the graph.
+
+```bash
+grapher ingest ./path/to/dir          # stubs pending nodes for docs/images
+# optional: grapher scan ./path       # status only, no writes
+```
+
+For **each** item in `pending`:
+
+1. Open the file: `Read` for text; for images use the image Read tool so you actually see it
+2. Write a concise, factual summary (what it is, key facts, how it relates to the project)
+3. Upsert and clear pending:
+
+```bash
+grapher add --id <node_id> --type document|image --title "<name>" \
+  --path <path> --content "<your summary>" --tags relevant,tags
+```
+
+Long summary:
+
+```bash
+grapher add --id <node_id> --type image --title "..." --path "..." --content - <<'EOF'
+...summary...
+EOF
+```
+
+4. `grapher link` related nodes (`references`, `depicts`, `applies_to`, `related`, …)
+
+## Persist other discoveries
+
+```bash
+grapher add --type finding --title "..." --content "..." --tags ...
+```
+
+Rules:
+
+- Prefer search over re-deriving known context
+- Summaries in `content`; originals via `--path` — do not dump whole files into the graph
+- After ingest, process **all** pending (or say what’s left) before moving on
+- `.grapher/knowledge.json` is shared memory across agents/sessions

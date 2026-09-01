@@ -1,0 +1,3865 @@
+{
+  "version": 1,
+  "nodes": {
+    "document-cassio-v1-complete-operating-man-7fc14f07b2": {
+      "id": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "type": "document",
+      "title": "CASSIO V1 Complete Operating Manual",
+      "content": "Canonical 50-page V1 product/operating spec for CASSIO: browser-based pocket synth/sampler/looper (no MIDI/USB workflow). Freezes the physical front panel (display, M1/M2 context knobs, M3=master volume, soft keys A-D, pads 1-6, BACK/MENU, D-pad+OK, STOP/PLAY/REC/TAP, mini keyboard, onboard mic). Scope covers performance, sound library, shaping (filter, A/R, two-band EQ, simple reverb/delay), mic/file sampling, 6-track loop (record/overdub/replace/mute/solo/undo), 6-lane 16-step sequencer, mixer, projects, and settings. Documents six top-level menu areas (PLAY/LOOP/SOUND/MIX/PROJECT/SETTINGS), Screens 01–38 with hardware mappings, plus appendices for factory content, library rules, sound-engine semantics, recording behavior, persistence (IndexedDB/OPFS recommended), and V1 boundaries. Hardware verdict: panel is sufficient; future work is digital UI, assets, and Web Audio engine.\n",
+      "path": "docs/CASSIO_V1_Complete_Operating_Manual.pdf",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "spec",
+        "operating-manual",
+        "hardware",
+        "web-audio"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:05:32+00:00"
+      },
+      "created_at": "2026-09-01T05:00:08+00:00",
+      "updated_at": "2026-09-01T05:05:32+00:00"
+    },
+    "concept-cassio-project": {
+      "id": "concept-cassio-project",
+      "type": "concept",
+      "title": "CASSIO project (this repo)",
+      "content": "CASSIO V1: Rails 8.1 instrument app + grapher knowledge from operating manual. Run: bin/rails s (or PORT=3001 if 3000 busy). Root / is the pocket synth UI. Knowledge in .grapher/; docs/ has PDF and manual-assets. Do not use graphify-out.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "project",
+        "context"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:05:36+00:00",
+      "updated_at": "2026-09-01T05:53:03+00:00"
+    },
+    "finding-consult-grapher-before-changes": {
+      "id": "finding-consult-grapher-before-changes",
+      "type": "finding",
+      "title": "Consult grapher before changes",
+      "content": "User preference for this workspace: before changing anything, consult grapher (search/get/neighbors) and keep the graph updated. Prefer grapher search over re-deriving known context. After ingesting files, enrich all pending stubs. Shared memory is .grapher/knowledge.json.\n",
+      "path": null,
+      "tags": [
+        "process",
+        "grapher",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:05:37+00:00",
+      "updated_at": "2026-09-01T05:05:37+00:00"
+    },
+    "image-p01-cover-8c5dcf373e": {
+      "id": "image-p01-cover-8c5dcf373e",
+      "type": "image",
+      "title": "Cover photo: CASSIO hardware",
+      "content": "Top-down photo of pink CASSIO pocket unit with black controls. Shows full front panel: color display (retro green/pink UI with SEQUENCE menu), soft keys A-D, knobs M1/M2/M3, pads 1-6 with LEDs, BACK/MENU, D-pad+OK, TRANSPORT (STOP/PLAY/REC/TAP), and 13-key mini keyboard. Enclosure subtitle reads POCKET MIDI SYNTH / SAMPLER (manual notes this should be corrected to omit MIDI).",
+      "path": "docs/manual-assets/p01-cover.jpg",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:09:54+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:09:54+00:00"
+    },
+    "image-p03-industrial-design-4808395220": {
+      "id": "image-p03-industrial-design-4808395220",
+      "type": "image",
+      "title": "Industrial design: numbered front panel",
+      "content": "B/W callout diagram of CASSIO front panel with legend items 1-21: display, M1/M2/M3 knobs, soft keys A-D, pads 1-6, BACK/MENU, navigation cluster with OK, STOP/PLAY/REC/TAP, mini keyboard. Title POCKET SYNTH / SAMPLER. Screen mock in diagram shows SEQUENCE menu and step grid.",
+      "path": "docs/manual-assets/p03-industrial-design.jpg",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:09:56+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:09:56+00:00"
+    },
+    "image-p06-screen-01-boot-1378e9148d": {
+      "id": "image-p06-screen-01-boot-1378e9148d",
+      "type": "image",
+      "title": "Screen 01: Boot / audio engine",
+      "content": "Black boot splash: large CASSIO title, magenta subtitle POCKET SYNTH / SAMPLER, 12-block progress bar (~9 green filled), status LOADING AUDIO ENGINE.... Minimal dark UI with magenta/green accents.",
+      "path": "docs/manual-assets/p06-screen-01-boot.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:09:57+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:09:57+00:00"
+    },
+    "image-p07-screen-02-play-home-9e5c1836cf": {
+      "id": "image-p07-screen-02-play-home-9e5c1836cf",
+      "type": "image",
+      "title": "Screen 02: PLAY performance home",
+      "content": "PLAY home: status BPM 120 + battery. M1 TONE, M2 FX, M3 VOLUME. Sound GLASS POLY with OCT 0, VOICE POLY, bar visualizer. Secondary: KEY C, PAD BANK A, HOLD OFF. Soft keys A OCT-, B OCT+, C HOLD, D LIBRARY.",
+      "path": "docs/manual-assets/p07-screen-02-play-home.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:09:59+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:09:59+00:00"
+    },
+    "image-p08-screen-03-main-menu-7b67056705": {
+      "id": "image-p08-screen-03-main-menu-7b67056705",
+      "type": "image",
+      "title": "Screen 03: Main menu",
+      "content": "Main MENU with six areas: PLAY, LOOP, SOUND (selected pink), MIX, PROJECT, SETTINGS. Hint text: HOLD BACK/MENU FROM ANY SCREEN; TRANSPORT KEEPS RUNNING WHILE MENU IS OPEN. Soft keys A OPEN, B UP, C DOWN, D CLOSE.",
+      "path": "docs/manual-assets/p08-screen-03-main-menu.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:00+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:00+00:00"
+    },
+    "image-p09-screen-04-sound-library-v1-bf14090f1c": {
+      "id": "image-p09-screen-04-sound-library-v1-bf14090f1c",
+      "type": "image",
+      "title": "Screen 04: Sound Library (v1 soft keys)",
+      "content": "SOUND LIBRARY under FACTORY/SYNTH. List: Glass Poly (selected), Neon Lead, Bit Pluck, Tape Pad, Pulse Stack. Detail: POLY/C3, M1 Brightness, M2 Space; OK LOAD SOUND; keys/pads preview. M1/M2 preview tone/FX, M3 volume. Soft keys A FACTORY, B USER, C REC, D FAV.",
+      "path": "docs/manual-assets/p09-screen-04-sound-library-v1.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:01+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:01+00:00"
+    },
+    "image-p09-screen-04-sound-library-v2-4d9534db6b": {
+      "id": "image-p09-screen-04-sound-library-v2-4d9534db6b",
+      "type": "image",
+      "title": "Screen 04: Sound Library (v2 soft keys)",
+      "content": "Alternate Sound Library mock: same list/detail as v1 but OK opens SOUND DETAIL; soft keys A FACTORY, B USER, C FAVORITES, D SAMPLER (differs from v1 REC/FAV).",
+      "path": "docs/manual-assets/p09-screen-04-sound-library-v2.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:03+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:03+00:00"
+    },
+    "image-p10-screen-05-sound-detail-d2a7535ac9": {
+      "id": "image-p10-screen-05-sound-detail-d2a7535ac9",
+      "type": "image",
+      "title": "Screen 05: Sound Detail",
+      "content": "SOUND DETAIL for GLASS POLY (FACTORY/SYNTH/POLY). Params: ROOT C3, VOICE POLY, SOURCE FACTORY, PAD MODE GATE. Macros box: M1 Brightness, M2 Space; note editing factory saves user copy. Soft keys A USE KEYS, B EDIT, C ASSIGN, D FAVORITE. M1 BRIGHT, M2 SPACE, M3 VOLUME.",
+      "path": "docs/manual-assets/p10-screen-05-sound-detail.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:04+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:04+00:00"
+    },
+    "image-p11-screen-06-sound-edit-shape-5d4e3a8f16": {
+      "id": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
+      "type": "image",
+      "title": "Screen 06: Sound Edit Shape",
+      "content": "SOUND EDIT Shape for GLASS POLY. M1 CUTOFF, M2 RESONANCE, M3 VOLUME. Bars: Cutoff 68%, Resonance 34%. Hints: arrows change voice mode/drive; BACK save or discard. Soft keys A SHAPE (active), B ENV, C EQ, D FX.",
+      "path": "docs/manual-assets/p11-screen-06-sound-edit-shape.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:28+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:28+00:00"
+    },
+    "image-p12-screen-07-sound-edit-envelop-8a5879be5b": {
+      "id": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
+      "type": "image",
+      "title": "Screen 07: Sound Edit Envelope",
+      "content": "SOUND EDIT Envelope for GLASS POLY. M1 ATTACK, M2 RELEASE, M3 VOLUME. Attack 18 ms, Release 480 ms. Hints: short attack = sharper start; long release = longer tail. Soft keys A SHAPE, B ENV, C EQ, D FX.",
+      "path": "docs/manual-assets/p12-screen-07-sound-edit-envelope.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:30+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:30+00:00"
+    },
+    "image-p13-screen-08-sound-edit-eq-5125a35d96": {
+      "id": "image-p13-screen-08-sound-edit-eq-5125a35d96",
+      "type": "image",
+      "title": "Screen 08: Sound Edit EQ",
+      "content": "SOUND EDIT EQ for GLASS POLY. M1 BASS, M2 TREBLE, M3 VOLUME. Bass +2.0 dB (low shelf), Treble +1.5 dB (high shelf), range -12 to +12 dB. Soft keys A SHAPE, B ENV, C EQ (active), D FX.",
+      "path": "docs/manual-assets/p13-screen-08-sound-edit-eq.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:31+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:31+00:00"
+    },
+    "image-p14-screen-09-sound-edit-fx-ce9e56a547": {
+      "id": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
+      "type": "image",
+      "title": "Screen 09: Sound Edit FX",
+      "content": "SOUND EDIT FX for GLASS POLY. M1 REVERB, M2 DELAY, M3 VOLUME. Reverb 24%, Delay 12%. Notes: FX stored with user sound; M3 remains master volume. Soft keys A SHAPE, B ENV, C EQ, D FX.",
+      "path": "docs/manual-assets/p14-screen-09-sound-edit-fx.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:32+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:32+00:00"
+    },
+    "image-p15-screen-10-save-sound-a9e6553ed8": {
+      "id": "image-p15-screen-10-save-sound-a9e6553ed8",
+      "type": "image",
+      "title": "Screen 10: Save Sound",
+      "content": "SAVE SOUND for GLASS POLY - EDITED. Explains factory presets read-only; Save As creates user sound with current Shape/Env/EQ/FX; existing user sounds may save in place with D. Soft keys A CANCEL, B NAME, C SAVE AS, D SAVE.",
+      "path": "docs/manual-assets/p15-screen-10-save-sound.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:34+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:34+00:00"
+    },
+    "image-p16-screen-11-pad-assignment-0c5af9cf2d": {
+      "id": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
+      "type": "image",
+      "title": "Screen 11: Pad Assignment",
+      "content": "PAD ASSIGN assigning GLASS POLY. M1 PAD LEVEL, M2 PAD PAN, M3 VOLUME. 2x3 pad grid: Pad1 Kick01, Pad2 EMPTY (selected pink), Pad3 Snare01, Pad4 Empty, Pad5 Hat01, Pad6 Empty. Hint: press physical pad to select. Soft keys A CLEAR, B MODE, C PREVIEW, D DONE.",
+      "path": "docs/manual-assets/p16-screen-11-pad-assignment.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:35+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:35+00:00"
+    },
+    "image-p17-screen-12-sampler-home-313d164399": {
+      "id": "image-p17-screen-12-sampler-home-313d164399",
+      "type": "image",
+      "title": "Screen 12: Sampler Home",
+      "content": "SAMPLER home. Options: Record from onboard mic (selected), Import from file system, Open user sample. Note: new recordings/imports enter same sample editor. M1/M2 preview tone/FX, M3 volume. Soft keys A MIC, B FILE, C OPEN, D BACK.",
+      "path": "docs/manual-assets/p17-screen-12-sampler-home.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:36+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:36+00:00"
+    },
+    "image-p18-screen-13-mic-record-74fad02713": {
+      "id": "image-p18-screen-13-mic-record-74fad02713",
+      "type": "image",
+      "title": "Screen 13: Microphone Record",
+      "content": "MIC RECORD active (red record indicator). Source ONBOARD MICROPHONE, timer 00:07.42, level meter bars. M1 INPUT GAIN, M2 THRESHOLD, M3 VOLUME. Commands: REC start/overwrite, STOP finish, PLAY audition; monitor default OFF. Soft keys A CANCEL, B COUNT-IN, C MONITOR, D SAVE.",
+      "path": "docs/manual-assets/p18-screen-13-mic-record.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:10:38+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:10:38+00:00"
+    },
+    "image-p19-screen-14-import-file-5e06069587": {
+      "id": "image-p19-screen-14-import-file-5e06069587",
+      "type": "image",
+      "title": "Screen 14: Import File",
+      "content": "IMPORT FILE / IMPORT AUDIO. Formats WAV/MP3/OGG/M4A*; D opens system file picker or choose recent imports. Notes: format support follows browser decoder; native picker outside CASSIO UI. Soft keys A CANCEL, B TYPES, C RECENTS, D OPEN. M3 VOLUME.",
+      "path": "docs/manual-assets/p19-screen-14-import-file.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:02+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:02+00:00"
+    },
+    "image-p20-screen-15-sample-edit-trim-da078db4b7": {
+      "id": "image-p20-screen-15-sample-edit-trim-da078db4b7",
+      "type": "image",
+      "title": "Screen 15: Sample Edit Trim",
+      "content": "SAMPLE EDIT Trim for REC_001. Green stereo waveform with pink START/END markers; outside region dimmed. M1 START, M2 END, M3 VOLUME. Hints: M1/M2 move non-destructive trim; OK zoom; arrows scroll. Soft keys A PLAY, B NORMALIZE, C TOOLS, D TUNE.",
+      "path": "docs/manual-assets/p20-screen-15-sample-edit-trim.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:04+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:04+00:00"
+    },
+    "image-p21-screen-16-sample-tools-849e054cc7": {
+      "id": "image-p21-screen-16-sample-tools-849e054cc7",
+      "type": "image",
+      "title": "Screen 16: Sample Tools",
+      "content": "SAMPLE TOOLS list: Normalize (selected) raise peak to safe max; Reverse play source backwards; Reset remove sample edits. Note: trim points remain non-destructive. Soft keys A NORMALIZE, B REVERSE, C RESET, D BACK.",
+      "path": "docs/manual-assets/p21-screen-16-sample-tools.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:05+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:05+00:00"
+    },
+    "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa": {
+      "id": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
+      "type": "image",
+      "title": "Screen 17: Sample Edit Tune",
+      "content": "SAMPLE EDIT Tune for REC_001. M1 SEMITONES (+05), M2 FINE (-12 cents), M3 VOLUME. Root note C3. Note: pitch changes playback rate in V1. Soft keys A RESET, B REVERSE, C ROOT, D MODE.",
+      "path": "docs/manual-assets/p22-screen-17-sample-edit-tune.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:06+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:06+00:00"
+    },
+    "image-p23-screen-18-sample-edit-playba-ae3eefc0a4": {
+      "id": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
+      "type": "image",
+      "title": "Screen 18: Sample Playback (D=TOOLS)",
+      "content": "SAMPLE EDIT Playback for REC_001. Modes: One-Shot play to end (selected), Gate plays while held, Loop repeats region. M1 ATTACK, M2 RELEASE, M3 VOLUME; attack/release smooth edges. Soft keys A ONE-SHOT, B GATE, C LOOP, D TOOLS.",
+      "path": "docs/manual-assets/p23-screen-18-sample-edit-playback-v1.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:07+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:07+00:00"
+    },
+    "image-p23-screen-18-sample-edit-playba-d702dd7b1c": {
+      "id": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
+      "type": "image",
+      "title": "Screen 18: Sample Playback (D=EQ)",
+      "content": "Alternate Playback mock same modes/params as v1 but soft key D is EQ instead of TOOLS (navigation variant toward sample EQ page).",
+      "path": "docs/manual-assets/p23-screen-18-sample-edit-playback-v2.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:09+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:09+00:00"
+    },
+    "image-p24-screen-19-sample-edit-eq-b7080f1234": {
+      "id": "image-p24-screen-19-sample-edit-eq-b7080f1234",
+      "type": "image",
+      "title": "Screen 19: Sample Edit EQ",
+      "content": "SAMPLE EDIT EQ for REC_001. M1 BASS, M2 TREBLE, M3 VOLUME. Both bass/treble at 0.0 dB. Notes: same 2-band EQ as instrument edit; saved with user sample preset. Soft keys A TRIM, B TUNE, C MODE, D EQ (active).",
+      "path": "docs/manual-assets/p24-screen-19-sample-edit-eq.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:10+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:10+00:00"
+    },
+    "image-p25-screen-20-save-sample-ba14c613a3": {
+      "id": "image-p25-screen-20-save-sample-ba14c613a3",
+      "type": "image",
+      "title": "Screen 20: Save Sample",
+      "content": "SAVE SAMPLE for REC_001. Destination USER LIBRARY, Playback ONE-SHOT, Root C3. Notes: save creates user sound; original source kept until storage cleanup. Soft keys A CANCEL, B NAME, C ASSIGN, D SAVE. M3 VOLUME.",
+      "path": "docs/manual-assets/p25-screen-20-save-sample.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:12+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:12+00:00"
+    },
+    "image-p26-screen-21-loop-track-view-v1-faf57e7578": {
+      "id": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
+      "type": "image",
+      "title": "Screen 21: LOOP Track View (mute/solo)",
+      "content": "LOOP track view playing: 4 BAR, Q 1/16, MON ALL. Six tracks Drums/Bass/Chord(selected)/Lead/Fx/Empty with colored clip blocks and playhead. M1 TRACK LEVEL, M2 PAN, M3 VOLUME. Soft keys A ARM, B MUTE, C SOLO, D UNDO. Hint: up/down select track; pads still play sounds.",
+      "path": "docs/manual-assets/p26-screen-21-loop-track-view-v1.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:38+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:38+00:00"
+    },
+    "image-p26-screen-21-loop-track-view-v2-a79e18f68d": {
+      "id": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
+      "type": "image",
+      "title": "Screen 21: LOOP Track View (seq/options)",
+      "content": "Alternate LOOP track view same grid/state as v1 but soft keys A ARM, B SEQ, C OPTIONS, D UNDO; hint adds OK TRACK MENU. Navigation variant toward sequencer and loop options.",
+      "path": "docs/manual-assets/p26-screen-21-loop-track-view-v2.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:40+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:40+00:00"
+    },
+    "image-p27-screen-22-loop-track-menu-db856743c2": {
+      "id": "image-p27-screen-22-loop-track-menu-db856743c2",
+      "type": "image",
+      "title": "Screen 22: Loop Track Menu",
+      "content": "TRACK 3 CHORD menu. M1 LEVEL, M2 PAN, M3 VOLUME. Params: Record Mode Overdub, Monitor During Rec On, Mute Off, Solo Off, Level 82%, Pan Center. Soft keys A MODE, B MONITOR, C CLEAR, D DONE.",
+      "path": "docs/manual-assets/p27-screen-22-loop-track-menu.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:41+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:41+00:00"
+    },
+    "image-p28-screen-23-loop-options-fa60a40139": {
+      "id": "image-p28-screen-23-loop-options-fa60a40139",
+      "type": "image",
+      "title": "Screen 23: Loop Options",
+      "content": "LOOP OPTIONS: Length 4 bars, Quantize 1/16, Count-in 1 bar, Play During Rec ALL (selected; hint ALL/MONITORED/OFF), Metronome On, Tempo 120 BPM. Soft keys A LENGTH, B QUANT, C MONITOR, D DONE. M3 VOLUME.",
+      "path": "docs/manual-assets/p28-screen-23-loop-options.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:43+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:43+00:00"
+    },
+    "image-p29-screen-24-step-sequencer-a047895360": {
+      "id": "image-p29-screen-24-step-sequencer-a047895360",
+      "type": "image",
+      "title": "Screen 24: Step Sequencer",
+      "content": "SEQUENCER playing Pattern A, 16 steps, Lane 1 Kick. 6x16 step grid with active steps (lane1 pink, others green) and playhead. M1 SWING, M2 GATE, M3 VOLUME. Hint: arrows move cursor, OK toggle step, pad selects lane. Soft keys A PAGE, B LENGTH, C SHIFT, D CLEAR.",
+      "path": "docs/manual-assets/p29-screen-24-step-sequencer.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:44+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:44+00:00"
+    },
+    "image-p30-screen-25-step-edit-6b7131d63a": {
+      "id": "image-p30-screen-25-step-edit-6b7131d63a",
+      "type": "image",
+      "title": "Screen 25: Step Edit",
+      "content": "STEP EDIT for Lane 2 / Step 05. State ON, Velocity 92, Gate 75%, Micro Shift +0 ms. M1 VELOCITY, M2 GATE, M3 VOLUME. Soft keys A OFF, B ACCENT, C TIE, D DONE.",
+      "path": "docs/manual-assets/p30-screen-25-step-edit.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:45+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:45+00:00"
+    },
+    "image-p31-screen-26-mixer-5af70d21a7": {
+      "id": "image-p31-screen-26-mixer-5af70d21a7",
+      "type": "image",
+      "title": "Screen 26: Mixer",
+      "content": "MIX six vertical faders: Drum 72, Bass 84 (selected pink), Chrd 65, Lead 50, Fx 38, Track6 00. M1 TRACK LEVEL, M2 PAN, M3 VOLUME apply to selected. Soft keys A MUTE, B SOLO, C RESET, D LOOP.",
+      "path": "docs/manual-assets/p31-screen-26-mixer.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:46+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:46+00:00"
+    },
+    "image-p32-screen-27-projects-79156bd48a": {
+      "id": "image-p32-screen-27-projects-79156bd48a",
+      "type": "image",
+      "title": "Screen 27: Projects",
+      "content": "PROJECTS list: First Jam (selected), Night Bus 08:14, Loop Idea 02:06, New Project 00:00. Note: project stores tempo, tracks, patterns, sound assignments and edit settings. Soft keys A NEW, B SAVE, C RENAME, D OPEN. M3 VOLUME.",
+      "path": "docs/manual-assets/p32-screen-27-projects.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:11:48+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:11:48+00:00"
+    },
+    "image-p33-screen-28-save-project-6af5d2cf6f": {
+      "id": "image-p33-screen-28-save-project-6af5d2cf6f",
+      "type": "image",
+      "title": "Screen 28: Save Project",
+      "content": "SAVE PROJECT for FIRST JAM: 6 loop tracks, 2 user samples referenced, Pattern A / 120 BPM. Notes: Save updates this project; Save As creates new copy. Soft keys A CANCEL, B NAME, C SAVE AS, D SAVE. M3 VOLUME.",
+      "path": "docs/manual-assets/p33-screen-28-save-project.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:15+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:15+00:00"
+    },
+    "image-p34-screen-29-text-entry-2fd5c8e60c": {
+      "id": "image-p34-screen-29-text-entry-2fd5c8e60c",
+      "type": "image",
+      "title": "Screen 29: Text Entry",
+      "content": "TEXT ENTRY name field showing REC_001_BASS with character grid A-Z, 0-9, underscore, hyphen; B selected. Soft keys A SPACE, B DELETE, C CANCEL, D DONE. Used for naming sounds/projects. M3 VOLUME.",
+      "path": "docs/manual-assets/p34-screen-29-text-entry.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:16+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:16+00:00"
+    },
+    "image-p35-screen-30-settings-home-33d632f163": {
+      "id": "image-p35-screen-30-settings-home-33d632f163",
+      "type": "image",
+      "title": "Screen 30: Settings Home",
+      "content": "SETTINGS menu: Audio (selected), Metronome, Display, Storage, Permissions, About. Right panel preview when Audio selected: Web Audio Engine, Onboard Microphone, Local Project Storage, File Import/Export. Soft keys A OPEN, B UP, C DOWN, D BACK.",
+      "path": "docs/manual-assets/p35-screen-30-settings-home.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:17+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:17+00:00"
+    },
+    "image-p36-screen-31-settings-master-au-3583e174e1": {
+      "id": "image-p36-screen-31-settings-master-au-3583e174e1",
+      "type": "image",
+      "title": "Screen 31: Settings Master Audio",
+      "content": "SETTINGS/AUDIO Master EQ. M1 BASS, M2 TREBLE, M3 VOLUME. Bass and Treble at 0.0 dB, range -12 to +12. Note: master EQ applies after the mixer. Soft keys A RESET, B LIMITER, C TEST, D BACK.",
+      "path": "docs/manual-assets/p36-screen-31-settings-master-audio.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:19+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:19+00:00"
+    },
+    "image-p37-screen-32-settings-metronome-4fef9b8e8c": {
+      "id": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
+      "type": "image",
+      "title": "Screen 32: Settings Metronome",
+      "content": "SETTINGS/METRO: Metronome On, Click Sound Block, Count-in 1 Bar, Accent Beat 1 On. M1 CLICK LEVEL, M2 COUNT-IN, M3 VOLUME. Hint: Hold TAP to toggle metronome anywhere. Soft keys A SOUND, B COUNT-IN, C LEVEL, D BACK.",
+      "path": "docs/manual-assets/p37-screen-32-settings-metronome.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:20+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:20+00:00"
+    },
+    "image-p38-screen-33-settings-display-e0529c2f4a": {
+      "id": "image-p38-screen-33-settings-display-e0529c2f4a",
+      "type": "image",
+      "title": "Screen 33: Settings Display",
+      "content": "SETTINGS/DISPLAY: Brightness 80%, Auto Dim 2 min, Dim Level 25%, Screen Sleep 10 min. M1 BRIGHTNESS, M2 DIM LEVEL, M3 VOLUME. Soft keys A DIM, B TIMEOUT, C RESET, D BACK.",
+      "path": "docs/manual-assets/p38-screen-33-settings-display.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:21+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:21+00:00"
+    },
+    "image-p39-screen-34-settings-storage-cdd01431e5": {
+      "id": "image-p39-screen-34-settings-storage-cdd01431e5",
+      "type": "image",
+      "title": "Screen 34: Settings Storage",
+      "content": "SETTINGS/STORAGE Local Storage used 62%: User Sounds 34, Projects 12, Orphaned Sources 3. Note: cleanup never deletes a referenced sample. Soft keys A SAMPLES, B CLEANUP, C PERSIST, D BACK. M3 VOLUME.",
+      "path": "docs/manual-assets/p39-screen-34-settings-storage.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:23+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:23+00:00"
+    },
+    "image-p40-screen-35-settings-permissio-19f191d5b1": {
+      "id": "image-p40-screen-35-settings-permissio-19f191d5b1",
+      "type": "image",
+      "title": "Screen 35: Settings Permissions",
+      "content": "SETTINGS/PERM Microphone ALLOWED with onboard mic test level meter. Notes: CASSIO requests mic access only when needed; if blocked change host browser permission. Soft keys A TEST MIC, B REQUEST, C HELP, D BACK. M3 VOLUME.",
+      "path": "docs/manual-assets/p40-screen-35-settings-permissions.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:24+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:24+00:00"
+    },
+    "image-p41-screen-36-about-v1-ff3d0f1de1": {
+      "id": "image-p41-screen-36-about-v1-ff3d0f1de1",
+      "type": "image",
+      "title": "Screen 36: About (storage/import)",
+      "content": "ABOUT CASSIO V1.0 Pocket Synth/Sampler. Specs: Audio Engine Web Audio, Mic Input Onboard, Sample Import File System, Storage Local. Build 1.0.0. Soft keys A LICENSE, B STORAGE, C DIAG, D BACK.",
+      "path": "docs/manual-assets/p41-screen-36-about-v1.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:52+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:52+00:00"
+    },
+    "image-p41-screen-36-about-v2-8fe1804b60": {
+      "id": "image-p41-screen-36-about-v2-8fe1804b60",
+      "type": "image",
+      "title": "Screen 36: About (MIDI/USB not used)",
+      "content": "ABOUT variant emphasizing V1 boundaries: Audio Engine Web Audio, Mic Onboard, Control I/O Front Panel, MIDI/USB NOT USED. Soft keys A LICENSE, B STORAGE, C DIAG, D BACK. M1/M2/M3 VOLUME labels shown.",
+      "path": "docs/manual-assets/p41-screen-36-about-v2.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:53+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:53+00:00"
+    },
+    "image-p41-screen-36-about-v3-520449e7a4": {
+      "id": "image-p41-screen-36-about-v3-520449e7a4",
+      "type": "image",
+      "title": "Screen 36: About (minimal soft keys)",
+      "content": "ABOUT variant with same core specs as v1 (Web Audio, onboard mic, file-system import, local storage) but soft keys A-C unlabeled and only D BACK active—minimal chrome mock.",
+      "path": "docs/manual-assets/p41-screen-36-about-v3.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:54+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:54+00:00"
+    },
+    "image-p42-screen-37-mic-blocked-926c5e4be0": {
+      "id": "image-p42-screen-37-mic-blocked-926c5e4be0",
+      "type": "image",
+      "title": "Screen 37: Microphone Blocked",
+      "content": "MIC RECORD error modal MICROPHONE BLOCKED: cannot record until permission allowed; link OPEN SETTINGS > PERMISSIONS. Soft keys A BACK, B PERMISSIONS, C RETRY, D HELP. Shown when browser mic access denied.",
+      "path": "docs/manual-assets/p42-screen-37-mic-blocked.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:55+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:55+00:00"
+    },
+    "image-p43-screen-38-destructive-confir-24f60c8554": {
+      "id": "image-p43-screen-38-destructive-confir-24f60c8554",
+      "type": "image",
+      "title": "Screen 38: Destructive Confirmation",
+      "content": "CONFIRM dialog DELETE USER SAMPLE? for REC_001_BASS. Warning: projects using this sample will prevent deletion. Soft keys A CANCEL, B/C blank, D DELETE.",
+      "path": "docs/manual-assets/p43-screen-38-destructive-confirm.png",
+      "tags": [
+        "ingest",
+        "cassio",
+        "v1",
+        "screen",
+        "mockup",
+        "manual-asset"
+      ],
+      "meta": {
+        "source": "ingest",
+        "enriched_at": "2026-09-01T05:12:57+00:00"
+      },
+      "created_at": "2026-09-01T05:09:15+00:00",
+      "updated_at": "2026-09-01T05:12:57+00:00"
+    },
+    "finding-manual-assets-ingested": {
+      "id": "finding-manual-assets-ingested",
+      "type": "finding",
+      "title": "PDF screen images ingested to grapher",
+      "content": "Extracted 45 unique images from CASSIO_V1_Complete_Operating_Manual.pdf into docs/manual-assets/ (cover, industrial-design callouts, Screens 01-38 including soft-key variants). Each is an enriched grapher image node linked with depicts to the manual document. 3 identical page-level RGB/ICC duplicates were dropped.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "images",
+        "ingest"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:13:18+00:00",
+      "updated_at": "2026-09-01T05:13:18+00:00"
+    },
+    "concept-v1-scope": {
+      "id": "concept-v1-scope",
+      "type": "concept",
+      "title": "V1 Scope capabilities",
+      "content": "CASSIO V1 freezes the physical panel. Capabilities: Performance (chromatic mini keyboard, octave, hold, factory/user sounds, 6 pads); Sound library (factory, user, mic recordings, imports, favorites); Sound shaping (filter/shape, attack/release, two-band bass/treble EQ, simple reverb/delay); Sampling (mic record, file import, trim, normalize, reverse, tune, root note, one-shot/gate/loop, save/assign); Looping (6 tracks: record/overdub/replace/mute/solo/undo, monitoring, length, count-in, quantize); Sequencing (6-lane step sequencer, 16-step base page, pattern length, swing, gate, velocity/accent/tie); Mixing (track level/pan, mute/solo, master output); Projects (new/save/save-as/open/rename, automatic recovery); System (master bass/treble EQ, metronome, brightness, storage, mic permissions). Per-sound EQ: M1=Bass M2=Treble -12..+12 dB (low/high shelf). Settings>Audio has second master Bass/Treble after mixer.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "scope",
+        "spec"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:36+00:00",
+      "updated_at": "2026-09-01T05:29:36+00:00"
+    },
+    "concept-hardware-front-panel": {
+      "id": "concept-hardware-front-panel",
+      "type": "concept",
+      "title": "Front panel control vocabulary",
+      "content": "Permanent controls: Display (screens + contextual labels); M1 context param 1; M2 context param 2; M3 master output volume in V1; soft keys A-D (labels on screen); Pads 1-6 (performance; may become lane select); BACK/MENU (tap=back/cancel, hold=main menu); D-pad+OK (focus, values, enter, confirm); STOP (stop transport, playhead to start; hold=all-notes-off panic); PLAY (play/pause loop or pattern); REC (record; during playback enter/leave overdub); TAP (tap tempo; hold=metronome toggle); Keyboard (current keyboard sound); Onboard mic (sampler source; monitor off by default). M1/M2 preferred as endless encoders. Enclosure-level (not front-panel workflow): mic, power, charging, audio out. Product subtitle: POCKET SYNTH / SAMPLER (not MIDI).\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "hardware",
+        "controls"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:38+00:00",
+      "updated_at": "2026-09-01T05:29:38+00:00"
+    },
+    "concept-global-behavior": {
+      "id": "concept-global-behavior",
+      "type": "concept",
+      "title": "Global control behavior",
+      "content": "Everywhere: M1/M2 change the two named top-of-display params (turning opens temporary value overlay). M3 always master volume — never saved track level or sample amplitude. BACK tap leave/cancel/up; hold opens main menu from anywhere. UP/DOWN lists/rows; LEFT/RIGHT horizontal/cursor/discrete values; OK enter/toggle/confirm. A-D execute bottom labels (blank=noop). PLAY start/pause; while stopped begins at start. STOP stop+return to beginning; hold STOP all-notes-off panic. REC from stopped: count-in then record selected loop track; while playing: overdub; during record: leave record keep playback. TAP: 2+ taps set BPM; hold TAP toggles metronome. Keyboard playable on performance/edit unless modal. Pads trigger assigned sounds unless screen says LANE/PAD SELECT. Status bar: BPM + battery; play/record symbol; no USB/MIDI status in V1.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "controls",
+        "global"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:40+00:00",
+      "updated_at": "2026-09-01T05:29:40+00:00"
+    },
+    "concept-navigation-map": {
+      "id": "concept-navigation-map",
+      "type": "concept",
+      "title": "Six top-level areas and workflows",
+      "content": "Hold BACK/MENU enters six areas: PLAY, LOOP, SOUND, MIX, PROJECT, SETTINGS. Branches: PLAY->Library->Sound Detail->Sound Edit/Pad Assign. LOOP->Tracks->Track Menu / Loop Options / Sequencer->Step Edit. SOUND->Sound Library / Sampler->Mic or File Import->Sample Editor->Save Sample. MIX->six-track level/pan mixer. PROJECT->list->Save/Save As/Rename/New. SETTINGS->Audio/Metronome/Display/Storage/Permissions/About. Fast workflows: Play a sound: Boot->PLAY->D LIBRARY->choose->OK->A USE KEYS. Record mic: Hold MENU->SOUND->D SAMPLER->A MIC->REC->STOP->edit->save. Import: Hold MENU->SOUND->SAMPLER->B FILE->D OPEN->edit->save. Make a loop: Hold MENU->LOOP->select track->REC->perform->REC exit overdub. Step program: LOOP->B SEQ->pad lane->arrows step->OK toggle. Save project: Hold MENU->PROJECT->B SAVE (+ text entry if naming).\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "navigation",
+        "menu"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:41+00:00",
+      "updated_at": "2026-09-01T05:29:41+00:00"
+    },
+    "concept-factory-library": {
+      "id": "concept-factory-library",
+      "type": "concept",
+      "title": "Factory sound library (Appendix A)",
+      "content": "Factory sounds are read-only; editing creates a User copy. Categories/macros (M1/M2): SYNTH — Glass Poly Brightness/Space; Neon Lead Cutoff/Drive; Bit Pluck Tone/Decay; Tape Pad Color/Space; Pulse Stack Width/Motion; Soft Chime Tone/Release; Hollow Bell Color/Decay; Rubber Mono Cutoff/Bite. BASS — Round Bass Tone/Decay; Sub Mono Harmonics/Release; Rubber Bass Cutoff/Bite; FM Bass Color/Snap; Dust Bass Tone/Drive; Pluck Bass Brightness/Decay. KEYS — Warm EP Tone/Tremolo; Toy Piano Color/Decay; Tape Piano Age/Space; Soft Organ Tone/Rotary; Bell Keys Brightness/Release; Lo-Fi Keys Filter/Wow. DRUMS — Kick01 Tone/Decay; Kick02 Punch/Decay; Snare01 Tone/Snap; Snare02 Body/Noise; Clap Tone/Width; Closed Hat Tone/Decay; Open Hat Tone/Decay; Low/High Tom Tone/Decay; Rim Tone/Room; Shaker Tone/Decay; Perc Hit Tone/Space. TEXTURE — Cassette Air Color/Motion; Vinyl Dust Tone/Density; Digital Rain Color/Motion; Breath Pad Tone/Space. FX — Rise/Fall Tone/Length; Impact Body/Space; Glitch Hit Color/Repeat.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "factory",
+        "sounds"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:43+00:00",
+      "updated_at": "2026-09-01T05:29:43+00:00"
+    },
+    "concept-glass-poly": {
+      "id": "concept-glass-poly",
+      "type": "concept",
+      "title": "Glass Poly factory synth",
+      "content": "Factory SYNTH preset Glass Poly. PLAY macros: M1 Tone/Brightness, M2 FX/Space (Appendix A: Brightness/Space). Sound Detail example: ROOT C3, VOICE POLY, SOURCE FACTORY, PAD MODE GATE; macros M1 Brightness, M2 Space; editing factory saves a user copy. Shape edit: Cutoff/Resonance. Envelope: Attack/Release. EQ: Bass/Treble shelves. FX: Reverb/Delay amounts. Default performance sound for V1 demos.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "factory",
+        "synth",
+        "glass-poly"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:45+00:00",
+      "updated_at": "2026-09-01T05:29:45+00:00"
+    },
+    "concept-library-rules": {
+      "id": "concept-library-rules",
+      "type": "concept",
+      "title": "Library rules (Appendix B)",
+      "content": "FACTORY: bundled read-only; edit always creates User copy; cannot delete factory assets. USER: saved sounds from edited factory, mic recordings, or imports. RECORDED/IMPORTED: filters inside User for mic vs import sources — not separate copies. FAVORITES: references to Factory or User; removing favorite never deletes sound. SOURCE AUDIO: stored once; multiple user sounds may reference with different trim/tune/EQ. DELETE: only when no project or user sound references item; destructive confirmation mandatory. EXPORT: user sample sources as WAV via browser download; Rendered Copy applies edits else Source Export original. STORAGE: persistent browser storage; show usage; warn before pressure causes recording failure.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "library",
+        "rules"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:47+00:00",
+      "updated_at": "2026-09-01T05:29:47+00:00"
+    },
+    "concept-sound-engine": {
+      "id": "concept-sound-engine",
+      "type": "concept",
+      "title": "Sound engine semantics (Appendix C)",
+      "content": "TONE/CUTOFF: darker low / brighter high harmonics. RESONANCE: boost around cutoff. ATTACK: time to full level. RELEASE: fade after key release. BASS EQ: low-shelf ~120Hz -12..+12dB. TREBLE EQ: high-shelf ~6kHz -12..+12dB. REVERB: wet amount. DELAY: amount; timing may follow tempo/preset. SAMPLE START/END: region in source buffer. NORMALIZE: peak to safe max, no compression. REVERSE: play region backward. COARSE/FINE TUNE: playback rate — pitch and duration move together in V1 (no pitch-preserving stretch). ROOT NOTE: keyboard note for base pitch. ONE-SHOT: plays to end. GATE: plays while held. LOOP (sample): repeats region until release/stop. TRACK LEVEL: non-destructive loop track volume. PAN: L/R. SWING: delay alternating seq subdivisions. GATE (SEQ): note duration relative to step.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "audio",
+        "engine"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:48+00:00",
+      "updated_at": "2026-09-01T05:29:48+00:00"
+    },
+    "concept-recording-behavior": {
+      "id": "concept-recording-behavior",
+      "type": "concept",
+      "title": "Loop recording behavior (Appendix D)",
+      "content": "NEW RECORD: REC while stopped starts selected track after count-in; becomes timing reference if no existing loop. OVERDUB: REC while playing adds pass; REC again stops adding, playback continues. REPLACE: if track mode Replace, next pass replaces after confirm/count-in. PLAY DURING REC ALL: all unmuted tracks audible. MONITORED: only tracks with Monitor ON. OFF: backing silent; metronome may play. UNDO: only most recent record/overdub — not library edits. METRONOME never in recorded audio. MIC SAMPLE MONITOR off by default (feedback). PAD/KEY MONITOR: always hear current performance while recording unless modal blocks input.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "loop",
+        "recording"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:50+00:00",
+      "updated_at": "2026-09-01T05:29:50+00:00"
+    },
+    "concept-persistence": {
+      "id": "concept-persistence",
+      "type": "concept",
+      "title": "Persistence (Appendix E)",
+      "content": "GLOBAL SETTINGS: master EQ, limiter preference, metronome click, display, storage permission/status, mic permission cache. PROJECT: BPM, key metadata, keyboard sound, pad assignments, loop tracks, loop options, sequencer patterns, mixer, octave/hold/voice where appropriate. USER SOUND: source ref, trim, tuning/root, playback mode, envelope, EQ, filter/shape, FX, name/favorite. SOURCE AUDIO: mic take or imported file once; referenced by sounds/projects. RECOVERY: rolling autosave of session. FACTORY LIBRARY: read-only app assets. Browser: IndexedDB or OPFS for media/state; request persistent storage; file picker/download for import/export. Manual should not expose implementation names unless troubleshooting.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "persistence",
+        "indexeddb"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:52+00:00",
+      "updated_at": "2026-09-01T05:29:52+00:00"
+    },
+    "concept-v1-boundaries": {
+      "id": "concept-v1-boundaries",
+      "type": "concept",
+      "title": "V1 boundaries (Appendix F)",
+      "content": "NO MIDI CONTROL: no external MIDI dependency; front panel self-contained. NO USB WORKFLOW: charging connector may exist but no USB device-management screen or USB sound import. FILE IMPORT: host browser/OS file picker; then all editing on CASSIO UI. PITCH/TIME: sampler tuning changes playback rate (pitch+duration together); pitch-preserving stretch later. DEEP SYNTHESIS: musical macros not full osc/mod matrix. MORE TRACKS: V1 fixes loop/mixer to six. TOUCH: no core workflow requires touch; native browser dialogs are only host UI exceptions. Hardware can be frozen: all V1 tasks reachable with display, M1/M2/M3, A-D, pads 1-6, BACK/MENU, nav cluster, transport, mini keyboard.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "boundaries"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:29:53+00:00",
+      "updated_at": "2026-09-01T05:29:53+00:00"
+    },
+    "concept-screen-01": {
+      "id": "concept-screen-01",
+      "type": "concept",
+      "title": "Screen 01: Boot / audio-engine initialization",
+      "content": "Screen 01: Boot / audio-engine initialization.\nGET THERE: Appears automatically after power/app launch.\nHARDWARE: No performance input is accepted until loading completes. STOP may still be treated as a panic command if the engine is partially initialized.\nWHAT IT DOES: No sound is produced until the audio context is ready. When initialization finishes, CASSIO enters PLAY using the last project or an empty project.\nSAVE/STATE: Last-open project ID and recovery state are read from local persistent storage.\nNOTES: If audio initialization fails, CASSIO should show an error instead of silently entering PLAY. 6 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-01"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:06+00:00",
+      "updated_at": "2026-09-01T05:30:06+00:00"
+    },
+    "concept-screen-02": {
+      "id": "concept-screen-02",
+      "type": "concept",
+      "title": "Screen 02: PLAY - performance home",
+      "content": "Screen 02: PLAY - performance home.\nGET THERE: Boot completes, or hold MENU -> PLAY.\nHARDWARE: M1 = preset-defined Tone macro. M2 = preset-defined FX macro. M3 = master volume. A = octave down. B = octave up. C = Hold. D = open Library. Keyboard plays current sound; pads trigger assigned pad sounds.\nWHAT IT DOES: Octave shifts keyboard notes by 12 semitones. Hold sustains released notes. M1/M2 alter the active sound in real time. Pad audio is independent of the keyboard sound.\nSAVE/STATE: Selected keyboard sound, octave, Hold state and user edits are stored in the current project. Temporary macro movement becomes part of the sound state only when saving a user sound/project.\nNOTES: Factory presets can be performed immediately. The current project key is metadata in V1 and does not force notes into a scale. 7 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-02"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:08+00:00",
+      "updated_at": "2026-09-01T05:30:08+00:00"
+    },
+    "concept-screen-03": {
+      "id": "concept-screen-03",
+      "type": "concept",
+      "title": "Screen 03: Main menu",
+      "content": "Screen 03: Main menu.\nGET THERE: Hold BACK / MENU from any normal screen.\nHARDWARE: UP/DOWN moves through PLAY, LOOP, SOUND, MIX, PROJECT and SETTINGS. OK opens the highlighted area. BACK closes the menu. Transport stays active.\nWHAT IT DOES: Opening the menu does not change the sound. Existing loop or sequencer playback continues unless STOP is pressed.\nSAVE/STATE: No state is saved merely by opening or navigating the menu.\nNOTES: This is the main future-proofing mechanism: new software screens can be added later without new hardware. 8 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-03"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:10+00:00",
+      "updated_at": "2026-09-01T05:30:10+00:00"
+    },
+    "concept-screen-04": {
+      "id": "concept-screen-04",
+      "type": "concept",
+      "title": "Screen 04: Sound Library",
+      "content": "Screen 04: Sound Library.\nHARDWARE: AA/B/C/D = Factory,switch B = User,Factory/User/Rec/Favorites            tabs. C = Favorites, D = Sampler. LEFT/RIGHT    LEFT/RIGHT changes             changeschanges category; UP/DOWN      category; sound.UP/DOWN Keyboard andchanges pads sound. audition theKeyboard      and pads highlighted sound. OK opensaudition   the Sound Sound Detail; highlighted Detail -> Asound. USE KEYSOKconfirms loads it.itBACK as the exitscurrent   keyboard without changing the loaded sound. sound. BACK restores the previously loaded sound if no selection was confirmed.\nSAVE/STATE: Factory sounds are read-only. User sounds and recordings are stored locally. Favorites store references only.\nNOTES: The library must remain quick: categories are shallow, names are short, and the user never needs an on-screen QWERTY keyboard just to browse. 9 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           PLAY->-> PLAY      D LIBRARY, D LIBRARY, or holdor MENU MENU     -> SOUND -> SOUND         -> Library. (the SOUND area opens the Library).\nWHAT: DOES       Highlighting Highlighting temporarily previews the temporarily         sound. USEthe previews     KEYS commitsLoading sound.    it to the keyboard commitsslot. M1/M2  preview it to the      the highlighted current   keyboard soundslot. using that preset's macro assignments. M1/M2 preview\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-04"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:12+00:00",
+      "updated_at": "2026-09-01T05:30:12+00:00"
+    },
+    "concept-screen-05": {
+      "id": "concept-screen-05",
+      "type": "concept",
+      "title": "Screen 05: Sound Detail",
+      "content": "Screen 05: Sound Detail.\nGET THERE: From Sound Library, highlight a sound and press OK/More, or open the current sound's detail action.\nHARDWARE: A = use on keyboard. B = edit. C = assign to a pad. D = favorite/unfavorite. M1/M2 remain live so the sound can be auditioned.\nWHAT IT DOES: Use Keys makes the sound the main pitched instrument. Assign maps it to one of the six pad slots. Edit opens non-destructive user parameters.\nSAVE/STATE: Favorite status and pad/key assignment are project/library metadata. Editing a factory preset never overwrites factory content.\nNOTES: Factory samples that are intended as one-shots may still be assigned to the keyboard; the root note defines pitch mapping. 10 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-05"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "updated_at": "2026-09-01T05:30:14+00:00"
+    },
+    "concept-screen-06": {
+      "id": "concept-screen-06",
+      "type": "concept",
+      "title": "Screen 06: Sound Edit - Shape",
+      "content": "Screen 06: Sound Edit - Shape.\nGET THERE: Sound Detail -> B EDIT. A selects Shape page.\nHARDWARE: M1 = cutoff/brightness. M2 = resonance. LEFT/RIGHT or OK can change discrete voice/drive options shown in the lower rows. A/B/C/D jump between Shape, Envelope, EQ and FX pages.\nWHAT IT DOES: Cutoff removes or reveals high-frequency content. Resonance emphasizes frequencies around the cutoff. Voice/drive options can make a sound more focused, saturated or mono/poly depending on preset type.\nSAVE/STATE: Edits remain pending until BACK; then Save Sound is shown. Factory sources require Save As.\nNOTES: Parameter names can vary by factory preset, but V1 should prefer musically obvious controls rather than exposing raw synthesis internals. 11 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-06"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:16+00:00",
+      "updated_at": "2026-09-01T05:30:16+00:00"
+    },
+    "concept-screen-07": {
+      "id": "concept-screen-07",
+      "type": "concept",
+      "title": "Screen 07: Sound Edit - Envelope",
+      "content": "Screen 07: Sound Edit - Envelope.\nGET THERE: Sound Edit -> B ENV.\nHARDWARE: M1 = Attack. M2 = Release. A/B/C/D switch edit pages.\nWHAT IT DOES: Short Attack produces a sharp immediate onset; longer Attack fades into the note. Short Release stops quickly; longer Release creates a tail after the key is released.\nSAVE/STATE: Values are saved with a user sound or project sound state.\nNOTES: V1 deliberately uses a simple two-control envelope here. More detailed ADSR controls can be added later as digital-only pages. 12 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-07"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:18+00:00",
+      "updated_at": "2026-09-01T05:30:18+00:00"
+    },
+    "concept-screen-08": {
+      "id": "concept-screen-08",
+      "type": "concept",
+      "title": "Screen 08: Sound Edit - EQ",
+      "content": "Screen 08: Sound Edit - EQ.\nGET THERE: Sound Edit -> C EQ.\nHARDWARE: M1 = Bass, from -12 dB to +12 dB. M2 = Treble, from -12 dB to +12 dB. OK can reset the selected band to 0 dB; a Reset action may reset both.\nWHAT IT DOES: Bass boosts/cuts low frequencies using a low-shelf EQ. Treble boosts/cuts high frequencies using a high-shelf EQ. This changes timbre, not note pitch or tempo.\nSAVE/STATE: EQ values are stored with the user sound or current project sound state.\nNOTES: Recommended implementation: low shelf around 120 Hz and high shelf around 6 kHz. Keep enough headroom/limiting to avoid clipping after boosts. 13 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-08"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:20+00:00",
+      "updated_at": "2026-09-01T05:30:20+00:00"
+    },
+    "concept-screen-09": {
+      "id": "concept-screen-09",
+      "type": "concept",
+      "title": "Screen 09: Sound Edit - FX",
+      "content": "Screen 09: Sound Edit - FX.\nGET THERE: Sound Edit -> D FX.\nHARDWARE: M1 = Reverb amount. M2 = Delay amount. M3 still controls master volume.\nWHAT IT DOES: Reverb adds room/space. Delay adds repeating echoes synchronized or free-running according to preset defaults. At 0% the corresponding effect is bypassed.\nSAVE/STATE: Values save with a user sound. Factory preset changes require Save As.\nNOTES: Detailed delay time, feedback or reverb type can be later digital pages; V1 only needs the two immediate musical amounts. 14 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-09"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:22+00:00",
+      "updated_at": "2026-09-01T05:30:22+00:00"
+    },
+    "concept-screen-10": {
+      "id": "concept-screen-10",
+      "type": "concept",
+      "title": "Screen 10: Save Sound",
+      "content": "Screen 10: Save Sound.\nGET THERE: Press BACK from Sound Edit after modifying a sound.\nHARDWARE: A = cancel and return to editing. B = edit name. C = Save As. D = Save when editing an existing user sound. Factory sounds disable overwrite and require Save As.\nWHAT IT DOES: Saving does not alter playback except that the edited sound becomes a reusable library item.\nSAVE/STATE: User sound stores a reference to its source plus filter/envelope/EQ/FX settings; factory media stays untouched.\nNOTES: This non-destructive model prevents accidental loss and keeps factory content immutable. 15 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-10"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:24+00:00",
+      "updated_at": "2026-09-01T05:30:24+00:00"
+    },
+    "concept-screen-11": {
+      "id": "concept-screen-11",
+      "type": "concept",
+      "title": "Screen 11: Pad Assignment",
+      "content": "Screen 11: Pad Assignment.\nGET THERE: Sound Detail -> C ASSIGN.\nHARDWARE: Press a physical pad or use arrows to choose Pad 1-6. OK assigns the current sound. A clears the selected pad. B switches pad playback mode where allowed. C previews. D finishes. M1/M2 can set pad level/pan if shown.\nWHAT IT DOES: Assigned pads become independent one-shot/gate/loop triggers during performance. Clearing removes the mapping but never deletes the sound from the library.\nSAVE/STATE: Pad assignments save in the project. Optional per-pad level/pan save with the assignment.\nNOTES: Pads remain performance triggers on PLAY and LOOP; the sequencer explicitly repurposes them as lane selectors. 16 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-11"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:26+00:00",
+      "updated_at": "2026-09-01T05:30:26+00:00"
+    },
+    "concept-screen-12": {
+      "id": "concept-screen-12",
+      "type": "concept",
+      "title": "Screen 12: Sampler Home",
+      "content": "Screen 12: Sampler Home.\nHARDWARE: AA== microphone. microphone.          B = file B = file import. C = import.   C = open open an existing        an existing user sample. D = back. user sample. UP/DOWN and OKDcan = also back. use UP/DOWN the list. and OK can also use the list.\nWHAT IT DOES: No audio changes until a source is recorded/imported. Existing project playback may continue behind the sampler unless the user stops it.\nSAVE/STATE: New recordings/imports are staged until the user reaches Save Sample.\nNOTES: Microphone and imported sources enter the same editor, so the manipulation workflow is consistent. 17 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU Hold    ->->SOUND MENU    SOUND to-> Sampler. open the Sound Library, then press D = SAMPLER.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-12"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:28+00:00",
+      "updated_at": "2026-09-01T05:30:28+00:00"
+    },
+    "concept-screen-13": {
+      "id": "concept-screen-13",
+      "type": "concept",
+      "title": "Screen 13: Microphone Record",
+      "content": "Screen 13: Microphone Record.\nGET THERE: Sampler Home -> A MIC.\nHARDWARE: REC starts recording after the configured count-in; STOP ends the take; PLAY auditions the last take. M1 = digital input gain. M2 = record threshold when threshold mode is enabled. B toggles count-in. C toggles monitoring. D saves/continues after a take.\nWHAT IT DOES: The mic signal is captured into an audio buffer. Monitoring is OFF by default to prevent speaker feedback. Input gain changes recorded level; it does not change microphone hardware sensitivity.\nSAVE/STATE: The take remains temporary until Save Sample. A staged take can be replaced by pressing REC again.\nNOTES: On first use, the browser may request microphone permission. The onboard mic is the default/only V1 input source. 18 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-13"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:30+00:00",
+      "updated_at": "2026-09-01T05:30:30+00:00"
+    },
+    "concept-screen-14": {
+      "id": "concept-screen-14",
+      "type": "concept",
+      "title": "Screen 14: Import File",
+      "content": "Screen 14: Import File.\nGET THERE: Sampler Home -> B FILE.\nHARDWARE: D = open system file picker. A = cancel. B displays supported formats. C can show recent imports. After the native picker returns a file, CASSIO decodes it and opens Sample Edit.\nWHAT IT DOES: Importing does not alter the original file. CASSIO makes its own local working copy/reference and previews it through the same sound engine.\nSAVE/STATE: The imported source is staged until Save Sample, then persisted in local app storage.\nNOTES: Guaranteed V1 targets should be WAV and MP3. OGG and M4A/AAC can be accepted where the browser decoder supports them. The native file-picker UI itself is provided by the operating system/browser, not CASSIO. 19 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-14"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:32+00:00",
+      "updated_at": "2026-09-01T05:30:32+00:00"
+    },
+    "concept-screen-15": {
+      "id": "concept-screen-15",
+      "type": "concept",
+      "title": "Screen 15: Sample Edit - Trim",
+      "content": "Screen 15: Sample Edit - Trim.\nGET THERE: After mic recording/import, or open a user sample -> Edit -> Trim.\nHARDWARE: M1 moves sample Start. M2 moves sample End. LEFT/RIGHT scroll the waveform; UP/DOWN zoom. A plays the selected region. B normalizes. C opens Sample Tools. D goes to Tune.\nWHAT IT DOES: Only the selected region is heard when the sample is triggered. Normalization increases or decreases gain so the peak reaches a safe target without changing tone.\nSAVE/STATE: Trim points and normalization metadata are saved with the user sample. Source audio remains intact.\nNOTES: Keep Start before End; enforce a minimum playable region to prevent invalid edits. 20 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-15"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:35+00:00",
+      "updated_at": "2026-09-01T05:30:35+00:00"
+    },
+    "concept-screen-16": {
+      "id": "concept-screen-16",
+      "type": "concept",
+      "title": "Screen 16: Sample Tools",
+      "content": "Screen 16: Sample Tools.\nGET THERE: Sample Edit - Trim -> C TOOLS.\nHARDWARE: A normalize, B reverse, C reset sample edits, D back. UP/DOWN can highlight the same actions and OK confirms.\nWHAT IT DOES: Normalize changes level only. Reverse plays the selected source region backward. Reset returns trim/reverse/normalization state to the original imported/recorded source.\nSAVE/STATE: Tools remain non-destructive metadata until the sample is exported/rendered. Reset is therefore safe.\nNOTES: Destructive deletion is never placed on this screen; sample deletion lives in the library/storage workflow and requires confirmation. 21 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-16"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:37+00:00",
+      "updated_at": "2026-09-01T05:30:37+00:00"
+    },
+    "concept-screen-17": {
+      "id": "concept-screen-17",
+      "type": "concept",
+      "title": "Screen 17: Sample Edit - Tune",
+      "content": "Screen 17: Sample Edit - Tune.\nGET THERE: Sample Edit -> Tune page.\nHARDWARE: M1 = coarse semitone tuning. M2 = fine cents. C/ROOT lets arrows choose the root note. B/REVERSE can toggle reverse if desired. A/RESET restores tuning. D/MODE opens playback behavior.\nWHAT IT DOES: Coarse/fine tuning changes playback rate in V1, so pitch and playback duration change together. Root note tells the keyboard which physical note plays the sample at its original saved pitch.\nSAVE/STATE: Tuning/root are stored with the user sample preset.\nNOTES: Pitch-preserving time stretch is intentionally not required for V1; it can be added later as software only. 22 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-17"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:39+00:00",
+      "updated_at": "2026-09-01T05:30:39+00:00"
+    },
+    "concept-screen-18": {
+      "id": "concept-screen-18",
+      "type": "concept",
+      "title": "Screen 18: Sample Edit - Playback",
+      "content": "Screen 18: Sample Edit - Playback.\nHARDWARE: AA== One-shot. One-shot.      B =C Gate. B = Gate.         C= = Loop. M1   Loop.smoothing. = Attack M1 = Attack     smoothing. M2 = Release smoothing.M2 D == Release smoothing. D opens EQ. additional tools/back depending context.\nWHAT IT DOES: One-shot plays Attack/Release smoothto   theatend clicks          after a trigger. Gate plays only while held. Loop repeats the selected boundaries. region until released/stopped. Attack/Release smooth clicks at boundaries.\nSAVE/STATE: Playback mode and smoothing values save with the user sample.\nNOTES: Pads commonly default to One-shot; keyboard-mapped sustained sounds may prefer Gate or Loop. 23 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           Sample Sample EditEdit  -> Mode/Playback -> Mode/Playback page. page.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-18"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:41+00:00",
+      "updated_at": "2026-09-01T05:30:41+00:00"
+    },
+    "concept-screen-19": {
+      "id": "concept-screen-19",
+      "type": "concept",
+      "title": "Screen 19: Sample Edit - EQ",
+      "content": "Screen 19: Sample Edit - EQ.\nGET THERE: Sample Edit -> EQ page.\nHARDWARE: M1 = Bass, M2 = Treble, each -12 dB to +12 dB. A/B/C/D return to Trim/Tune/Mode/EQ tabs.\nWHAT IT DOES: Bass changes low-end weight; Treble changes brightness/noise/air. EQ is applied during playback and is not baked into the source file unless exported.\nSAVE/STATE: Values save with the sample preset.\nNOTES: After saving, the resulting user sound can also use the generic Sound Edit pages for filter/envelope/FX. 24 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-19"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "updated_at": "2026-09-01T05:30:43+00:00"
+    },
+    "concept-screen-20": {
+      "id": "concept-screen-20",
+      "type": "concept",
+      "title": "Screen 20: Save Sample",
+      "content": "Screen 20: Save Sample.\nGET THERE: Press BACK/Save from the sample editor after a usable take exists.\nHARDWARE: A cancel, B name, C assign, D save. Naming uses Text Entry. Assign can route the new sound to the keyboard or a pad before leaving.\nWHAT IT DOES: Saving itself does not process the audio beyond the current non-destructive edit chain. The newly saved sound is immediately playable.\nSAVE/STATE: Creates a user-library item referencing the local source plus trim/tune/mode/EQ metadata.\nNOTES: The original source remains available until storage cleanup determines it is unreferenced. 25 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-20"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:45+00:00",
+      "updated_at": "2026-09-01T05:30:45+00:00"
+    },
+    "concept-screen-21": {
+      "id": "concept-screen-21",
+      "type": "concept",
+      "title": "Screen 21: LOOP - Track View",
+      "content": "Screen 21: LOOP - Track View.\nHARDWARE: UP/DOWN UP/DOWN       selects selects        track. track; OK opensM1 Track= Menu. selected    track M1 = track    level. level. M2 = M2 pan. = A =pan. ARM, A B =arm, SEQ, B C =mute, C solo, OPTIONS,      D undo D = UNDO.     last and Keyboard recording pads          operation. remain playable.        Keyboard Transport             and pads remain playable so performances can be recorded. controls record/play/stop. Transport controls record/play/stop. REC from stopped records after count-in; REC while playing enters overdub. Mute/Solo and record mode live in OK -> Track Menu. Backing-track monitoring follows Loop Options.\nWHAT IT DOES: REC from stopped records the selected track after count-in. REC while playing enters overdub.\nSAVE/STATE: Loop audio, track level/pan/mute state and selected track save with the project.\nNOTES: Pads remain performance inputs here; track selection is deliberately kept on the D-pad so pad- based drum performance can still be recorded. 26 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU MENU -> -> LOOP, LOOP,      orfrom or REC   REC   from a performance a performance                screen screen when a loop track iswhen    a loop track is selected. selected.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-21"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:47+00:00",
+      "updated_at": "2026-09-01T05:30:47+00:00"
+    },
+    "concept-screen-22": {
+      "id": "concept-screen-22",
+      "type": "concept",
+      "title": "Screen 22: Loop Track Menu",
+      "content": "Screen 22: Loop Track Menu.\nHARDWARE: A changes UP/DOWN       record selects Recordmode      (Overdub/Replace). Mode, Monitor                         B toggles During Rec, Mute, Solo,            whether Level or Pan;        this or LEFT/RIGHT    track is included OK changes         when the selected row.Loop A shortcuts Options Record    uses Mode,      MONITORED B toggles              playback. Monitor, C clears           C clears after confirmation,   the track D returns.     after M1/M2      confirmation. continue level/pan.    D returns. M1/M2 continue level/pan. Overdub adds new performance to existing audio; Replace records a fresh pass. Mute/Solo affect playback. Monitor controls whether the track is heard when Loop Options uses MONITORED recording playback.\nWHAT IT DOES: Overdub adds new performance to existing audio; Replace records a fresh pass for the track.\nSAVE/STATE: Track options save in the project. Clear removes the track's recorded material but not source sounds.\nNOTES: Clear is destructive and therefore uses the common confirmation pattern. 27 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP        select select a tracka->track OK. -> OK.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-22"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "updated_at": "2026-09-01T05:30:49+00:00"
+    },
+    "concept-screen-23": {
+      "id": "concept-screen-23",
+      "type": "concept",
+      "title": "Screen 23: Loop Options",
+      "content": "Screen 23: Loop Options.\nHARDWARE: UP/DOWN UP/DOWN      selects selects Length,Length, Quantize, Quantize, Count-in, PlayCount-in, During Rec, Play  During Metronome      Rec,LEFT/RIGHT or Tempo. Metronome    or Tempo. changes           LEFT/RIGHT values. A-D jump to the changes most commonvalues.   A-D jump to the most common option groups. option groups.\nSAVE/STATE: Options save with the project.\nNOTES: Recommended V1 loop lengths: 1, 2, 4 or 8 bars. Quantize choices: Off, 1/4, 1/8, 1/16. 28 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Options action from the screen/menu. C OPTIONS.\nWHAT: DOES       Loop Loop   Length Length       defines defines         the region. the repeating repeating   region. Quantize          Quantize aligns recorded      aligns events         recorded to the grid. Count-in note/sample       triggers delays recording. Play During to Recthe = ALL, MONITORED or\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-23"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:52+00:00",
+      "updated_at": "2026-09-01T05:30:52+00:00"
+    },
+    "concept-screen-24": {
+      "id": "concept-screen-24",
+      "type": "concept",
+      "title": "Screen 24: Step Sequencer",
+      "content": "Screen 24: Step Sequencer.\nHARDWARE: Pads Pads  1-61-6   select select       a sequencer a sequencer   lane on thislane screenon  this only.    screen Arrows move only. the stepArrows    move cursor. OK  togglesthe  step a step. M1 cursor.   OK = swing; M2   toggles = gate.      aB A page, step.CM1 length,       = swing; shift/nudge,     M2lane D clear   = after gate.    A page,PLAY/STOP confirmation.  B length,auditions C shift/nudge, the pattern. D clear lane after confirmation. PLAY/STOP audition pattern. Active steps trigger the sound assigned to their lane. Swing delays alternating subdivisions; Gate changes note/sample duration when supported.\nWHAT IT DOES: Active steps trigger the sound assigned to their lane. Swing delays alternating subdivisions; Gate\nSAVE/STATE: Pattern, lane assignments, length, swing/gate and step states save in the project.\nNOTES: The base grid is 16 steps; longer patterns use pages rather than requiring a wider physical display. 29 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Sequencer. B SEQ.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-24"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:54+00:00",
+      "updated_at": "2026-09-01T05:30:54+00:00"
+    },
+    "concept-screen-25": {
+      "id": "concept-screen-25",
+      "type": "concept",
+      "title": "Screen 25: Step Edit",
+      "content": "Screen 25: Step Edit.\nGET THERE: Sequencer -> highlight a step -> OK/hold OK depending implementation.\nHARDWARE: M1 = step velocity/value. M2 = gate. A off, B accent, C tie, D done. LEFT/RIGHT can set micro-shift where enabled.\nWHAT IT DOES: Velocity changes trigger level/intensity for the step. Accent is a quick high-velocity state. Tie holds a note across the next step. Micro-shift nudges timing without moving the visible grid location.\nSAVE/STATE: Step values save in the pattern.\nNOTES: If the physical keys/pads are not velocity sensitive, sequencer velocity still works because it is a software parameter. 30 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-25"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:56+00:00",
+      "updated_at": "2026-09-01T05:30:56+00:00"
+    },
+    "concept-screen-26": {
+      "id": "concept-screen-26",
+      "type": "concept",
+      "title": "Screen 26: Mixer",
+      "content": "Screen 26: Mixer.\nGET THERE: MENU -> MIX, or LOOP -> Mix shortcut.\nHARDWARE: LEFT/RIGHT or UP/DOWN selects track. M1 = track level. M2 = pan. A mute, B solo, C reset selected track mix, D return to Loop.\nWHAT IT DOES: Level changes loudness of the track in the mix; pan moves it left/right. Mute silences a track; Solo temporarily isolates it. None of these alter the recorded audio.\nSAVE/STATE: Mixer state saves with the project.\nNOTES: M3 still controls final master volume after the track mix. 31 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-26"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:57+00:00",
+      "updated_at": "2026-09-01T05:30:57+00:00"
+    },
+    "concept-screen-27": {
+      "id": "concept-screen-27",
+      "type": "concept",
+      "title": "Screen 27: Projects",
+      "content": "Screen 27: Projects.\nGET THERE: MENU -> PROJECT.\nHARDWARE: UP/DOWN selects a project. A new, B save current, C rename selected, D open selected. OK can also open.\nWHAT IT DOES: Opening a project replaces the active tempo, sounds, loop tracks, pattern and mix state. Current unsaved changes must be saved/discarded first.\nSAVE/STATE: Projects are stored locally in persistent browser/app storage and reference user samples by ID.\nNOTES: CASSIO should also maintain an automatic recovery snapshot so an unexpected shutdown does not erase the current session. 32 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-27"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:30:59+00:00",
+      "updated_at": "2026-09-01T05:30:59+00:00"
+    },
+    "concept-screen-28": {
+      "id": "concept-screen-28",
+      "type": "concept",
+      "title": "Screen 28: Save Project",
+      "content": "Screen 28: Save Project.\nGET THERE: PROJECT -> B SAVE, or leaving a dirty project when prompted.\nHARDWARE: A cancel, B name, C Save As, D Save. New projects use Text Entry for the name.\nWHAT IT DOES: Saving does not interrupt audio beyond any brief storage operation; it only commits the current state.\nSAVE/STATE: Stores tempo/key metadata, sound assignments, user-sound edit values, loop tracks, sequencer patterns and mixer settings.\nNOTES: Large user audio sources are stored once and referenced, rather than duplicated into every project. 33 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-28"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:01+00:00",
+      "updated_at": "2026-09-01T05:31:01+00:00"
+    },
+    "concept-screen-29": {
+      "id": "concept-screen-29",
+      "type": "concept",
+      "title": "Screen 29: Text Entry",
+      "content": "Screen 29: Text Entry.\nGET THERE: Any Name/Rename action.\nHARDWARE: Arrows move cursor. OK inserts character. A space, B delete, C cancel, D done. Holding LEFT/RIGHT may accelerate cursor movement.\nWHAT IT DOES: No audio change. Playback can remain paused or continue depending on the parent screen.\nSAVE/STATE: The completed name is returned to the parent Save/Rename screen.\nNOTES: Keep allowed names compact and filesystem-safe: letters, digits, spaces, dash and underscore are sufficient for V1. 34 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-29"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:03+00:00",
+      "updated_at": "2026-09-01T05:31:03+00:00"
+    },
+    "concept-screen-30": {
+      "id": "concept-screen-30",
+      "type": "concept",
+      "title": "Screen 30: Settings Home",
+      "content": "Screen 30: Settings Home.\nGET THERE: MENU -> SETTINGS.\nHARDWARE: UP/DOWN selects Audio, Metronome, Display, Storage, Permissions or About. OK/A opens. BACK returns.\nWHAT IT DOES: Merely opening Settings does not alter sound. Audio/Metronome pages can make live changes as the user adjusts them.\nSAVE/STATE: System preferences persist independently of projects.\nNOTES: This menu is also where future software-only settings can be added without changing hardware. 35 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-30"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:05+00:00",
+      "updated_at": "2026-09-01T05:31:05+00:00"
+    },
+    "concept-screen-31": {
+      "id": "concept-screen-31",
+      "type": "concept",
+      "title": "Screen 31: Settings - Master Audio",
+      "content": "Screen 31: Settings - Master Audio.\nGET THERE: SETTINGS -> AUDIO.\nHARDWARE: M1 = master Bass, M2 = master Treble. A reset EQ. B limiter toggle. C test tone/preview. D back. M3 remains master volume.\nWHAT IT DOES: Bass/Treble alter the whole device output. Limiter catches peaks caused by stacked tracks/EQ boosts and reduces clipping.\nSAVE/STATE: Master EQ and limiter preference persist globally, not per project.\nNOTES: Per-sound EQ and master EQ are intentionally separate: one shapes a sound; the other compensates for speakers/headphones or overall taste. 36 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-31"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:07+00:00",
+      "updated_at": "2026-09-01T05:31:07+00:00"
+    },
+    "concept-screen-32": {
+      "id": "concept-screen-32",
+      "type": "concept",
+      "title": "Screen 32: Settings - Metronome",
+      "content": "Screen 32: Settings - Metronome.\nGET THERE: SETTINGS -> METRONOME.\nHARDWARE: M1 click level. M2 count-in bars. A chooses click sound, B count-in mode, C level/reset, D back. Hold TAP toggles metronome from any screen.\nWHAT IT DOES: Metronome adds a click to playback/recording monitoring only; it is never recorded into loop audio. Count-in plays before recording begins.\nSAVE/STATE: Settings persist globally; a project stores BPM but not necessarily the preferred click sound.\nNOTES: Beat 1 may use an accented click so bar boundaries are obvious. 37 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-32"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:09+00:00",
+      "updated_at": "2026-09-01T05:31:09+00:00"
+    },
+    "concept-screen-33": {
+      "id": "concept-screen-33",
+      "type": "concept",
+      "title": "Screen 33: Settings - Display",
+      "content": "Screen 33: Settings - Display.\nGET THERE: SETTINGS -> DISPLAY.\nHARDWARE: M1 brightness. M2 dim level. UP/DOWN chooses auto-dim or screen-sleep time; LEFT/RIGHT changes values. D back.\nWHAT IT DOES: No audio effect.\nSAVE/STATE: Display preferences persist globally.\nNOTES: Audio playback/recording must not stop merely because the screen dims. Screen sleep is a visual power-saving state only. 38 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-33"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:11+00:00",
+      "updated_at": "2026-09-01T05:31:11+00:00"
+    },
+    "concept-screen-34": {
+      "id": "concept-screen-34",
+      "type": "concept",
+      "title": "Screen 34: Settings - Storage",
+      "content": "Screen 34: Settings - Storage.\nGET THERE: SETTINGS -> STORAGE.\nHARDWARE: A jumps to user samples (same USER library screen). B cleanup. C requests/presents persistent- storage status. D back. Arrows navigate rows.\nWHAT IT DOES: No audio effect unless the user deletes an unreferenced sample.\nSAVE/STATE: Cleanup may remove orphaned source files only after verifying that no project/user sound references them. Persistent storage requests the browser/device to reduce automatic eviction.\nNOTES: Never delete a referenced sample silently. Deletion actions use a confirmation dialog. 39 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-34"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:13+00:00",
+      "updated_at": "2026-09-01T05:31:13+00:00"
+    },
+    "concept-screen-35": {
+      "id": "concept-screen-35",
+      "type": "concept",
+      "title": "Screen 35: Settings - Permissions",
+      "content": "Screen 35: Settings - Permissions.\nGET THERE: SETTINGS -> PERMISSIONS.\nHARDWARE: A tests mic and shows level meter. B requests permission if available. C shows help text. D back.\nWHAT IT DOES: Mic Test meters input; monitoring remains off, so testing should not feed the mic directly to speakers.\nSAVE/STATE: Permission state is controlled by the host browser/OS; CASSIO stores only its own preference/status cache.\nNOTES: On a dedicated device, microphone access can ideally be pre-authorized so the user never sees a browser permission prompt. 40 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-35"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:15+00:00",
+      "updated_at": "2026-09-01T05:31:15+00:00"
+    },
+    "concept-screen-36": {
+      "id": "concept-screen-36",
+      "type": "concept",
+      "title": "Screen 36: About",
+      "content": "Screen 36: About.\nGET THERE: SETTINGS -> ABOUT.\nHARDWARE: D/Back returns. Other soft keys may be blank in a production build unless diagnostics are deliberately exposed.\nWHAT IT DOES: No audio effect.\nSAVE/STATE: No musical state changes.\nNOTES: The production screen should identify the device as a pocket synth/sampler and list Web Audio, onboard microphone, file import and local storage capabilities. 41 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-36"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:16+00:00",
+      "updated_at": "2026-09-01T05:31:16+00:00"
+    },
+    "concept-screen-37": {
+      "id": "concept-screen-37",
+      "type": "concept",
+      "title": "Screen 37: Microphone Blocked",
+      "content": "Screen 37: Microphone Blocked.\nGET THERE: Appears after Mic Record or Mic Test when browser permission is denied/unavailable.\nHARDWARE: A back, B open Permissions page, C retry, D help. REC remains disabled until permission is available.\nWHAT IT DOES: No mic audio is captured. Existing instrument/loop playback is unaffected.\nSAVE/STATE: No recording is created.\nNOTES: The error must explain the next action instead of failing silently. 42 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-37"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:19+00:00",
+      "updated_at": "2026-09-01T05:31:19+00:00"
+    },
+    "concept-screen-38": {
+      "id": "concept-screen-38",
+      "type": "concept",
+      "title": "Screen 38: Destructive Confirmation",
+      "content": "Screen 38: Destructive Confirmation.\nGET THERE: Appears only after a destructive action.\nHARDWARE: A cancel. D confirm destructive action. The middle soft keys remain blank unless the specific action needs another choice.\nWHAT IT DOES: Sound changes only after confirmation. Cancelling returns exactly to the previous state.\nSAVE/STATE: Deletion/clear is committed only after D confirm. Referenced samples cannot be deleted; CASSIO should identify the blocking project/sound.\nNOTES: Using one consistent destructive-dialog pattern reduces accidental data loss. 43 CASSIO / V1 COMPLETE OPERATING MANUAL\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen",
+        "screen-38"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:21+00:00",
+      "updated_at": "2026-09-01T05:31:21+00:00"
+    },
+    "concept-area-play": {
+      "id": "concept-area-play",
+      "type": "concept",
+      "title": "PLAY area",
+      "content": "Top-level PLAY: performance home Screen 02; Library shortcut to Sound Library; Sound Detail; Sound Edit; Pad Assign. Soft path D LIBRARY from PLAY.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "play"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:37+00:00",
+      "updated_at": "2026-09-01T05:31:37+00:00"
+    },
+    "concept-area-loop": {
+      "id": "concept-area-loop",
+      "type": "concept",
+      "title": "LOOP area",
+      "content": "Top-level LOOP: Track View (6 tracks), Track Menu (overdub/replace/monitor/mute/solo/level/pan), Loop Options (length/quantize/count-in/play-during-rec/metronome/tempo), Step Sequencer + Step Edit.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "loop"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:38+00:00",
+      "updated_at": "2026-09-01T05:31:38+00:00"
+    },
+    "concept-area-sound": {
+      "id": "concept-area-sound",
+      "type": "concept",
+      "title": "SOUND area",
+      "content": "Top-level SOUND: Sound Library/Detail/Edit; Sampler Home -> Mic Record or Import File -> Sample Edit (trim/tools/tune/playback/EQ) -> Save Sample; Pad Assign.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "sound"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:40+00:00",
+      "updated_at": "2026-09-01T05:31:40+00:00"
+    },
+    "concept-area-mix": {
+      "id": "concept-area-mix",
+      "type": "concept",
+      "title": "MIX area",
+      "content": "Top-level MIX: six-track mixer with level/pan, mute/solo; M3 remains master volume.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "mix"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:41+00:00",
+      "updated_at": "2026-09-01T05:31:41+00:00"
+    },
+    "concept-area-project": {
+      "id": "concept-area-project",
+      "type": "concept",
+      "title": "PROJECT area",
+      "content": "Top-level PROJECT: project list, New/Save/Save As/Rename/Open; Text Entry for names; recovery autosave.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "project"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:43+00:00",
+      "updated_at": "2026-09-01T05:31:43+00:00"
+    },
+    "concept-area-settings": {
+      "id": "concept-area-settings",
+      "type": "concept",
+      "title": "SETTINGS area",
+      "content": "Top-level SETTINGS: Master Audio EQ, Metronome, Display, Storage, Permissions (mic), About. Also Mic Blocked and Destructive Confirmation patterns.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "area",
+        "settings"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:31:44+00:00",
+      "updated_at": "2026-09-01T05:31:44+00:00"
+    },
+    "concept-workflow-play-sound": {
+      "id": "concept-workflow-play-sound",
+      "type": "concept",
+      "title": "Workflow: Play a sound",
+      "content": "Boot -> PLAY -> D LIBRARY -> choose sound -> OK -> A USE KEYS. Use keyboard; A/B shift octave.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:01+00:00",
+      "updated_at": "2026-09-01T05:32:01+00:00"
+    },
+    "concept-workflow-record-mic": {
+      "id": "concept-workflow-record-mic",
+      "type": "concept",
+      "title": "Workflow: Record mic sample",
+      "content": "Hold MENU -> SOUND -> D SAMPLER -> A MIC -> REC -> STOP -> trim/tune/mode/EQ -> save.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:03+00:00",
+      "updated_at": "2026-09-01T05:32:03+00:00"
+    },
+    "concept-workflow-import": {
+      "id": "concept-workflow-import",
+      "type": "concept",
+      "title": "Workflow: Import sample",
+      "content": "Hold MENU -> SOUND -> D SAMPLER -> B FILE -> D OPEN -> choose system file -> edit -> save. Formats WAV/MP3/OGG/M4A per browser decoder.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:04+00:00",
+      "updated_at": "2026-09-01T05:32:04+00:00"
+    },
+    "concept-workflow-make-loop": {
+      "id": "concept-workflow-make-loop",
+      "type": "concept",
+      "title": "Workflow: Make a loop",
+      "content": "Hold MENU -> LOOP -> select track -> REC -> perform -> REC to exit overdub -> PLAY/STOP as needed.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:06+00:00",
+      "updated_at": "2026-09-01T05:32:06+00:00"
+    },
+    "concept-workflow-step-program": {
+      "id": "concept-workflow-step-program",
+      "type": "concept",
+      "title": "Workflow: Step program",
+      "content": "LOOP -> B SEQ -> pad selects lane -> arrows select step -> OK toggles step.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:07+00:00",
+      "updated_at": "2026-09-01T05:32:07+00:00"
+    },
+    "concept-workflow-save-project": {
+      "id": "concept-workflow-save-project",
+      "type": "concept",
+      "title": "Workflow: Save project",
+      "content": "Hold MENU -> PROJECT -> B SAVE; use Text Entry if naming a new project.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "workflow"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:09+00:00",
+      "updated_at": "2026-09-01T05:32:09+00:00"
+    },
+    "instruction-pdf-graphed": {
+      "id": "instruction-pdf-graphed",
+      "type": "instruction",
+      "title": "PDF fully graphed into grapher (Phase 1)",
+      "content": "Phase 1 complete: CASSIO_V1_Complete_Operating_Manual.pdf read from primary text and manual-assets images; structured concepts stored in grapher for scope, hardware, global behavior, navigation, all Screens 01-38, factory library, Glass Poly, library rules, sound engine, recording, persistence, boundaries, six areas, and fast workflows. Graphify-out was purged and must not be used. Phase 2 (Rails Milestone A) must consult these nodes via grapher search/get/neighbors.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "process",
+        "phase-1"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:12+00:00",
+      "updated_at": "2026-09-01T05:32:12+00:00"
+    },
+    "finding-pdf-graph-complete": {
+      "id": "finding-pdf-graph-complete",
+      "type": "finding",
+      "title": "Operating manual structured in grapher",
+      "content": "Full V1 operating manual is now represented as grapher concepts (not graphify cache): core domains, Screens 01-38, six menu areas, six workflows, linked to PDF document and depicting screen images. Ready for Rails Milestone A build to consult grapher.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "grapher"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:32:13+00:00",
+      "updated_at": "2026-09-01T05:32:13+00:00"
+    },
+    "finding-rails-milestone-a": {
+      "id": "finding-rails-milestone-a",
+      "type": "finding",
+      "title": "Rails Milestone A implemented",
+      "content": "Rails 8.1 Hotwire/Stimulus instrument at repo root. GET / serves hardware shell (pink chassis, LCD, M1/M2/M3, A-D, pads, BACK/MENU, D-pad+OK, transport, mini keyboard). Client Web Audio: AudioEngine + GlassPolyVoice (brightness/space). Screens: Boot (factory JSON + IndexedDB recovery + gesture resume), PLAY (octave/hold/library stub), Menu (six areas; only PLAY live). Persistence: IndexedDB recovery store. Factory: public/factory/sounds.json. Consulted grapher concepts screen-01/02/03, hardware-front-panel, glass-poly, persistence. No graphify.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "rails",
+        "milestone-a"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T05:53:01+00:00",
+      "updated_at": "2026-09-01T05:53:01+00:00"
+    },
+    "finding-ui-keyboard-vscreen-pwa": {
+      "id": "finding-ui-keyboard-vscreen-pwa",
+      "type": "finding",
+      "title": "Keyboard drag, V-screen UI, portrait gate, splash, PWA icons",
+      "content": "UI polish pass: mini-keyboard uses pointer capture + elementFromPoint drag (no stuck notes; Hold respected). Viewport fit via scale into 100dvh with overflow hidden. All transient messages on V-screen overlay only (external toast/hint removed). Landscape on phone/tablet shows PORTRAIT ONLY gate. Splash on V-screen then boot/audio. PWA: public/icons/* + manifest portrait/standalone, theme #ff2d7a.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "ui",
+        "pwa",
+        "keyboard"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:06:33+00:00",
+      "updated_at": "2026-09-01T06:06:33+00:00"
+    },
+    "finding-ui-fullbleed-layout": {
+      "id": "finding-ui-fullbleed-layout",
+      "type": "finding",
+      "title": "Full-bleed chassis; mid-row never stacks",
+      "content": "Phone layout: chassis is width/height 100% (100dvh) with safe-area padding; no min(400px) cap or transform scale fit. Mid-row always 2 columns (pads | nav) — removed max-width 480px stack that jumbled controls. Pads use equal grid rows not fixed aspect-ratio. Desktop (>=720px) soft-caps chassis to ~430x860 centered. fitChassis() clears transform only.",
+      "path": null,
+      "tags": [
+        "ui",
+        "layout",
+        "mobile",
+        "css"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:12:11+00:00",
+      "updated_at": "2026-09-01T06:12:11+00:00"
+    },
+    "finding-ui-knobs-viz-autoboot": {
+      "id": "finding-ui-knobs-viz-autoboot",
+      "type": "finding",
+      "title": "Knob rotate, bit-wave viz, auto boot",
+      "content": "M1/M2/M3 knobs rotate -135..+135 mapped to brightness/space/masterVolume. PLAY V-screen has full-width pixelated canvas oscilloscope (AnalyserNode on master); flat line when silent. Boot auto-advances splash→factory→recovery→audio→PLAY with no tap-to-start; AudioContext resume deferred to first pad/key/PLAY via ensureAudioRunning. Tap retry only on bootError.",
+      "path": null,
+      "tags": [
+        "ui",
+        "knobs",
+        "visualizer",
+        "boot",
+        "audio"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:17:18+00:00",
+      "updated_at": "2026-09-01T06:17:18+00:00"
+    },
+    "finding-octave-remap-held-midi": {
+      "id": "finding-octave-remap-held-midi",
+      "type": "finding",
+      "title": "Octave remaps held keys; stacked drone is future FX",
+      "content": "Bug: keyUp/padUp recomputed MIDI from current octave so after A/B OCT shift, noteOff missed the sounding voice and pitches stacked into a thick bass drone. Fix: heldKeys/heldPads are Map(degree|pad→midi); release uses stored midi; soft A/B call remapHeldNotes (immediate off old, on new). Octave range stays -3..+3 for intentional super-bass. The accidental stacked old+new drone is a candidate future sound-library FX (octave stack / hold-stack), not default PLAY behavior. HOLD keeps map entries so remaps still apply to latched notes.",
+      "path": null,
+      "tags": [
+        "audio",
+        "octave",
+        "hold",
+        "fx-idea"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:28:05+00:00",
+      "updated_at": "2026-09-01T06:28:05+00:00"
+    },
+    "finding-ui-boot-knobs-brand-0926": {
+      "id": "finding-ui-boot-knobs-brand-0926",
+      "type": "finding",
+      "title": "Boot no-await resume; chonky knobs; studio-0926",
+      "content": "Boot hang: await AudioContext.resume() without gesture never resolved — start() now fire-and-forget resume, ready=true, PLAY advances; ensureAudioRunning resumes on first pad/key/PLAY. Knobs: public/knobs/knob.png matte black + pink hash, recessed bay, slight LCD column squeeze (top-row 1fr + ~4.5rem). Brand: studio - 0926 lighter sheen right of CASSIO. Pads aspect-ratio 1; taller keyboard; larger d-pad/OK.",
+      "path": null,
+      "tags": [
+        "ui",
+        "boot",
+        "knobs",
+        "brand"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:28:06+00:00",
+      "updated_at": "2026-09-01T06:28:06+00:00"
+    },
+    "finding-ui-layout-menu-wave-topknob": {
+      "id": "finding-ui-layout-menu-wave-topknob",
+      "type": "finding",
+      "title": "Nav left/pads right; top-down knobs; BACK/MENU; live wave",
+      "content": "UX layout: mid-row is nav-cluster (BACK / MENU one-line, larger d-pad/OK, transport) on LEFT and pads 1-6 on RIGHT for natural handedness (differs from cover photo pads-left). Knobs use orthographic top-down PNG so rotate looks correct. Keyboard row grows to near chassis bottom (grid fr + height 100%, reduced bottom pad). BACK/MENU: tap opens menu from PLAY and closes from menu; hold also opens; label is single-line BACK / MENU. V-screen viz is continuous pink oscilloscope stroke+soft fill scaled by RMS and masterVolume, shape from live analyser waveform (not stepped bit columns).",
+      "path": null,
+      "tags": [
+        "ui",
+        "layout",
+        "menu",
+        "visualizer",
+        "knobs"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:49:08+00:00",
+      "updated_at": "2026-09-01T06:49:08+00:00"
+    },
+    "finding-ui-brand-keys-balance": {
+      "id": "finding-ui-brand-keys-balance",
+      "type": "finding",
+      "title": "Shorter keys; matte-gloss brand; dark pink model",
+      "content": "Keyboard height capped again (clamp ~3.7–4.5rem, chassis last row auto) so mid-row nav/pads are not squished. Brand CASSIO and model studio-0926 use matte-gloss gradient text + soft highlight drop-shadow. Model is dark pink (#9a1848 family), readable clamp ~0.62–0.78rem, smaller than logo.",
+      "path": null,
+      "tags": [
+        "ui",
+        "brand",
+        "keyboard"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:51:47+00:00",
+      "updated_at": "2026-09-01T06:51:47+00:00"
+    },
+    "finding-ui-keyboard-height-50pct": {
+      "id": "finding-ui-keyboard-height-50pct",
+      "type": "finding",
+      "title": "Keyboard height +50% from short clamp",
+      "content": "Keyboard height set to clamp(5.55rem, 15.75vh, 6.75rem) — exactly 50% taller than the prior short clamp(3.7rem, 10.5vh, 4.5rem). Do not swing back to fr-growing full-bleed keys or the undersized 3.7rem band without user ask.",
+      "path": null,
+      "tags": [
+        "ui",
+        "keyboard"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:56:39+00:00",
+      "updated_at": "2026-09-01T06:56:39+00:00"
+    },
+    "finding-ui-no-text-select": {
+      "id": "finding-ui-no-text-select",
+      "type": "finding",
+      "title": "Disable text selection on instrument UI",
+      "content": "cassio-body/stage and all descendants use user-select:none, -webkit-touch-callout:none, tap-highlight transparent; selectstart prevented on root. Stops accidental text highlight while tapping/dragging controls.",
+      "path": null,
+      "tags": [
+        "ui",
+        "touch"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T06:57:54+00:00",
+      "updated_at": "2026-09-01T06:57:54+00:00"
+    },
+    "finding-ui-overhead-knob-realestate": {
+      "id": "finding-ui-overhead-knob-realestate",
+      "type": "finding",
+      "title": "Overhead knob shadow; bottom slack into V-screen",
+      "content": "Knob shadow is overhead-centered under-shadow (0 3px 5px + thin rim), no hard 0 3px 0 side ledge. Chassis bottom padding is safe-area only (no extra 0.2rem); gap 0.28rem; grid top-row 1.25fr / mid 1.1fr so V-screen grows. Keyboard height unchanged clamp(5.55rem, 15.75vh, 6.75rem) per finding-ui-keyboard-height-50pct.",
+      "path": null,
+      "tags": [
+        "ui",
+        "knobs",
+        "layout"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:18:09+00:00",
+      "updated_at": "2026-09-01T07:18:09+00:00"
+    },
+    "finding-ui-pitch-wheel-nav-align": {
+      "id": "finding-ui-pitch-wheel-nav-align",
+      "type": "finding",
+      "title": "Studio pitch wheel; mid-row pad alignment",
+      "content": "Added spring-return PITCH wheel (±2 semitones) under tightened M1–M3 stack in side-controls (Studio UX; not in V1 hardware legend). GlassPolyVoice.setPitchBend uses osc detune cents on live voices. Mid-row: pads align-content space-between; nav-cluster justify space-between so BACK/MENU top matches pad top and transport bottom matches pad bottom; d-pad flexes middle.",
+      "path": null,
+      "tags": [
+        "ui",
+        "pitch",
+        "layout",
+        "audio"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:24:48+00:00",
+      "updated_at": "2026-09-01T07:24:48+00:00"
+    },
+    "finding-ui-equal-spacing-se-scale": {
+      "id": "finding-ui-equal-spacing-se-scale",
+      "type": "finding",
+      "title": "Equal M1–PITCH gaps; d-pad scale; SE-safe clamps",
+      "content": "side-controls: justify center; shared clamp(0.2rem,1.2vh,0.35rem) gap on knobs and side-controls; removed pitch margin-top auto so M1/M2/M3/PITCH spacing is equal. D-pad/OK use min(vw,vh) in clamp so they grow on tall phones but stay compact on SE-class short viewports. Knobs, pitch wheel, keyboard, BACK, transport also vh-capped. max-height 700px media tightens chassis/mid-row gaps.",
+      "path": null,
+      "tags": [
+        "ui",
+        "layout",
+        "responsive"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:32:40+00:00",
+      "updated_at": "2026-09-01T07:32:40+00:00"
+    },
+    "finding-hold-toggle-sticky-pitch": {
+      "id": "finding-hold-toggle-sticky-pitch",
+      "type": "finding",
+      "title": "HOLD re-press toggles; pitch sticky until tap",
+      "content": "With HOLD on: re-pressing a latched key/pad noteOffs and clears that latch (toggle). Keys stay visually active while latched. Pitch wheel does not spring-return while HOLD on; a near-zero-movement tap resets bend to 0. HOLD off clears notes, restores pitch spring-return, and centers bend.",
+      "path": null,
+      "tags": [
+        "hold",
+        "pitch",
+        "ux"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:33:48+00:00",
+      "updated_at": "2026-09-01T07:33:48+00:00"
+    },
+    "finding-ui-midrow-axis-tighten": {
+      "id": "finding-ui-midrow-axis-tighten",
+      "type": "finding",
+      "title": "Pads/nav tightened toward mid-row center",
+      "content": "Pad grid gap reduced to ~0.24rem (0.18rem on max-height 700px). Shared --mid-inset 0.22rem on .mid-row; .pads and .nav-cluster use width calc(100% - 2*inset) + margin-inline auto so BACK/MENU and transport track the same horizontal footprint as the pad block toward the center axis.",
+      "path": null,
+      "tags": [
+        "ui",
+        "layout",
+        "pads"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:37:56+00:00",
+      "updated_at": "2026-09-01T07:37:56+00:00"
+    },
+    "finding-ui-pad-row-gap-pack": {
+      "id": "finding-ui-pad-row-gap-pack",
+      "type": "finding",
+      "title": "Pad rows use equal gap not space-between",
+      "content": "Root cause of huge vertical pad gaps was align-content:space-between stretching 3 pad rows across full mid-row height. Pads now height:auto, align-self/align-content center, uniform gap 0.24rem (row=col). Nav-cluster similarly centered with justify-content:center and dpad flex 0 so BACK/transport sit close to the cluster axis matching pad density.",
+      "path": null,
+      "tags": [
+        "ui",
+        "pads",
+        "layout"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:40:19+00:00",
+      "updated_at": "2026-09-01T07:40:19+00:00"
+    },
+    "finding-ui-mid-panel-flush": {
+      "id": "finding-ui-mid-panel-flush",
+      "type": "finding",
+      "title": "mid-panel flushes BACK/transport to pad block",
+      "content": "mid-row wraps nav+pads in .mid-panel (flex stretch). Pads keep uniform 0.24rem gap and content height; nav-cluster stretches to that height with justify space-between so BACK top and transport bottom flush with pad block. Shared --mid-inset for horizontal footprint.",
+      "path": null,
+      "tags": [
+        "ui",
+        "layout",
+        "pads"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:43:40+00:00",
+      "updated_at": "2026-09-01T07:43:40+00:00"
+    }
+  },
+  "edges": [
+    {
+      "from": "concept-cassio-project",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:05:44+00:00",
+      "note": "Primary V1 product/operating spec for this project"
+    },
+    {
+      "from": "finding-consult-grapher-before-changes",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T05:05:44+00:00",
+      "note": "Workflow rule for working in this repo"
+    },
+    {
+      "from": "concept-cassio-project",
+      "to": "finding-consult-grapher-before-changes",
+      "rel": "related",
+      "created_at": "2026-09-01T05:05:44+00:00",
+      "note": "Agents must consult grapher before changes"
+    },
+    {
+      "from": "image-p01-cover-8c5dcf373e",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p03-industrial-design-4808395220",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p06-screen-01-boot-1378e9148d",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p07-screen-02-play-home-9e5c1836cf",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p08-screen-03-main-menu-7b67056705",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p09-screen-04-sound-library-v1-bf14090f1c",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:04+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p09-screen-04-sound-library-v2-4d9534db6b",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p10-screen-05-sound-detail-d2a7535ac9",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p13-screen-08-sound-edit-eq-5125a35d96",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p15-screen-10-save-sound-a9e6553ed8",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p17-screen-12-sampler-home-313d164399",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p18-screen-13-mic-record-74fad02713",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p19-screen-14-import-file-5e06069587",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:05+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p20-screen-15-sample-edit-trim-da078db4b7",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p21-screen-16-sample-tools-849e054cc7",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p24-screen-19-sample-edit-eq-b7080f1234",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p25-screen-20-save-sample-ba14c613a3",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p27-screen-22-loop-track-menu-db856743c2",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:06+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p28-screen-23-loop-options-fa60a40139",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p29-screen-24-step-sequencer-a047895360",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p30-screen-25-step-edit-6b7131d63a",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p31-screen-26-mixer-5af70d21a7",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p32-screen-27-projects-79156bd48a",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p33-screen-28-save-project-6af5d2cf6f",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p34-screen-29-text-entry-2fd5c8e60c",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p35-screen-30-settings-home-33d632f163",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p36-screen-31-settings-master-au-3583e174e1",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:07+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p38-screen-33-settings-display-e0529c2f4a",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p39-screen-34-settings-storage-cdd01431e5",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p40-screen-35-settings-permissio-19f191d5b1",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p41-screen-36-about-v2-8fe1804b60",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p41-screen-36-about-v3-520449e7a4",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p41-screen-36-about-v1-ff3d0f1de1",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p42-screen-37-mic-blocked-926c5e4be0",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "image-p01-cover-8c5dcf373e",
+      "to": "concept-cassio-project",
+      "rel": "related",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Hardware product photo of CASSIO"
+    },
+    {
+      "from": "image-p03-industrial-design-4808395220",
+      "to": "concept-cassio-project",
+      "rel": "related",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Numbered front-panel component legend"
+    },
+    {
+      "from": "image-p07-screen-02-play-home-9e5c1836cf",
+      "to": "concept-cassio-project",
+      "rel": "related",
+      "created_at": "2026-09-01T05:13:08+00:00",
+      "note": "Default performance UI home screen"
+    },
+    {
+      "from": "finding-manual-assets-ingested",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T05:13:19+00:00",
+      "note": "Visual UI/hardware context now in graph"
+    },
+    {
+      "from": "image-p43-screen-38-destructive-confir-24f60c8554",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:13:36+00:00",
+      "note": "Extracted from CASSIO V1 operating manual PDF"
+    },
+    {
+      "from": "concept-v1-scope",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-hardware-front-panel",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-global-behavior",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-navigation-map",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-factory-library",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-glass-poly",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-library-rules",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:55+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-sound-engine",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-recording-behavior",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-persistence",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-v1-boundaries",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "From operating manual primary text"
+    },
+    {
+      "from": "concept-hardware-front-panel",
+      "to": "image-p03-industrial-design-4808395220",
+      "rel": "related",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "Numbered callout diagram"
+    },
+    {
+      "from": "concept-hardware-front-panel",
+      "to": "image-p01-cover-8c5dcf373e",
+      "rel": "related",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "Physical product photo"
+    },
+    {
+      "from": "concept-glass-poly",
+      "to": "concept-factory-library",
+      "rel": "related",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "Glass Poly is a factory SYNTH preset"
+    },
+    {
+      "from": "concept-glass-poly",
+      "to": "concept-sound-engine",
+      "rel": "related",
+      "created_at": "2026-09-01T05:29:56+00:00",
+      "note": "Uses tone/brightness and space/reverb semantics"
+    },
+    {
+      "from": "concept-screen-01",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:07+00:00",
+      "note": "Manual Screen 01"
+    },
+    {
+      "from": "image-p06-screen-01-boot-1378e9148d",
+      "to": "concept-screen-01",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:08+00:00",
+      "note": "UI mockup for Screen 01"
+    },
+    {
+      "from": "concept-screen-01",
+      "to": "image-p06-screen-01-boot-1378e9148d",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:08+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-02",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:10+00:00",
+      "note": "Manual Screen 02"
+    },
+    {
+      "from": "image-p07-screen-02-play-home-9e5c1836cf",
+      "to": "concept-screen-02",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:10+00:00",
+      "note": "UI mockup for Screen 02"
+    },
+    {
+      "from": "concept-screen-02",
+      "to": "image-p07-screen-02-play-home-9e5c1836cf",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:10+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-03",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:12+00:00",
+      "note": "Manual Screen 03"
+    },
+    {
+      "from": "image-p08-screen-03-main-menu-7b67056705",
+      "to": "concept-screen-03",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:12+00:00",
+      "note": "UI mockup for Screen 03"
+    },
+    {
+      "from": "concept-screen-03",
+      "to": "image-p08-screen-03-main-menu-7b67056705",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:12+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-04",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "note": "Manual Screen 04"
+    },
+    {
+      "from": "image-p09-screen-04-sound-library-v1-bf14090f1c",
+      "to": "concept-screen-04",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "note": "UI mockup for Screen 04"
+    },
+    {
+      "from": "concept-screen-04",
+      "to": "image-p09-screen-04-sound-library-v1-bf14090f1c",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "image-p09-screen-04-sound-library-v2-4d9534db6b",
+      "to": "concept-screen-04",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "note": "UI mockup for Screen 04"
+    },
+    {
+      "from": "concept-screen-04",
+      "to": "image-p09-screen-04-sound-library-v2-4d9534db6b",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:14+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-05",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:16+00:00",
+      "note": "Manual Screen 05"
+    },
+    {
+      "from": "image-p10-screen-05-sound-detail-d2a7535ac9",
+      "to": "concept-screen-05",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:16+00:00",
+      "note": "UI mockup for Screen 05"
+    },
+    {
+      "from": "concept-screen-05",
+      "to": "image-p10-screen-05-sound-detail-d2a7535ac9",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:16+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-06",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:18+00:00",
+      "note": "Manual Screen 06"
+    },
+    {
+      "from": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
+      "to": "concept-screen-06",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:18+00:00",
+      "note": "UI mockup for Screen 06"
+    },
+    {
+      "from": "concept-screen-06",
+      "to": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:18+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-07",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:20+00:00",
+      "note": "Manual Screen 07"
+    },
+    {
+      "from": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
+      "to": "concept-screen-07",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:20+00:00",
+      "note": "UI mockup for Screen 07"
+    },
+    {
+      "from": "concept-screen-07",
+      "to": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:20+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-08",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:22+00:00",
+      "note": "Manual Screen 08"
+    },
+    {
+      "from": "image-p13-screen-08-sound-edit-eq-5125a35d96",
+      "to": "concept-screen-08",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:22+00:00",
+      "note": "UI mockup for Screen 08"
+    },
+    {
+      "from": "concept-screen-08",
+      "to": "image-p13-screen-08-sound-edit-eq-5125a35d96",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:22+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-09",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:24+00:00",
+      "note": "Manual Screen 09"
+    },
+    {
+      "from": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
+      "to": "concept-screen-09",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:24+00:00",
+      "note": "UI mockup for Screen 09"
+    },
+    {
+      "from": "concept-screen-09",
+      "to": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:24+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-10",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:26+00:00",
+      "note": "Manual Screen 10"
+    },
+    {
+      "from": "image-p15-screen-10-save-sound-a9e6553ed8",
+      "to": "concept-screen-10",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:26+00:00",
+      "note": "UI mockup for Screen 10"
+    },
+    {
+      "from": "concept-screen-10",
+      "to": "image-p15-screen-10-save-sound-a9e6553ed8",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:26+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-11",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:27+00:00",
+      "note": "Manual Screen 11"
+    },
+    {
+      "from": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
+      "to": "concept-screen-11",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:28+00:00",
+      "note": "UI mockup for Screen 11"
+    },
+    {
+      "from": "concept-screen-11",
+      "to": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:28+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-12",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:30+00:00",
+      "note": "Manual Screen 12"
+    },
+    {
+      "from": "image-p17-screen-12-sampler-home-313d164399",
+      "to": "concept-screen-12",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:30+00:00",
+      "note": "UI mockup for Screen 12"
+    },
+    {
+      "from": "concept-screen-12",
+      "to": "image-p17-screen-12-sampler-home-313d164399",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:30+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-13",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:32+00:00",
+      "note": "Manual Screen 13"
+    },
+    {
+      "from": "image-p18-screen-13-mic-record-74fad02713",
+      "to": "concept-screen-13",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:32+00:00",
+      "note": "UI mockup for Screen 13"
+    },
+    {
+      "from": "concept-screen-13",
+      "to": "image-p18-screen-13-mic-record-74fad02713",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:32+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-14",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:34+00:00",
+      "note": "Manual Screen 14"
+    },
+    {
+      "from": "image-p19-screen-14-import-file-5e06069587",
+      "to": "concept-screen-14",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:35+00:00",
+      "note": "UI mockup for Screen 14"
+    },
+    {
+      "from": "concept-screen-14",
+      "to": "image-p19-screen-14-import-file-5e06069587",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:35+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-15",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:36+00:00",
+      "note": "Manual Screen 15"
+    },
+    {
+      "from": "image-p20-screen-15-sample-edit-trim-da078db4b7",
+      "to": "concept-screen-15",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:37+00:00",
+      "note": "UI mockup for Screen 15"
+    },
+    {
+      "from": "concept-screen-15",
+      "to": "image-p20-screen-15-sample-edit-trim-da078db4b7",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:37+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-16",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:38+00:00",
+      "note": "Manual Screen 16"
+    },
+    {
+      "from": "image-p21-screen-16-sample-tools-849e054cc7",
+      "to": "concept-screen-16",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:39+00:00",
+      "note": "UI mockup for Screen 16"
+    },
+    {
+      "from": "concept-screen-16",
+      "to": "image-p21-screen-16-sample-tools-849e054cc7",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:39+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-17",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:41+00:00",
+      "note": "Manual Screen 17"
+    },
+    {
+      "from": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
+      "to": "concept-screen-17",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:41+00:00",
+      "note": "UI mockup for Screen 17"
+    },
+    {
+      "from": "concept-screen-17",
+      "to": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:41+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-18",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "note": "Manual Screen 18"
+    },
+    {
+      "from": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
+      "to": "concept-screen-18",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "note": "UI mockup for Screen 18"
+    },
+    {
+      "from": "concept-screen-18",
+      "to": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
+      "to": "concept-screen-18",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "note": "UI mockup for Screen 18"
+    },
+    {
+      "from": "concept-screen-18",
+      "to": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:43+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-19",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:45+00:00",
+      "note": "Manual Screen 19"
+    },
+    {
+      "from": "image-p24-screen-19-sample-edit-eq-b7080f1234",
+      "to": "concept-screen-19",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:45+00:00",
+      "note": "UI mockup for Screen 19"
+    },
+    {
+      "from": "concept-screen-19",
+      "to": "image-p24-screen-19-sample-edit-eq-b7080f1234",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:45+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-20",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:47+00:00",
+      "note": "Manual Screen 20"
+    },
+    {
+      "from": "image-p25-screen-20-save-sample-ba14c613a3",
+      "to": "concept-screen-20",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:47+00:00",
+      "note": "UI mockup for Screen 20"
+    },
+    {
+      "from": "concept-screen-20",
+      "to": "image-p25-screen-20-save-sample-ba14c613a3",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:47+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-21",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "note": "Manual Screen 21"
+    },
+    {
+      "from": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
+      "to": "concept-screen-21",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "note": "UI mockup for Screen 21"
+    },
+    {
+      "from": "concept-screen-21",
+      "to": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
+      "to": "concept-screen-21",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "note": "UI mockup for Screen 21"
+    },
+    {
+      "from": "concept-screen-21",
+      "to": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:49+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-22",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:51+00:00",
+      "note": "Manual Screen 22"
+    },
+    {
+      "from": "image-p27-screen-22-loop-track-menu-db856743c2",
+      "to": "concept-screen-22",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:51+00:00",
+      "note": "UI mockup for Screen 22"
+    },
+    {
+      "from": "concept-screen-22",
+      "to": "image-p27-screen-22-loop-track-menu-db856743c2",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:51+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-23",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:53+00:00",
+      "note": "Manual Screen 23"
+    },
+    {
+      "from": "image-p28-screen-23-loop-options-fa60a40139",
+      "to": "concept-screen-23",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:53+00:00",
+      "note": "UI mockup for Screen 23"
+    },
+    {
+      "from": "concept-screen-23",
+      "to": "image-p28-screen-23-loop-options-fa60a40139",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:53+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-24",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:55+00:00",
+      "note": "Manual Screen 24"
+    },
+    {
+      "from": "image-p29-screen-24-step-sequencer-a047895360",
+      "to": "concept-screen-24",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:55+00:00",
+      "note": "UI mockup for Screen 24"
+    },
+    {
+      "from": "concept-screen-24",
+      "to": "image-p29-screen-24-step-sequencer-a047895360",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:56+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-25",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:57+00:00",
+      "note": "Manual Screen 25"
+    },
+    {
+      "from": "image-p30-screen-25-step-edit-6b7131d63a",
+      "to": "concept-screen-25",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:57+00:00",
+      "note": "UI mockup for Screen 25"
+    },
+    {
+      "from": "concept-screen-25",
+      "to": "image-p30-screen-25-step-edit-6b7131d63a",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:57+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-26",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:30:59+00:00",
+      "note": "Manual Screen 26"
+    },
+    {
+      "from": "image-p31-screen-26-mixer-5af70d21a7",
+      "to": "concept-screen-26",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:30:59+00:00",
+      "note": "UI mockup for Screen 26"
+    },
+    {
+      "from": "concept-screen-26",
+      "to": "image-p31-screen-26-mixer-5af70d21a7",
+      "rel": "related",
+      "created_at": "2026-09-01T05:30:59+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-27",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:01+00:00",
+      "note": "Manual Screen 27"
+    },
+    {
+      "from": "image-p32-screen-27-projects-79156bd48a",
+      "to": "concept-screen-27",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:01+00:00",
+      "note": "UI mockup for Screen 27"
+    },
+    {
+      "from": "concept-screen-27",
+      "to": "image-p32-screen-27-projects-79156bd48a",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:01+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-28",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:03+00:00",
+      "note": "Manual Screen 28"
+    },
+    {
+      "from": "image-p33-screen-28-save-project-6af5d2cf6f",
+      "to": "concept-screen-28",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:03+00:00",
+      "note": "UI mockup for Screen 28"
+    },
+    {
+      "from": "concept-screen-28",
+      "to": "image-p33-screen-28-save-project-6af5d2cf6f",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:03+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-29",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:05+00:00",
+      "note": "Manual Screen 29"
+    },
+    {
+      "from": "image-p34-screen-29-text-entry-2fd5c8e60c",
+      "to": "concept-screen-29",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:05+00:00",
+      "note": "UI mockup for Screen 29"
+    },
+    {
+      "from": "concept-screen-29",
+      "to": "image-p34-screen-29-text-entry-2fd5c8e60c",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:05+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-30",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:07+00:00",
+      "note": "Manual Screen 30"
+    },
+    {
+      "from": "image-p35-screen-30-settings-home-33d632f163",
+      "to": "concept-screen-30",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:07+00:00",
+      "note": "UI mockup for Screen 30"
+    },
+    {
+      "from": "concept-screen-30",
+      "to": "image-p35-screen-30-settings-home-33d632f163",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:07+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-31",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:09+00:00",
+      "note": "Manual Screen 31"
+    },
+    {
+      "from": "image-p36-screen-31-settings-master-au-3583e174e1",
+      "to": "concept-screen-31",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:09+00:00",
+      "note": "UI mockup for Screen 31"
+    },
+    {
+      "from": "concept-screen-31",
+      "to": "image-p36-screen-31-settings-master-au-3583e174e1",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:09+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-32",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:11+00:00",
+      "note": "Manual Screen 32"
+    },
+    {
+      "from": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
+      "to": "concept-screen-32",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:11+00:00",
+      "note": "UI mockup for Screen 32"
+    },
+    {
+      "from": "concept-screen-32",
+      "to": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:11+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-33",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:12+00:00",
+      "note": "Manual Screen 33"
+    },
+    {
+      "from": "image-p38-screen-33-settings-display-e0529c2f4a",
+      "to": "concept-screen-33",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:12+00:00",
+      "note": "UI mockup for Screen 33"
+    },
+    {
+      "from": "concept-screen-33",
+      "to": "image-p38-screen-33-settings-display-e0529c2f4a",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:13+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-34",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:14+00:00",
+      "note": "Manual Screen 34"
+    },
+    {
+      "from": "image-p39-screen-34-settings-storage-cdd01431e5",
+      "to": "concept-screen-34",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:14+00:00",
+      "note": "UI mockup for Screen 34"
+    },
+    {
+      "from": "concept-screen-34",
+      "to": "image-p39-screen-34-settings-storage-cdd01431e5",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:15+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-35",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:16+00:00",
+      "note": "Manual Screen 35"
+    },
+    {
+      "from": "image-p40-screen-35-settings-permissio-19f191d5b1",
+      "to": "concept-screen-35",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:16+00:00",
+      "note": "UI mockup for Screen 35"
+    },
+    {
+      "from": "concept-screen-35",
+      "to": "image-p40-screen-35-settings-permissio-19f191d5b1",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:16+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-36",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "Manual Screen 36"
+    },
+    {
+      "from": "image-p41-screen-36-about-v2-8fe1804b60",
+      "to": "concept-screen-36",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "UI mockup for Screen 36"
+    },
+    {
+      "from": "concept-screen-36",
+      "to": "image-p41-screen-36-about-v2-8fe1804b60",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "image-p41-screen-36-about-v3-520449e7a4",
+      "to": "concept-screen-36",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "UI mockup for Screen 36"
+    },
+    {
+      "from": "concept-screen-36",
+      "to": "image-p41-screen-36-about-v3-520449e7a4",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "image-p41-screen-36-about-v1-ff3d0f1de1",
+      "to": "concept-screen-36",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "UI mockup for Screen 36"
+    },
+    {
+      "from": "concept-screen-36",
+      "to": "image-p41-screen-36-about-v1-ff3d0f1de1",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:18+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-37",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:20+00:00",
+      "note": "Manual Screen 37"
+    },
+    {
+      "from": "image-p42-screen-37-mic-blocked-926c5e4be0",
+      "to": "concept-screen-37",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:20+00:00",
+      "note": "UI mockup for Screen 37"
+    },
+    {
+      "from": "concept-screen-37",
+      "to": "image-p42-screen-37-mic-blocked-926c5e4be0",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:20+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-screen-38",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:22+00:00",
+      "note": "Manual Screen 38"
+    },
+    {
+      "from": "image-p43-screen-38-destructive-confir-24f60c8554",
+      "to": "concept-screen-38",
+      "rel": "depicts",
+      "created_at": "2026-09-01T05:31:22+00:00",
+      "note": "UI mockup for Screen 38"
+    },
+    {
+      "from": "concept-screen-38",
+      "to": "image-p43-screen-38-destructive-confir-24f60c8554",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:22+00:00",
+      "note": "Has display mockup image"
+    },
+    {
+      "from": "concept-area-play",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:38+00:00"
+    },
+    {
+      "from": "concept-area-play",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:38+00:00"
+    },
+    {
+      "from": "concept-area-loop",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:39+00:00"
+    },
+    {
+      "from": "concept-area-loop",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:40+00:00"
+    },
+    {
+      "from": "concept-area-sound",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:41+00:00"
+    },
+    {
+      "from": "concept-area-sound",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:41+00:00"
+    },
+    {
+      "from": "concept-area-mix",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:43+00:00"
+    },
+    {
+      "from": "concept-area-mix",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:43+00:00"
+    },
+    {
+      "from": "concept-area-project",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:44+00:00"
+    },
+    {
+      "from": "concept-area-project",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:44+00:00"
+    },
+    {
+      "from": "concept-area-settings",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:31:46+00:00"
+    },
+    {
+      "from": "concept-area-settings",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:31:46+00:00"
+    },
+    {
+      "from": "concept-workflow-play-sound",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:03+00:00"
+    },
+    {
+      "from": "concept-workflow-play-sound",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:03+00:00"
+    },
+    {
+      "from": "concept-workflow-record-mic",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:04+00:00"
+    },
+    {
+      "from": "concept-workflow-record-mic",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:04+00:00"
+    },
+    {
+      "from": "concept-workflow-import",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:05+00:00"
+    },
+    {
+      "from": "concept-workflow-import",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:06+00:00"
+    },
+    {
+      "from": "concept-workflow-make-loop",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:07+00:00"
+    },
+    {
+      "from": "concept-workflow-make-loop",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:07+00:00"
+    },
+    {
+      "from": "concept-workflow-step-program",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:08+00:00"
+    },
+    {
+      "from": "concept-workflow-step-program",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:09+00:00"
+    },
+    {
+      "from": "concept-workflow-save-project",
+      "to": "document-cassio-v1-complete-operating-man-7fc14f07b2",
+      "rel": "references",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "concept-workflow-save-project",
+      "to": "concept-navigation-map",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "concept-workflow-play-sound",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "concept-workflow-play-sound",
+      "to": "concept-glass-poly",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "concept-area-play",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "concept-area-play",
+      "to": "concept-screen-03",
+      "rel": "related",
+      "created_at": "2026-09-01T05:32:10+00:00"
+    },
+    {
+      "from": "instruction-pdf-graphed",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T05:32:13+00:00"
+    },
+    {
+      "from": "finding-pdf-graph-complete",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T05:32:15+00:00"
+    },
+    {
+      "from": "finding-rails-milestone-a",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T05:53:03+00:00",
+      "note": "Milestone A app shipped"
+    },
+    {
+      "from": "finding-rails-milestone-a",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T05:53:03+00:00",
+      "note": "Implements PLAY home"
+    },
+    {
+      "from": "finding-rails-milestone-a",
+      "to": "concept-glass-poly",
+      "rel": "related",
+      "created_at": "2026-09-01T05:53:03+00:00",
+      "note": "Web Audio Glass Poly voice"
+    },
+    {
+      "from": "finding-ui-keyboard-vscreen-pwa",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T06:06:35+00:00"
+    },
+    {
+      "from": "finding-ui-keyboard-vscreen-pwa",
+      "to": "concept-screen-01",
+      "rel": "related",
+      "created_at": "2026-09-01T06:06:35+00:00",
+      "note": "Splash/boot on V-screen"
+    },
+    {
+      "from": "finding-ui-keyboard-vscreen-pwa",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T06:06:35+00:00",
+      "note": "Keyboard play behavior"
+    },
+    {
+      "from": "finding-ui-layout-menu-wave-topknob",
+      "to": "concept-hardware-front-panel",
+      "rel": "related",
+      "created_at": "2026-09-01T06:49:10+00:00",
+      "note": "Front-panel UX deviations and menu behavior"
+    },
+    {
+      "from": "finding-ui-overhead-knob-realestate",
+      "to": "finding-ui-keyboard-height-50pct",
+      "rel": "related",
+      "created_at": "2026-09-01T07:18:11+00:00",
+      "note": "Keeps locked keyboard height while reclaiming slack elsewhere"
+    },
+    {
+      "from": "finding-ui-pitch-wheel-nav-align",
+      "to": "concept-hardware-front-panel",
+      "rel": "related",
+      "created_at": "2026-09-01T07:24:50+00:00",
+      "note": "Studio pitch wheel addition beyond V1 panel legend"
+    }
+  ]
+}
