@@ -33,6 +33,10 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Local mkcert HTTPS materials (regenerate with bin/setup-https)
+/config/certs/
+/public/dev-ca.pem
+
 
 /app/assets/builds/*
 !/app/assets/builds/.keep

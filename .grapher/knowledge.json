@@ -2634,6 +2634,24 @@
       "meta": {},
       "created_at": "2026-09-01T20:42:27+00:00",
       "updated_at": "2026-09-01T20:42:27+00:00"
+    },
+    "finding-dev-https-lan-mic": {
+      "id": "finding-dev-https-lan-mic",
+      "type": "finding",
+      "title": "bin/dev-https LAN mkcert for phone mic",
+      "content": "Phone mic needs secure context. bin/setup-https generates mkcert certs for localhost + current LAN IP into config/certs/; copies rootCA to public/dev-ca.pem. bin/dev-https sets SSL_* + HTTPS_LAN=1, binds 0.0.0.0:3000 HTTPS, and serves CA over plain HTTP :3080 for first-time phone install (chicken/egg). development hosts cleared when HTTPS_LAN. Desktop: sudo mkcert -install. Phone: http://LAN:3080/dev-ca.pem install+trust, then https://LAN:3000/.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "dev",
+        "https",
+        "mkcert",
+        "mic",
+        "pwa"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T20:55:48+00:00",
+      "updated_at": "2026-09-01T20:55:48+00:00"
     }
   },
   "edges": [
@@ -4612,6 +4630,18 @@
       "to": "concept-area-sound",
       "rel": "related",
       "created_at": "2026-09-01T20:42:29+00:00"
+    },
+    {
+      "from": "finding-dev-https-lan-mic",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T20:55:49+00:00"
+    },
+    {
+      "from": "finding-dev-https-lan-mic",
+      "to": "finding-rails-milestone-c",
+      "rel": "related",
+      "created_at": "2026-09-01T20:55:50+00:00"
     }
   ]
 }
