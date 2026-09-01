@@ -2279,6 +2279,133 @@
       "meta": {},
       "created_at": "2026-09-01T07:43:40+00:00",
       "updated_at": "2026-09-01T07:43:40+00:00"
+    },
+    "finding-rails-milestone-b": {
+      "id": "finding-rails-milestone-b",
+      "type": "finding",
+      "title": "Rails Milestone B: Screens 04–11 sound library path",
+      "content": "Milestone B implements Sound Library → Detail → Shape/Env/EQ/FX edit → Save Sound → Pad Assign (Screens 04–11). PLAY D LIBRARY and MENU→SOUND open library. Factory/User/Rec/Fav tabs; audition on highlight; USE KEYS commits keyboard sound; ROOT is per-sound (LEFT/RIGHT, UP/DOWN oct) not project-locked; Save As uses device keyboard for names; factory never overwritten. GlassPoly + AudioEngine gain continuous rideable cutoff/res/A/R/EQ/reverb/delay for mid-record effect capture later. IndexedDB userSounds + favorites + pads in recovery. Non-playable factory entries browse-only until voices exist.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "rails",
+        "milestone-b"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T07:59:46+00:00",
+      "updated_at": "2026-09-01T07:59:46+00:00"
+    },
+    "finding-ui-pads-unsquish-flush": {
+      "id": "finding-ui-pads-unsquish-flush",
+      "type": "finding",
+      "title": "Pad pack wins over mid-panel stretch",
+      "content": "Pads must stay content-sized (height:auto, align-self/align-content center, uniform gap 0.24rem / 0.18rem on SE) with SE-safe min(vw,vh) touch floor on .pad — never min-height:0 and never align-content:space-between. mid-panel is a 2-col grid: nav-cluster align-self stretch + justify space-between flushes BACK/transport to the pad block height; pads do not stretch to fill mid-row. Flush must not override gap-pack or pad min size.\n",
+      "path": null,
+      "tags": [
+        "ui",
+        "pads",
+        "layout"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:06:35+00:00",
+      "updated_at": "2026-09-01T08:06:35+00:00"
+    },
+    "finding-fix-nan-naming-manage-root": {
+      "id": "finding-fix-nan-naming-manage-root",
+      "type": "finding",
+      "title": "Edit NaN fixed; device naming; user manage; ROOT UX",
+      "content": "Fixed Sound Edit cutoff NaN: patchFromSound/openEdit no longer spread undefined brightness (sanitizePatch). Save As naming uses on-LCD device keyboard (name-entry screen) and auto-continues Save As after Enter. User Detail D MORE opens manage: rename, duplicate, delete with Screen-38-style confirm; factory cannot delete. Sound Detail highlights ROOT row with ◀▶ KEY / ▲▼ OCT hints; root changes toast and update live keyboard mapping when that sound is loaded.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "bugfix",
+        "ui",
+        "sounds"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:16:24+00:00",
+      "updated_at": "2026-09-01T08:16:24+00:00"
+    },
+    "finding-ui-play-live-root-orient": {
+      "id": "finding-ui-play-live-root-orient",
+      "type": "finding",
+      "title": "PLAY live ROOT shift; landscape pad reflow",
+      "content": "PLAY D-pad: LEFT/RIGHT chromatic ROOT, UP/DOWN root octave; toast + remapHeldNotes for live looping. Chassis uses display:none in landscape (not visibility:hidden) so pads do not layout under short vh; on portrait return double-rAF reflow clears pad/mid-panel inline sizes. User Detail shows D MORE · RENAME/DUP/DELETE hint.\n",
+      "path": null,
+      "tags": [
+        "ui",
+        "play",
+        "pads",
+        "root"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:27:41+00:00",
+      "updated_at": "2026-09-01T08:27:41+00:00"
+    },
+    "finding-ui-landscape-pad-squash-v2": {
+      "id": "finding-ui-landscape-pad-squash-v2",
+      "type": "finding",
+      "title": "Landscape pad squash: mid-row max-content + vw mins",
+      "content": "Persistent landscape→portrait pad squash: chassis mid-row is now max-content (not minmax(0,1.1fr)) so the pad band cannot be crushed. Pad min size is vw-only clamp (no vh) to avoid iOS short-vh poison after rotate. Portrait return debounces 120ms, display-cycles .mid-row, and listens to visualViewport resize while _needsOrientReflow is set. Landscape still display:none on chassis.\n",
+      "path": null,
+      "tags": [
+        "ui",
+        "pads",
+        "layout",
+        "orientation"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:34:58+00:00",
+      "updated_at": "2026-09-01T08:34:58+00:00"
+    },
+    "finding-ui-lcd-nav-text-bump": {
+      "id": "finding-ui-lcd-nav-text-bump",
+      "type": "finding",
+      "title": "LCD nav text ~10% larger, wrap-safe",
+      "content": "MENU items, library rows, soft-key strip, param/manage lists bumped ~10% in cassio.css (selector-specific, not global .lcd base). Soft cells and menu/lib/param rows use nowrap+ellipsis to avoid ugly wraps or soft-strip vertical shift. Hints stay wrap-allowed at slight bump.",
+      "path": null,
+      "tags": [
+        "ui",
+        "lcd",
+        "typography",
+        "readability"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:44:28+00:00",
+      "updated_at": "2026-09-01T08:44:28+00:00"
+    },
+    "finding-ui-keyboard-shorter-midgap": {
+      "id": "finding-ui-keyboard-shorter-midgap",
+      "type": "finding",
+      "title": "Keyboard −10% + mid-row gap",
+      "content": "Keyboard height clamp set to 90% of prior (clamp(4.14rem, min(14.2vh, 25.2vw), 6.075rem)) with margin-top ≈ removed height (clamp(0.46rem, min(1.55vh, 2.8vw), 0.675rem)) so space opens between mid-row buttons and keys. Chassis gap unchanged. Black-key inset still relative to keyboard box.",
+      "path": null,
+      "tags": [
+        "ui",
+        "keyboard",
+        "layout"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:49:37+00:00",
+      "updated_at": "2026-09-01T08:49:37+00:00"
+    },
+    "finding-roadmap-bplus-then-c": {
+      "id": "finding-roadmap-bplus-then-c",
+      "type": "finding",
+      "title": "Roadmap: B+ factory voices/presets then C Sampler",
+      "content": "After Milestone B (sound library path) lands: next build is Milestone B+ — unlock factory presets WITH voice engines (synth stubs + kick/snare/hat for pads; voice router by sound.voice). Then Milestone C — Sampler Screens 12–20 (mic/import/edit/save). Preset = library card/patch; voice = DSP engine. Do not use graphify.",
+      "path": null,
+      "tags": [
+        "roadmap",
+        "milestone",
+        "factory",
+        "sampler"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T08:57:16+00:00",
+      "updated_at": "2026-09-01T08:57:16+00:00"
     }
   },
   "edges": [
@@ -3860,6 +3987,193 @@
       "rel": "related",
       "created_at": "2026-09-01T07:24:50+00:00",
       "note": "Studio pitch wheel addition beyond V1 panel legend"
+    },
+    {
+      "from": "finding-rails-milestone-b",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T07:59:47+00:00",
+      "note": "Milestone B shipped"
+    },
+    {
+      "from": "finding-rails-milestone-b",
+      "to": "concept-screen-04",
+      "rel": "related",
+      "created_at": "2026-09-01T07:59:47+00:00",
+      "note": "Library"
+    },
+    {
+      "from": "finding-rails-milestone-b",
+      "to": "concept-screen-05",
+      "rel": "related",
+      "created_at": "2026-09-01T07:59:48+00:00",
+      "note": "Detail"
+    },
+    {
+      "from": "finding-rails-milestone-b",
+      "to": "concept-workflow-play-sound",
+      "rel": "related",
+      "created_at": "2026-09-01T07:59:48+00:00",
+      "note": "Finishes play-a-sound path"
+    },
+    {
+      "from": "finding-rails-milestone-b",
+      "to": "concept-library-rules",
+      "rel": "related",
+      "created_at": "2026-09-01T07:59:48+00:00",
+      "note": "Factory immutable / user Save As"
+    },
+    {
+      "from": "finding-ui-pads-unsquish-flush",
+      "to": "finding-ui-pad-row-gap-pack",
+      "rel": "related",
+      "created_at": "2026-09-01T08:06:37+00:00",
+      "note": "Reasserts gap-pack"
+    },
+    {
+      "from": "finding-ui-pads-unsquish-flush",
+      "to": "finding-ui-mid-panel-flush",
+      "rel": "related",
+      "created_at": "2026-09-01T08:06:37+00:00",
+      "note": "Flush without crushing pads"
+    },
+    {
+      "from": "finding-ui-pads-unsquish-flush",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T08:06:37+00:00",
+      "note": "Pad layout fix"
+    },
+    {
+      "from": "finding-fix-nan-naming-manage-root",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T08:16:26+00:00",
+      "note": "Bugfix + manage UX"
+    },
+    {
+      "from": "finding-fix-nan-naming-manage-root",
+      "to": "concept-screen-10",
+      "rel": "related",
+      "created_at": "2026-09-01T08:16:26+00:00",
+      "note": "Save As naming"
+    },
+    {
+      "from": "finding-fix-nan-naming-manage-root",
+      "to": "concept-screen-05",
+      "rel": "related",
+      "created_at": "2026-09-01T08:16:27+00:00",
+      "note": "ROOT UX on Detail"
+    },
+    {
+      "from": "finding-fix-nan-naming-manage-root",
+      "to": "concept-library-rules",
+      "rel": "related",
+      "created_at": "2026-09-01T08:16:27+00:00",
+      "note": "User delete/rename"
+    },
+    {
+      "from": "finding-fix-nan-naming-manage-root",
+      "to": "concept-screen-38",
+      "rel": "related",
+      "created_at": "2026-09-01T08:16:27+00:00",
+      "note": "Delete confirm"
+    },
+    {
+      "from": "finding-ui-play-live-root-orient",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T08:27:43+00:00",
+      "note": "Live root + orient fix"
+    },
+    {
+      "from": "finding-ui-play-live-root-orient",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T08:27:43+00:00",
+      "note": "PLAY live key"
+    },
+    {
+      "from": "finding-ui-play-live-root-orient",
+      "to": "finding-ui-pads-unsquish-flush",
+      "rel": "related",
+      "created_at": "2026-09-01T08:27:43+00:00",
+      "note": "Orientation reflow"
+    },
+    {
+      "from": "finding-ui-landscape-pad-squash-v2",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T08:35:00+00:00",
+      "note": "Orient pad fix v2"
+    },
+    {
+      "from": "finding-ui-landscape-pad-squash-v2",
+      "to": "finding-ui-pads-unsquish-flush",
+      "rel": "related",
+      "created_at": "2026-09-01T08:35:00+00:00",
+      "note": "Strengthens pack rules"
+    },
+    {
+      "from": "finding-ui-landscape-pad-squash-v2",
+      "to": "finding-ui-play-live-root-orient",
+      "rel": "related",
+      "created_at": "2026-09-01T08:35:00+00:00",
+      "note": "Supersedes weak reflow"
+    },
+    {
+      "from": "finding-ui-lcd-nav-text-bump",
+      "to": "concept-screen-03",
+      "rel": "related",
+      "created_at": "2026-09-01T08:44:41+00:00"
+    },
+    {
+      "from": "finding-ui-lcd-nav-text-bump",
+      "to": "concept-screen-04",
+      "rel": "related",
+      "created_at": "2026-09-01T08:44:42+00:00"
+    },
+    {
+      "from": "finding-ui-lcd-nav-text-bump",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T08:44:42+00:00"
+    },
+    {
+      "from": "finding-ui-keyboard-shorter-midgap",
+      "to": "finding-ui-keyboard-height-50pct",
+      "rel": "related",
+      "created_at": "2026-09-01T08:49:39+00:00"
+    },
+    {
+      "from": "finding-ui-keyboard-shorter-midgap",
+      "to": "concept-screen-02",
+      "rel": "related",
+      "created_at": "2026-09-01T08:49:39+00:00"
+    },
+    {
+      "from": "finding-roadmap-bplus-then-c",
+      "to": "finding-rails-milestone-b",
+      "rel": "related",
+      "created_at": "2026-09-01T08:57:18+00:00"
+    },
+    {
+      "from": "finding-roadmap-bplus-then-c",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T08:57:18+00:00"
+    },
+    {
+      "from": "finding-roadmap-bplus-then-c",
+      "to": "concept-factory-library",
+      "rel": "related",
+      "created_at": "2026-09-01T08:57:18+00:00"
+    },
+    {
+      "from": "finding-roadmap-bplus-then-c",
+      "to": "concept-area-sound",
+      "rel": "related",
+      "created_at": "2026-09-01T08:57:18+00:00"
     }
   ]
 }

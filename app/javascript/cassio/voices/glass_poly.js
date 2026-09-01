@@ -14,23 +14,62 @@ export function noteNameToMidi(name) {
   return (parseInt(m[2], 10) + 1) * 12 + pc
 }
 
-/** Glass Poly — brightness (cutoff) + space (engine wet) + pitch bend. */
+/** Glass Poly — rideable filter/env; FX via engine. */
 export class GlassPolyVoice {
   constructor(engine) {
     this.engine = engine
     this.brightness = 0.68
-    this.pitchBend = 0 // semitones, typically -2..+2
+    this.resonance = 0.34
+    this.pitchBend = 0
     this.voices = new Map()
     this.attack = 0.018
     this.release = 0.48
   }
 
+  applyPatch(patch) {
+    if (!patch) return
+    if (patch.brightness != null) this.setBrightness(patch.brightness)
+    if (patch.resonance != null) this.setResonance(patch.resonance)
+    if (patch.attack != null) this.setAttack(patch.attack)
+    if (patch.release != null) this.setRelease(patch.release)
+    if (patch.reverb != null) this.engine.setSpace(patch.reverb)
+    if (patch.delay != null) this.engine.setDelay(patch.delay)
+    if (patch.bassDb != null) this.engine.setBassDb(patch.bassDb)
+    if (patch.trebleDb != null) this.engine.setTrebleDb(patch.trebleDb)
+  }
+
+  #cutoffHz() {
+    return 400 + this.brightness * 7600
+  }
+
+  #q() {
+    return 0.5 + this.resonance * 11.5
+  }
+
   setBrightness(v) {
     this.brightness = Math.min(1, Math.max(0.05, v))
-    const cutoff = 400 + this.brightness * 7600
+    const cutoff = this.#cutoffHz()
+    const t = this.engine.now()
     for (const vox of this.voices.values()) {
-      vox.filter.frequency.setTargetAtTime(cutoff, this.engine.now(), 0.03)
+      vox.filter.frequency.setTargetAtTime(cutoff, t, 0.03)
     }
+  }
+
+  setResonance(v) {
+    this.resonance = Math.min(1, Math.max(0, v))
+    const q = this.#q()
+    const t = this.engine.now()
+    for (const vox of this.voices.values()) {
+      vox.filter.Q.setTargetAtTime(q, t, 0.03)
+    }
+  }
+
+  setAttack(v) {
+    this.attack = Math.min(1.2, Math.max(0.005, v))
+  }
+
+  setRelease(v) {
+    this.release = Math.min(2.5, Math.max(0.02, v))
   }
 
   setPitchBend(semitones) {
@@ -65,8 +104,8 @@ export class GlassPolyVoice {
     mix.gain.value = 0.35
     const filter = ctx.createBiquadFilter()
     filter.type = "lowpass"
-    filter.Q.value = 1.2
-    filter.frequency.value = 400 + this.brightness * 7600
+    filter.Q.value = this.#q()
+    filter.frequency.value = this.#cutoffHz()
 
     const env = ctx.createGain()
     env.gain.setValueAtTime(0, t)

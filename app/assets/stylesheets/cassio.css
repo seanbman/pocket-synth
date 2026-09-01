@@ -65,8 +65,7 @@ html, body {
 }
 
 .cassio-stage.landscape .chassis {
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
 }
 
 .portrait-gate {
@@ -109,7 +108,7 @@ html, body {
   border-radius: 0;
   padding: max(0.45rem, env(safe-area-inset-top)) max(0.45rem, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0.45rem, env(safe-area-inset-left));
   display: grid;
-  grid-template-rows: auto minmax(0, 1.25fr) minmax(0, 1.1fr) auto;
+  grid-template-rows: auto minmax(0, 1.35fr) max-content auto;
   gap: 0.28rem;
   min-height: 0;
 }
@@ -370,7 +369,7 @@ html, body {
   box-shadow: 0 0 6px rgba(255, 46, 126, 0.55);
 }
 
-/* Mid controls: nav height locked to pad block; pad gaps stay uniform */
+/* Mid controls: pad block is content-sized; nav stretches to that height */
 .mid-row {
   --mid-inset: 0.22rem;
   display: flex;
@@ -380,8 +379,8 @@ html, body {
 }
 
 .mid-panel {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: stretch;
   gap: 0.5rem;
   width: 100%;
@@ -392,19 +391,19 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.24rem;
-  flex: 1 1 0;
   min-width: 0;
-  min-height: 0;
-  height: max-content;
+  height: auto;
   width: calc(100% - var(--mid-inset) * 2);
   margin-inline: auto;
-  align-content: start;
+  align-self: center;
+  align-content: center;
   box-sizing: border-box;
 }
 .pad {
   aspect-ratio: 1 / 1;
   width: 100%;
-  min-height: 0;
+  min-width: clamp(2.4rem, 15vw, 3.5rem);
+  min-height: clamp(2.4rem, 15vw, 3.5rem);
   background: #151515;
   border: none;
   border-radius: 6px;
@@ -438,9 +437,10 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   gap: 0.25rem;
-  flex: 1 1 0;
   min-width: 0;
   min-height: 0;
+  height: 100%;
+  align-self: stretch;
   width: calc(100% - var(--mid-inset) * 2);
   margin-inline: auto;
   box-sizing: border-box;
@@ -503,7 +503,8 @@ html, body {
 
 .keyboard {
   position: relative;
-  height: clamp(4.6rem, min(15.75vh, 28vw), 6.75rem);
+  height: clamp(4.14rem, min(14.2vh, 25.2vw), 6.075rem);
+  margin-top: clamp(0.46rem, min(1.55vh, 2.8vw), 0.675rem);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -673,14 +674,163 @@ html, body {
   border-top: 1px solid #333;
   padding-top: 0.25rem;
   margin-top: auto;
-  font-size: 0.48rem;
+  font-size: 0.52rem;
 }
 .lcd-soft > div {
   border: 1px solid #333;
   padding: 0.2rem 0.1rem;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sk { color: var(--pink); font-weight: 700; }
+.lcd-soft > div.soft-active { border-color: #fff; }
+.lcd-soft > div.soft-disabled { opacity: 0.35; }
+
+.lib-body, .detail-body {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 0.35rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.lib-cat { font-size: 0.55rem; margin-bottom: 0.15rem; }
+.lib-list { overflow: auto; max-height: 100%; }
+.lib-row {
+  color: var(--green);
+  padding: 0.1rem 0.2rem;
+  margin-bottom: 0.05rem;
+  font-size: 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lib-row.selected {
+  background: var(--pink);
+  color: #000;
+  font-weight: 700;
+}
+.lib-detail-box {
+  border: 1px solid #888;
+  padding: 0.25rem;
+  font-size: 0.55rem;
+  line-height: 1.35;
+}
+.lib-detail-name { color: #fff; font-weight: 700; margin-bottom: 0.15rem; }
+.lib-hint { color: #fff; margin-top: 0.25rem; }
+
+.detail-params { margin: 0.35rem 0; font-size: 0.55rem; line-height: 1.45; }
+.detail-macros-box {
+  border: 1px solid #666;
+  padding: 0.3rem;
+  font-size: 0.48rem;
+  line-height: 1.4;
+}
+
+.edit-body, .save-body, .pad-assign-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.edit-meter { margin: 0.35rem 0; }
+.meter-track {
+  height: 0.45rem;
+  border: 1px solid #aaa;
+  margin: 0.15rem 0;
+  position: relative;
+}
+.meter-fill {
+  height: 100%;
+  background: var(--green);
+}
+.meter-val { font-size: 0.5rem; color: #fff; }
+.edit-hint { font-size: 0.48rem; margin-top: 0.4rem; line-height: 1.35; }
+.save-name-line { margin-top: 0.45rem; font-size: 0.55rem; }
+
+.pad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  margin: 0.35rem 0;
+}
+.pad-cell {
+  border: 1px solid #555;
+  padding: 0.25rem 0.15rem;
+  text-align: center;
+  font-size: 0.48rem;
+  min-height: 2.2rem;
+}
+.pad-cell.selected { border-color: var(--pink); }
+.pad-cell-num { color: var(--muted); }
+.pad-cell.selected .pad-cell-num { color: var(--pink); }
+.pad-cell-name { color: var(--green); margin-top: 0.15rem; }
+
+.param-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem;
+  padding: 0.12rem 0.2rem;
+  margin-bottom: 0.08rem;
+  font-size: 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.param-row.selected {
+  background: var(--pink);
+  color: #000;
+}
+.param-row.selected .muted,
+.param-row.selected .green,
+.param-row.selected .root-value {
+  color: #000;
+  font-weight: 700;
+}
+.root-value { font-size: 0.72rem; letter-spacing: 0.04em; }
+.param-hint {
+  color: var(--muted);
+  font-size: 0.45rem;
+  margin: 0 0.2rem 0.35rem;
+}
+
+.name-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.name-field {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.4rem;
+  background: #000;
+  border: 1px solid var(--pink);
+  color: var(--green);
+  font: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  caret-color: var(--pink);
+  outline: none;
+}
+.manage-body, .confirm-body {
+  flex: 1;
+  min-height: 0;
+  font-size: 0.6rem;
+  line-height: 1.45;
+}
+
+.name-input-host {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
 
 .menu-body {
   display: grid;
@@ -693,13 +843,17 @@ html, body {
   color: var(--green);
   padding: 0.12rem 0.2rem;
   margin-bottom: 0.08rem;
+  font-size: 0.62rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .menu-item.selected {
   background: var(--pink);
   color: #000;
   font-weight: 700;
 }
-.menu-hint { font-size: 0.48rem; line-height: 1.35; }
+.menu-hint { font-size: 0.52rem; line-height: 1.35; }
 
 /* Compact phones (e.g. iPhone SE) — keep controls usable without crushing */
 @media (max-height: 700px) {
@@ -711,6 +865,10 @@ html, body {
   }
   .pads {
     gap: 0.18rem;
+  }
+  .pad {
+    min-width: clamp(2.2rem, 14vw, 3.2rem);
+    min-height: clamp(2.2rem, 14vw, 3.2rem);
   }
   .knob-bay,
   .pitch-bay {

@@ -4,6 +4,9 @@ export function renderPlay(state) {
   const m2 = state.sound?.macros?.m2?.label || "FX"
   const hold = state.hold ? "ON" : "OFF"
   const transport = state.playing ? "PLAY" : state.recording ? "REC" : ""
+  const root = state.root || state.sound?.root || "C3"
+  const voice = (state.sound?.voice || "poly").toUpperCase()
+  const keyPc = String(root).replace(/-?\d+$/, "") || "C"
   return `
     <div class="lcd-screen play-screen">
       <div class="lcd-status">
@@ -19,9 +22,10 @@ export function renderPlay(state) {
       <div class="play-body">
         <div class="muted">SOUND</div>
         <div class="sound-name">${sound}</div>
-        <div class="play-meta"><span class="green">OCT ${state.octave}</span> <span class="green">VOICE POLY</span></div>
+        <div class="play-meta"><span class="green">OCT ${state.octave}</span> <span class="green">VOICE ${voice}</span></div>
         <canvas class="viz-wave" data-viz-wave width="256" height="48" aria-hidden="true"></canvas>
-        <div class="play-meta muted">KEY ${state.key} &nbsp; PAD BANK A &nbsp; HOLD ${hold}</div>
+        <div class="play-meta"><span class="green">KEY ${keyPc}</span> <span class="green">ROOT ${root}</span> <span class="muted">HOLD ${hold}</span></div>
+        <div class="play-meta muted">◀▶ KEY &nbsp; ▲▼ ROOT OCT &nbsp; PAD BANK A</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">OCT -</span></div>

@@ -13,6 +13,17 @@
         "m1": { "label": "TONE", "param": "brightness", "default": 0.68 },
         "m2": { "label": "FX", "param": "space", "default": 0.24 }
       },
+      "patch": {
+        "root": "C3",
+        "brightness": 0.68,
+        "resonance": 0.34,
+        "attack": 0.018,
+        "release": 0.48,
+        "bassDb": 0,
+        "trebleDb": 0,
+        "reverb": 0.24,
+        "delay": 0
+      },
       "playable": true
     },
     {
