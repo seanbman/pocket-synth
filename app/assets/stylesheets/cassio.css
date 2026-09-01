@@ -287,8 +287,8 @@ html, body {
     inset 0 -1px 0 rgba(255,255,255,0.12);
 }
 .knob {
-  width: clamp(2.15rem, min(10.5vw, 6.2vh), 3rem);
-  height: clamp(2.15rem, min(10.5vw, 6.2vh), 3rem);
+  width: clamp(2.35rem, min(11.4vw, 6.85vh), 3.25rem);
+  height: clamp(2.35rem, min(11.4vw, 6.85vh), 3.25rem);
   border-radius: 50%;
   border: none;
   padding: 0;
@@ -324,8 +324,8 @@ html, body {
     inset 0 -1px 0 rgba(255,255,255,0.12);
 }
 .pitch-wheel {
-  width: clamp(1.35rem, min(7vw, 4.2vh), 1.9rem);
-  height: clamp(2.6rem, min(14vh, 22vw), 4.4rem);
+  width: clamp(1.48rem, min(7.6vw, 4.55vh), 2.05rem);
+  height: clamp(2.85rem, min(15.2vh, 24vw), 4.75rem);
   border-radius: 999px;
   background:
     linear-gradient(90deg, #0a0a0a 0%, #2a2a2a 45%, #141414 55%, #050505 100%);
