@@ -409,7 +409,18 @@ export class SeqController {
     const tick = () => {
       this._raf = null
       if (a.screen !== "sequencer") return
-      const step = a.transport.playing ? a.stepSeq.playheadStep() : -1
+      const playLen = this.#trackMode() ? this.#trackSeq()?.length : null
+      const step = a.transport.playing ? a.stepSeq.playheadStep(playLen) : -1
+      if (step >= 0 && a.transport.playing) {
+        const playPage = Math.floor(step / PAGE)
+        const viewPage = Math.floor((a.seqCursor || 0) / PAGE)
+        if (playPage !== viewPage) {
+          a.seqCursor = step
+          a.render()
+          this._raf = requestAnimationFrame(tick)
+          return
+        }
+      }
       const page = Math.floor((a.seqCursor || 0) / PAGE)
       const col = step >= 0 && Math.floor(step / PAGE) === page ? step % PAGE : -1
       if (col !== this._lastCol) {
