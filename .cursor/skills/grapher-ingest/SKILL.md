@@ -1,40 +1,54 @@
 ---
 name: grapher-ingest
 description: >-
-  Ingest a directory into the grapher knowledge graph using Cursor's LLM to
-  understand documents and images, then write summaries and links. Use when the
-  user asks to graph, ingest, index, or map a folder of files/images into
-  grapher, or to enrich pending grapher stubs.
+  Fully ingest a directory into grapher with deep understanding. Cursor is the
+  enriching LLM: every document, image, video, and audio file must be consumed
+  and deeply understood — never path-only stubs. Use when graphing, ingesting,
+  indexing, or mapping a folder of files/media into grapher, or finishing
+  pending stubs.
 ---
 
-# Grapher LLM ingest
+# Grapher full-directory ingest (deep media understanding)
 
-You are the vision/reader. `grapher` only stores and retrieves — it does not interpret file contents.
+**Cursor is the enriching LLM.** `grapher` stores your words; it does not see, watch, or hear. Directory ingest succeeds only when **every** document, **image**, **video**, and **audio** file has been deeply consumed and that understanding is written into the graph.
+
+## Non-negotiables (read twice)
+
+1. **Paths are not knowledge.** Storing `--path` without rich `--content` is a failure — especially for images, video, and sound.
+2. **Process the entire pending queue.** No skipping media because it is “hard” or “binary.”
+3. **Images — deep visual understanding:** use image `Read`/vision. Graph what is depicted: subjects, layout, text in image, diagrams, UI, style, and project relevance. Filename captions are forbidden.
+4. **Videos — deep audiovisual understanding:** inspect frames/playback with available tools. Graph scenes, actions, on-screen text, speech if present, and how the clip informs the project — not “video file at …”.
+5. **Audio / sound — deep auditory understanding:** listen or extract speech/music/SFX meaning. Graph a real summary/transcript gist and role in the project — not “audio at …”.
+6. **Done only when** `grapher scan <DIR>` shows **pending 0** for the target set and search can hit facts that came from the media itself (not just filenames).
 
 ## Workflow
 
-1. Ensure store exists: `grapher init` (safe if already present).
-2. Queue work:
+1. `grapher init` if needed; `grapher cursor install` if rules/skills are missing.
+2. Queue:
    ```bash
    grapher ingest <DIR>
    ```
-   Optional filters: `--glob '**/*.{md,png}'`, `--types document,image`.
-3. Read the JSON `pending` list.
-4. For each pending entry (batch thoughtfully, but finish the queue):
-   - **Text/code/docs:** `Read` the `abs_path` or `path`
-   - **Images:** `Read` the image path so you see pixels, not just the filename
-   - Produce a short grounded summary (purpose, notable details, project relevance)
-   - Upsert:
+   Default covers `document`, `image`, `video`, and `audio`.
+3. Take the full `pending` list (`--json` if parsing).
+4. For **each** pending item until empty:
+   - Open `abs_path` with the right modality (text Read, image vision, video/audio inspection)
+   - Write a **deep** grounded summary into `--content` (the knowledge payload)
+   - Upsert with the exact pending `path` and `node_id`:
      ```bash
      grapher add --id <node_id> --type <type> --title "<title>" \
-       --path <path> --content "<summary>" --tags ingest,<more>
+       --path <path> --content "<deep understanding>" --tags ingest,<more>
      ```
-5. Link related nodes (`depicts`, `references`, `related`, …).
-6. Verify: `grapher scan <DIR>` should show `indexed` for processed files; `grapher search` should hit the new summaries.
+5. Link (`depicts`, `references`, `related`, …).
+6. Verify:
+   ```bash
+   grapher scan <DIR>
+   grapher search "<a detail that only exists inside an image/video/audio you ingested>"
+   ```
 
 ## Do / Don't
 
-- Do ground summaries in what you actually read/saw
-- Do keep `content` concise and embeddable
-- Don't paste entire file bodies into `--content`
-- Don't mark done while `pending_count` > 0 unless the user asked to stop early — report remaining ids
+- Do treat image/video/audio as mandatory first-class knowledge sources
+- Do put understanding in `content`; path only locates the original
+- Do keep `content` dense and embeddable (not whole file dumps)
+- Don't leave empty or filename-only media nodes
+- Don't stop while `pending_count > 0` unless the user explicitly aborts — then report remaining ids

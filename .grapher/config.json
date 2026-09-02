@@ -1,0 +1,19 @@
+{
+  "profile": "software",
+  "domain": "software",
+  "kinds": [
+    "knowledge",
+    "design",
+    "implementation",
+    "decision",
+    "operations"
+  ],
+  "stages": [
+    "ideation",
+    "designing",
+    "planning",
+    "developing",
+    "launching",
+    "maintaining"
+  ]
+}

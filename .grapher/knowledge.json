@@ -1,5 +1,27 @@
 {
-  "version": 1,
+  "version": 2,
+  "graph": {
+    "name": "cassio-brain",
+    "domain": "software",
+    "kinds": [
+      "knowledge",
+      "design",
+      "implementation",
+      "decision",
+      "operations"
+    ],
+    "stages": [
+      "ideation",
+      "designing",
+      "planning",
+      "developing",
+      "launching",
+      "maintaining"
+    ],
+    "profile": "software",
+    "created_at": "2026-09-02T09:01:59+00:00",
+    "updated_at": "2026-09-02T17:53:16+00:00"
+  },
   "nodes": {
     "document-cassio-v1-complete-operating-man-7fc14f07b2": {
       "id": "document-cassio-v1-complete-operating-man-7fc14f07b2",
@@ -18,10 +40,21 @@
       ],
       "meta": {
         "source": "ingest",
-        "enriched_at": "2026-09-01T05:05:32+00:00"
+        "enriched_at": "2026-09-01T05:05:32+00:00",
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
       },
       "created_at": "2026-09-01T05:00:08+00:00",
-      "updated_at": "2026-09-01T05:05:32+00:00"
+      "updated_at": "2026-09-01T05:05:32+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-cassio-project": {
       "id": "concept-cassio-project",
@@ -37,7 +70,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:05:36+00:00",
-      "updated_at": "2026-09-01T05:53:03+00:00"
+      "updated_at": "2026-09-01T05:53:03+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-consult-grapher-before-changes": {
       "id": "finding-consult-grapher-before-changes",
@@ -52,7 +92,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:05:37+00:00",
-      "updated_at": "2026-09-01T05:05:37+00:00"
+      "updated_at": "2026-09-01T05:05:37+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p01-cover-8c5dcf373e": {
       "id": "image-p01-cover-8c5dcf373e",
@@ -73,7 +120,14 @@
         "enriched_at": "2026-09-01T05:09:54+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:09:54+00:00"
+      "updated_at": "2026-09-01T05:09:54+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p03-industrial-design-4808395220": {
       "id": "image-p03-industrial-design-4808395220",
@@ -94,7 +148,14 @@
         "enriched_at": "2026-09-01T05:09:56+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:09:56+00:00"
+      "updated_at": "2026-09-01T05:09:56+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p06-screen-01-boot-1378e9148d": {
       "id": "image-p06-screen-01-boot-1378e9148d",
@@ -115,7 +176,14 @@
         "enriched_at": "2026-09-01T05:09:57+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:09:57+00:00"
+      "updated_at": "2026-09-01T05:09:57+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p07-screen-02-play-home-9e5c1836cf": {
       "id": "image-p07-screen-02-play-home-9e5c1836cf",
@@ -136,7 +204,14 @@
         "enriched_at": "2026-09-01T05:09:59+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:09:59+00:00"
+      "updated_at": "2026-09-01T05:09:59+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p08-screen-03-main-menu-7b67056705": {
       "id": "image-p08-screen-03-main-menu-7b67056705",
@@ -157,7 +232,14 @@
         "enriched_at": "2026-09-01T05:10:00+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:00+00:00"
+      "updated_at": "2026-09-01T05:10:00+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p09-screen-04-sound-library-v1-bf14090f1c": {
       "id": "image-p09-screen-04-sound-library-v1-bf14090f1c",
@@ -178,7 +260,14 @@
         "enriched_at": "2026-09-01T05:10:01+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:01+00:00"
+      "updated_at": "2026-09-01T05:10:01+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p09-screen-04-sound-library-v2-4d9534db6b": {
       "id": "image-p09-screen-04-sound-library-v2-4d9534db6b",
@@ -199,7 +288,14 @@
         "enriched_at": "2026-09-01T05:10:03+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:03+00:00"
+      "updated_at": "2026-09-01T05:10:03+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p10-screen-05-sound-detail-d2a7535ac9": {
       "id": "image-p10-screen-05-sound-detail-d2a7535ac9",
@@ -220,7 +316,14 @@
         "enriched_at": "2026-09-01T05:10:04+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:04+00:00"
+      "updated_at": "2026-09-01T05:10:04+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p11-screen-06-sound-edit-shape-5d4e3a8f16": {
       "id": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
@@ -241,7 +344,14 @@
         "enriched_at": "2026-09-01T05:10:28+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:28+00:00"
+      "updated_at": "2026-09-01T05:10:28+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p12-screen-07-sound-edit-envelop-8a5879be5b": {
       "id": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
@@ -262,7 +372,14 @@
         "enriched_at": "2026-09-01T05:10:30+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:30+00:00"
+      "updated_at": "2026-09-01T05:10:30+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p13-screen-08-sound-edit-eq-5125a35d96": {
       "id": "image-p13-screen-08-sound-edit-eq-5125a35d96",
@@ -283,7 +400,14 @@
         "enriched_at": "2026-09-01T05:10:31+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:31+00:00"
+      "updated_at": "2026-09-01T05:10:31+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p14-screen-09-sound-edit-fx-ce9e56a547": {
       "id": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
@@ -304,7 +428,14 @@
         "enriched_at": "2026-09-01T05:10:32+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:32+00:00"
+      "updated_at": "2026-09-01T05:10:32+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p15-screen-10-save-sound-a9e6553ed8": {
       "id": "image-p15-screen-10-save-sound-a9e6553ed8",
@@ -325,7 +456,14 @@
         "enriched_at": "2026-09-01T05:10:34+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:34+00:00"
+      "updated_at": "2026-09-01T05:10:34+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p16-screen-11-pad-assignment-0c5af9cf2d": {
       "id": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
@@ -346,7 +484,14 @@
         "enriched_at": "2026-09-01T05:10:35+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:35+00:00"
+      "updated_at": "2026-09-01T05:10:35+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p17-screen-12-sampler-home-313d164399": {
       "id": "image-p17-screen-12-sampler-home-313d164399",
@@ -367,7 +512,14 @@
         "enriched_at": "2026-09-01T05:10:36+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:36+00:00"
+      "updated_at": "2026-09-01T05:10:36+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p18-screen-13-mic-record-74fad02713": {
       "id": "image-p18-screen-13-mic-record-74fad02713",
@@ -388,7 +540,14 @@
         "enriched_at": "2026-09-01T05:10:38+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:10:38+00:00"
+      "updated_at": "2026-09-01T05:10:38+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p19-screen-14-import-file-5e06069587": {
       "id": "image-p19-screen-14-import-file-5e06069587",
@@ -409,7 +568,14 @@
         "enriched_at": "2026-09-01T05:11:02+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:02+00:00"
+      "updated_at": "2026-09-01T05:11:02+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p20-screen-15-sample-edit-trim-da078db4b7": {
       "id": "image-p20-screen-15-sample-edit-trim-da078db4b7",
@@ -430,7 +596,14 @@
         "enriched_at": "2026-09-01T05:11:04+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:04+00:00"
+      "updated_at": "2026-09-01T05:11:04+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p21-screen-16-sample-tools-849e054cc7": {
       "id": "image-p21-screen-16-sample-tools-849e054cc7",
@@ -451,7 +624,14 @@
         "enriched_at": "2026-09-01T05:11:05+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:05+00:00"
+      "updated_at": "2026-09-01T05:11:05+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa": {
       "id": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
@@ -472,7 +652,14 @@
         "enriched_at": "2026-09-01T05:11:06+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:06+00:00"
+      "updated_at": "2026-09-01T05:11:06+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p23-screen-18-sample-edit-playba-ae3eefc0a4": {
       "id": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
@@ -493,7 +680,14 @@
         "enriched_at": "2026-09-01T05:11:07+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:07+00:00"
+      "updated_at": "2026-09-01T05:11:07+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p23-screen-18-sample-edit-playba-d702dd7b1c": {
       "id": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
@@ -514,7 +708,14 @@
         "enriched_at": "2026-09-01T05:11:09+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:09+00:00"
+      "updated_at": "2026-09-01T05:11:09+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p24-screen-19-sample-edit-eq-b7080f1234": {
       "id": "image-p24-screen-19-sample-edit-eq-b7080f1234",
@@ -535,7 +736,14 @@
         "enriched_at": "2026-09-01T05:11:10+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:10+00:00"
+      "updated_at": "2026-09-01T05:11:10+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p25-screen-20-save-sample-ba14c613a3": {
       "id": "image-p25-screen-20-save-sample-ba14c613a3",
@@ -556,7 +764,14 @@
         "enriched_at": "2026-09-01T05:11:12+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:12+00:00"
+      "updated_at": "2026-09-01T05:11:12+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p26-screen-21-loop-track-view-v1-faf57e7578": {
       "id": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
@@ -577,7 +792,14 @@
         "enriched_at": "2026-09-01T05:11:38+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:38+00:00"
+      "updated_at": "2026-09-01T05:11:38+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p26-screen-21-loop-track-view-v2-a79e18f68d": {
       "id": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
@@ -598,7 +820,14 @@
         "enriched_at": "2026-09-01T05:11:40+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:40+00:00"
+      "updated_at": "2026-09-01T05:11:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p27-screen-22-loop-track-menu-db856743c2": {
       "id": "image-p27-screen-22-loop-track-menu-db856743c2",
@@ -619,7 +848,14 @@
         "enriched_at": "2026-09-01T05:11:41+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:41+00:00"
+      "updated_at": "2026-09-01T05:11:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p28-screen-23-loop-options-fa60a40139": {
       "id": "image-p28-screen-23-loop-options-fa60a40139",
@@ -640,7 +876,14 @@
         "enriched_at": "2026-09-01T05:11:43+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:43+00:00"
+      "updated_at": "2026-09-01T05:11:43+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p29-screen-24-step-sequencer-a047895360": {
       "id": "image-p29-screen-24-step-sequencer-a047895360",
@@ -661,7 +904,14 @@
         "enriched_at": "2026-09-01T05:11:44+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:44+00:00"
+      "updated_at": "2026-09-01T05:11:44+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p30-screen-25-step-edit-6b7131d63a": {
       "id": "image-p30-screen-25-step-edit-6b7131d63a",
@@ -682,7 +932,14 @@
         "enriched_at": "2026-09-01T05:11:45+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:45+00:00"
+      "updated_at": "2026-09-01T05:11:45+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p31-screen-26-mixer-5af70d21a7": {
       "id": "image-p31-screen-26-mixer-5af70d21a7",
@@ -703,7 +960,14 @@
         "enriched_at": "2026-09-01T05:11:46+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:46+00:00"
+      "updated_at": "2026-09-01T05:11:46+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p32-screen-27-projects-79156bd48a": {
       "id": "image-p32-screen-27-projects-79156bd48a",
@@ -724,7 +988,14 @@
         "enriched_at": "2026-09-01T05:11:48+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:11:48+00:00"
+      "updated_at": "2026-09-01T05:11:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p33-screen-28-save-project-6af5d2cf6f": {
       "id": "image-p33-screen-28-save-project-6af5d2cf6f",
@@ -745,7 +1016,14 @@
         "enriched_at": "2026-09-01T05:12:15+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:15+00:00"
+      "updated_at": "2026-09-01T05:12:15+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p34-screen-29-text-entry-2fd5c8e60c": {
       "id": "image-p34-screen-29-text-entry-2fd5c8e60c",
@@ -766,7 +1044,14 @@
         "enriched_at": "2026-09-01T05:12:16+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:16+00:00"
+      "updated_at": "2026-09-01T05:12:16+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p35-screen-30-settings-home-33d632f163": {
       "id": "image-p35-screen-30-settings-home-33d632f163",
@@ -787,7 +1072,14 @@
         "enriched_at": "2026-09-01T05:12:17+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:17+00:00"
+      "updated_at": "2026-09-01T05:12:17+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p36-screen-31-settings-master-au-3583e174e1": {
       "id": "image-p36-screen-31-settings-master-au-3583e174e1",
@@ -808,7 +1100,14 @@
         "enriched_at": "2026-09-01T05:12:19+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:19+00:00"
+      "updated_at": "2026-09-01T05:12:19+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p37-screen-32-settings-metronome-4fef9b8e8c": {
       "id": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
@@ -829,7 +1128,14 @@
         "enriched_at": "2026-09-01T05:12:20+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:20+00:00"
+      "updated_at": "2026-09-01T05:12:20+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p38-screen-33-settings-display-e0529c2f4a": {
       "id": "image-p38-screen-33-settings-display-e0529c2f4a",
@@ -850,7 +1156,14 @@
         "enriched_at": "2026-09-01T05:12:21+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:21+00:00"
+      "updated_at": "2026-09-01T05:12:21+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p39-screen-34-settings-storage-cdd01431e5": {
       "id": "image-p39-screen-34-settings-storage-cdd01431e5",
@@ -871,7 +1184,14 @@
         "enriched_at": "2026-09-01T05:12:23+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:23+00:00"
+      "updated_at": "2026-09-01T05:12:23+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p40-screen-35-settings-permissio-19f191d5b1": {
       "id": "image-p40-screen-35-settings-permissio-19f191d5b1",
@@ -892,7 +1212,14 @@
         "enriched_at": "2026-09-01T05:12:24+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:24+00:00"
+      "updated_at": "2026-09-01T05:12:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p41-screen-36-about-v1-ff3d0f1de1": {
       "id": "image-p41-screen-36-about-v1-ff3d0f1de1",
@@ -913,7 +1240,14 @@
         "enriched_at": "2026-09-01T05:12:52+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:52+00:00"
+      "updated_at": "2026-09-01T05:12:52+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p41-screen-36-about-v2-8fe1804b60": {
       "id": "image-p41-screen-36-about-v2-8fe1804b60",
@@ -934,7 +1268,14 @@
         "enriched_at": "2026-09-01T05:12:53+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:53+00:00"
+      "updated_at": "2026-09-01T05:12:53+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p41-screen-36-about-v3-520449e7a4": {
       "id": "image-p41-screen-36-about-v3-520449e7a4",
@@ -955,7 +1296,14 @@
         "enriched_at": "2026-09-01T05:12:54+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:54+00:00"
+      "updated_at": "2026-09-01T05:12:54+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p42-screen-37-mic-blocked-926c5e4be0": {
       "id": "image-p42-screen-37-mic-blocked-926c5e4be0",
@@ -976,7 +1324,14 @@
         "enriched_at": "2026-09-01T05:12:55+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:55+00:00"
+      "updated_at": "2026-09-01T05:12:55+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "image-p43-screen-38-destructive-confir-24f60c8554": {
       "id": "image-p43-screen-38-destructive-confir-24f60c8554",
@@ -997,7 +1352,14 @@
         "enriched_at": "2026-09-01T05:12:57+00:00"
       },
       "created_at": "2026-09-01T05:09:15+00:00",
-      "updated_at": "2026-09-01T05:12:57+00:00"
+      "updated_at": "2026-09-01T05:12:57+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-manual-assets-ingested": {
       "id": "finding-manual-assets-ingested",
@@ -1013,7 +1375,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:13:18+00:00",
-      "updated_at": "2026-09-01T05:13:18+00:00"
+      "updated_at": "2026-09-01T05:13:18+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-v1-scope": {
       "id": "concept-v1-scope",
@@ -1029,7 +1398,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:36+00:00",
-      "updated_at": "2026-09-01T05:29:36+00:00"
+      "updated_at": "2026-09-01T05:29:36+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-hardware-front-panel": {
       "id": "concept-hardware-front-panel",
@@ -1045,7 +1421,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:38+00:00",
-      "updated_at": "2026-09-01T05:29:38+00:00"
+      "updated_at": "2026-09-01T05:29:38+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-global-behavior": {
       "id": "concept-global-behavior",
@@ -1061,7 +1444,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:40+00:00",
-      "updated_at": "2026-09-01T05:29:40+00:00"
+      "updated_at": "2026-09-01T05:29:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-navigation-map": {
       "id": "concept-navigation-map",
@@ -1077,7 +1467,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:41+00:00",
-      "updated_at": "2026-09-01T05:29:41+00:00"
+      "updated_at": "2026-09-01T05:29:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-factory-library": {
       "id": "concept-factory-library",
@@ -1093,7 +1490,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:43+00:00",
-      "updated_at": "2026-09-01T05:29:43+00:00"
+      "updated_at": "2026-09-01T05:29:43+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-glass-poly": {
       "id": "concept-glass-poly",
@@ -1110,7 +1514,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:45+00:00",
-      "updated_at": "2026-09-01T05:29:45+00:00"
+      "updated_at": "2026-09-01T05:29:45+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-library-rules": {
       "id": "concept-library-rules",
@@ -1126,7 +1537,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:47+00:00",
-      "updated_at": "2026-09-01T05:29:47+00:00"
+      "updated_at": "2026-09-01T05:29:47+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-sound-engine": {
       "id": "concept-sound-engine",
@@ -1142,7 +1560,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:48+00:00",
-      "updated_at": "2026-09-01T05:29:48+00:00"
+      "updated_at": "2026-09-01T05:29:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-recording-behavior": {
       "id": "concept-recording-behavior",
@@ -1158,7 +1583,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:50+00:00",
-      "updated_at": "2026-09-01T05:29:50+00:00"
+      "updated_at": "2026-09-01T05:29:50+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-persistence": {
       "id": "concept-persistence",
@@ -1174,7 +1606,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:52+00:00",
-      "updated_at": "2026-09-01T05:29:52+00:00"
+      "updated_at": "2026-09-01T05:29:52+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-v1-boundaries": {
       "id": "concept-v1-boundaries",
@@ -1189,7 +1628,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:29:53+00:00",
-      "updated_at": "2026-09-01T05:29:53+00:00"
+      "updated_at": "2026-09-01T05:29:53+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-01": {
       "id": "concept-screen-01",
@@ -1205,7 +1651,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:06+00:00",
-      "updated_at": "2026-09-01T05:30:06+00:00"
+      "updated_at": "2026-09-01T05:30:06+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-02": {
       "id": "concept-screen-02",
@@ -1221,7 +1674,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:08+00:00",
-      "updated_at": "2026-09-01T05:30:08+00:00"
+      "updated_at": "2026-09-01T05:30:08+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-03": {
       "id": "concept-screen-03",
@@ -1237,13 +1697,20 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:10+00:00",
-      "updated_at": "2026-09-01T05:30:10+00:00"
+      "updated_at": "2026-09-01T05:30:10+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-04": {
       "id": "concept-screen-04",
       "type": "concept",
       "title": "Screen 04: Sound Library",
-      "content": "Screen 04: Sound Library.\nHARDWARE: AA/B/C/D = Factory,switch B = User,Factory/User/Rec/Favorites            tabs. C = Favorites, D = Sampler. LEFT/RIGHT    LEFT/RIGHT changes             changeschanges category; UP/DOWN      category; sound.UP/DOWN Keyboard andchanges pads sound. audition theKeyboard      and pads highlighted sound. OK opensaudition   the Sound Sound Detail; highlighted Detail -> Asound. USE KEYSOKconfirms loads it.itBACK as the exitscurrent   keyboard without changing the loaded sound. sound. BACK restores the previously loaded sound if no selection was confirmed.\nSAVE/STATE: Factory sounds are read-only. User sounds and recordings are stored locally. Favorites store references only.\nNOTES: The library must remain quick: categories are shallow, names are short, and the user never needs an on-screen QWERTY keyboard just to browse. 9 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           PLAY->-> PLAY      D LIBRARY, D LIBRARY, or holdor MENU MENU     -> SOUND -> SOUND         -> Library. (the SOUND area opens the Library).\nWHAT: DOES       Highlighting Highlighting temporarily previews the temporarily         sound. USEthe previews     KEYS commitsLoading sound.    it to the keyboard commitsslot. M1/M2  preview it to the      the highlighted current   keyboard soundslot. using that preset's macro assignments. M1/M2 preview\n",
+      "content": "Screen 04: Sound Library.\n\nUI (from mockup): SOUND LIBRARY under FACTORY/SYNTH. List: Glass Poly (selected), Neon Lead, Bit Pluck, Tape Pad, Pulse Stack. Detail: POLY/C3, M1 Brightness, M2 Space; OK LOAD SOUND; keys/pads preview. M1/M2 preview tone/FX, M3 volume. Soft keys A FACTORY, B USER, C REC, D FAV.\n\nNOTES: The library must remain quick: categories are shallow, names are short, and the user never needs an on-screen QWERTY keyboard just to browse. 9 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           PLAY->-> PLAY      D LIBRARY, D LIBRARY, or holdor MENU MENU     -> SOUND -> SOUND         -> Library. (the SOUND area opens the Library).\nWHAT: DOES       Highlighting Highlighting temporarily previews the temporarily         sound. USEthe previews     KEYS commitsLoading sound.    it to the keyboard commitsslot. M1/M2  preview it to the      the highlighted current   keyboard soundslot. using that preset's macro assignments. M1/M2 preview\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1251,9 +1718,19 @@
         "screen",
         "screen-04"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:12+00:00",
-      "updated_at": "2026-09-01T05:30:12+00:00"
+      "updated_at": "2026-09-01T05:30:12+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-05": {
       "id": "concept-screen-05",
@@ -1269,7 +1746,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:14+00:00",
-      "updated_at": "2026-09-01T05:30:14+00:00"
+      "updated_at": "2026-09-01T05:30:14+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-06": {
       "id": "concept-screen-06",
@@ -1285,7 +1769,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:16+00:00",
-      "updated_at": "2026-09-01T05:30:16+00:00"
+      "updated_at": "2026-09-01T05:30:16+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-07": {
       "id": "concept-screen-07",
@@ -1301,7 +1792,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:18+00:00",
-      "updated_at": "2026-09-01T05:30:18+00:00"
+      "updated_at": "2026-09-01T05:30:18+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-08": {
       "id": "concept-screen-08",
@@ -1317,7 +1815,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:20+00:00",
-      "updated_at": "2026-09-01T05:30:20+00:00"
+      "updated_at": "2026-09-01T05:30:20+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-09": {
       "id": "concept-screen-09",
@@ -1333,7 +1838,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:22+00:00",
-      "updated_at": "2026-09-01T05:30:22+00:00"
+      "updated_at": "2026-09-01T05:30:22+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-10": {
       "id": "concept-screen-10",
@@ -1349,7 +1861,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:24+00:00",
-      "updated_at": "2026-09-01T05:30:24+00:00"
+      "updated_at": "2026-09-01T05:30:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-11": {
       "id": "concept-screen-11",
@@ -1365,13 +1884,20 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:26+00:00",
-      "updated_at": "2026-09-01T05:30:26+00:00"
+      "updated_at": "2026-09-01T05:30:26+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-12": {
       "id": "concept-screen-12",
       "type": "concept",
       "title": "Screen 12: Sampler Home",
-      "content": "Screen 12: Sampler Home.\nHARDWARE: AA== microphone. microphone.          B = file B = file import. C = import.   C = open open an existing        an existing user sample. D = back. user sample. UP/DOWN and OKDcan = also back. use UP/DOWN the list. and OK can also use the list.\nWHAT IT DOES: No audio changes until a source is recorded/imported. Existing project playback may continue behind the sampler unless the user stops it.\nSAVE/STATE: New recordings/imports are staged until the user reaches Save Sample.\nNOTES: Microphone and imported sources enter the same editor, so the manipulation workflow is consistent. 17 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU Hold    ->->SOUND MENU    SOUND to-> Sampler. open the Sound Library, then press D = SAMPLER.\n",
+      "content": "Screen 12: Sampler Home.\n\nUI (from mockup): SAMPLER home. Options: Record from onboard mic (selected), Import from file system, Open user sample. Note: new recordings/imports enter same sample editor. M1/M2 preview tone/FX, M3 volume. Soft keys A MIC, B FILE, C OPEN, D BACK.\n\nWHAT IT DOES: No audio changes until a source is recorded/imported. Existing project playback may continue behind the sampler unless the user stops it.\nSAVE/STATE: New recordings/imports are staged until the user reaches Save Sample.\nNOTES: Microphone and imported sources enter the same editor, so the manipulation workflow is consistent. 17 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU Hold    ->->SOUND MENU    SOUND to-> Sampler. open the Sound Library, then press D = SAMPLER.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1379,9 +1905,19 @@
         "screen",
         "screen-12"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:28+00:00",
-      "updated_at": "2026-09-01T05:30:28+00:00"
+      "updated_at": "2026-09-01T05:30:28+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-13": {
       "id": "concept-screen-13",
@@ -1397,7 +1933,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:30+00:00",
-      "updated_at": "2026-09-01T05:30:30+00:00"
+      "updated_at": "2026-09-01T05:30:30+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-14": {
       "id": "concept-screen-14",
@@ -1413,7 +1956,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:32+00:00",
-      "updated_at": "2026-09-01T05:30:32+00:00"
+      "updated_at": "2026-09-01T05:30:32+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-15": {
       "id": "concept-screen-15",
@@ -1429,7 +1979,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:35+00:00",
-      "updated_at": "2026-09-01T05:30:35+00:00"
+      "updated_at": "2026-09-01T05:30:35+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-16": {
       "id": "concept-screen-16",
@@ -1445,7 +2002,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:37+00:00",
-      "updated_at": "2026-09-01T05:30:37+00:00"
+      "updated_at": "2026-09-01T05:30:37+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-17": {
       "id": "concept-screen-17",
@@ -1461,13 +2025,20 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:39+00:00",
-      "updated_at": "2026-09-01T05:30:39+00:00"
+      "updated_at": "2026-09-01T05:30:39+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-18": {
       "id": "concept-screen-18",
       "type": "concept",
       "title": "Screen 18: Sample Edit - Playback",
-      "content": "Screen 18: Sample Edit - Playback.\nHARDWARE: AA== One-shot. One-shot.      B =C Gate. B = Gate.         C= = Loop. M1   Loop.smoothing. = Attack M1 = Attack     smoothing. M2 = Release smoothing.M2 D == Release smoothing. D opens EQ. additional tools/back depending context.\nWHAT IT DOES: One-shot plays Attack/Release smoothto   theatend clicks          after a trigger. Gate plays only while held. Loop repeats the selected boundaries. region until released/stopped. Attack/Release smooth clicks at boundaries.\nSAVE/STATE: Playback mode and smoothing values save with the user sample.\nNOTES: Pads commonly default to One-shot; keyboard-mapped sustained sounds may prefer Gate or Loop. 23 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           Sample Sample EditEdit  -> Mode/Playback -> Mode/Playback page. page.\n",
+      "content": "Screen 18: Sample Edit - Playback.\n\nUI (from mockup): Alternate Playback mock same modes/params as v1 but soft key D is EQ instead of TOOLS (navigation variant toward sample EQ page).\n\nWHAT IT DOES: One-shot plays Attack/Release smoothto   theatend clicks          after a trigger. Gate plays only while held. Loop repeats the selected boundaries. region until released/stopped. Attack/Release smooth clicks at boundaries.\nSAVE/STATE: Playback mode and smoothing values save with the user sample.\nNOTES: Pads commonly default to One-shot; keyboard-mapped sustained sounds may prefer Gate or Loop. 23 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           Sample Sample EditEdit  -> Mode/Playback -> Mode/Playback page. page.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1475,9 +2046,19 @@
         "screen",
         "screen-18"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:41+00:00",
-      "updated_at": "2026-09-01T05:30:41+00:00"
+      "updated_at": "2026-09-01T05:30:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-19": {
       "id": "concept-screen-19",
@@ -1493,7 +2074,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:43+00:00",
-      "updated_at": "2026-09-01T05:30:43+00:00"
+      "updated_at": "2026-09-01T05:30:43+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-20": {
       "id": "concept-screen-20",
@@ -1509,13 +2097,20 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:45+00:00",
-      "updated_at": "2026-09-01T05:30:45+00:00"
+      "updated_at": "2026-09-01T05:30:45+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-21": {
       "id": "concept-screen-21",
       "type": "concept",
       "title": "Screen 21: LOOP - Track View",
-      "content": "Screen 21: LOOP - Track View.\nHARDWARE: UP/DOWN UP/DOWN       selects selects        track. track; OK opensM1 Track= Menu. selected    track M1 = track    level. level. M2 = M2 pan. = A =pan. ARM, A B =arm, SEQ, B C =mute, C solo, OPTIONS,      D undo D = UNDO.     last and Keyboard recording pads          operation. remain playable.        Keyboard Transport             and pads remain playable so performances can be recorded. controls record/play/stop. Transport controls record/play/stop. REC from stopped records after count-in; REC while playing enters overdub. Mute/Solo and record mode live in OK -> Track Menu. Backing-track monitoring follows Loop Options.\nWHAT IT DOES: REC from stopped records the selected track after count-in. REC while playing enters overdub.\nSAVE/STATE: Loop audio, track level/pan/mute state and selected track save with the project.\nNOTES: Pads remain performance inputs here; track selection is deliberately kept on the D-pad so pad- based drum performance can still be recorded. 26 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU MENU -> -> LOOP, LOOP,      orfrom or REC   REC   from a performance a performance                screen screen when a loop track iswhen    a loop track is selected. selected.\n",
+      "content": "Screen 21: LOOP - Track View.\n\nUI (from mockup): LOOP track view playing: 4 BAR, Q 1/16, MON ALL. Six tracks Drums/Bass/Chord(selected)/Lead/Fx/Empty with colored clip blocks and playhead. M1 TRACK LEVEL, M2 PAN, M3 VOLUME. Soft keys A ARM, B MUTE, C SOLO, D UNDO. Hint: up/down select track; pads still play sounds.\n\nWHAT IT DOES: REC from stopped records the selected track after count-in. REC while playing enters overdub.\nSAVE/STATE: Loop audio, track level/pan/mute state and selected track save with the project.\nNOTES: Pads remain performance inputs here; track selection is deliberately kept on the D-pad so pad- based drum performance can still be recorded. 26 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU MENU -> -> LOOP, LOOP,      orfrom or REC   REC   from a performance a performance                screen screen when a loop track iswhen    a loop track is selected. selected.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1523,15 +2118,25 @@
         "screen",
         "screen-21"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:47+00:00",
-      "updated_at": "2026-09-01T05:30:47+00:00"
+      "updated_at": "2026-09-01T05:30:47+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-22": {
       "id": "concept-screen-22",
       "type": "concept",
       "title": "Screen 22: Loop Track Menu",
-      "content": "Screen 22: Loop Track Menu.\nHARDWARE: A changes UP/DOWN       record selects Recordmode      (Overdub/Replace). Mode, Monitor                         B toggles During Rec, Mute, Solo,            whether Level or Pan;        this or LEFT/RIGHT    track is included OK changes         when the selected row.Loop A shortcuts Options Record    uses Mode,      MONITORED B toggles              playback. Monitor, C clears           C clears after confirmation,   the track D returns.     after M1/M2      confirmation. continue level/pan.    D returns. M1/M2 continue level/pan. Overdub adds new performance to existing audio; Replace records a fresh pass. Mute/Solo affect playback. Monitor controls whether the track is heard when Loop Options uses MONITORED recording playback.\nWHAT IT DOES: Overdub adds new performance to existing audio; Replace records a fresh pass for the track.\nSAVE/STATE: Track options save in the project. Clear removes the track's recorded material but not source sounds.\nNOTES: Clear is destructive and therefore uses the common confirmation pattern. 27 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP        select select a tracka->track OK. -> OK.\n",
+      "content": "Screen 22: Loop Track Menu.\n\nUI (from mockup): TRACK 3 CHORD menu. M1 LEVEL, M2 PAN, M3 VOLUME. Params: Record Mode Overdub, Monitor During Rec On, Mute Off, Solo Off, Level 82%, Pan Center. Soft keys A MODE, B MONITOR, C CLEAR, D DONE.\n\nWHAT IT DOES: Overdub adds new performance to existing audio; Replace records a fresh pass for the track.\nSAVE/STATE: Track options save in the project. Clear removes the track's recorded material but not source sounds.\nNOTES: Clear is destructive and therefore uses the common confirmation pattern. 27 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP        select select a tracka->track OK. -> OK.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1539,15 +2144,25 @@
         "screen",
         "screen-22"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:49+00:00",
-      "updated_at": "2026-09-01T05:30:49+00:00"
+      "updated_at": "2026-09-01T05:30:49+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-23": {
       "id": "concept-screen-23",
       "type": "concept",
       "title": "Screen 23: Loop Options",
-      "content": "Screen 23: Loop Options.\nHARDWARE: UP/DOWN UP/DOWN      selects selects Length,Length, Quantize, Quantize, Count-in, PlayCount-in, During Rec, Play  During Metronome      Rec,LEFT/RIGHT or Tempo. Metronome    or Tempo. changes           LEFT/RIGHT values. A-D jump to the changes most commonvalues.   A-D jump to the most common option groups. option groups.\nSAVE/STATE: Options save with the project.\nNOTES: Recommended V1 loop lengths: 1, 2, 4 or 8 bars. Quantize choices: Off, 1/4, 1/8, 1/16. 28 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Options action from the screen/menu. C OPTIONS.\nWHAT: DOES       Loop Loop   Length Length       defines defines         the region. the repeating repeating   region. Quantize          Quantize aligns recorded      aligns events         recorded to the grid. Count-in note/sample       triggers delays recording. Play During to Recthe = ALL, MONITORED or\n",
+      "content": "Screen 23: Loop Options.\n\nUI (from mockup): LOOP OPTIONS: Length 4 bars, Quantize 1/16, Count-in 1 bar, Play During Rec ALL (selected; hint ALL/MONITORED/OFF), Metronome On, Tempo 120 BPM. Soft keys A LENGTH, B QUANT, C MONITOR, D DONE. M3 VOLUME.\n\nNOTES: Recommended V1 loop lengths: 1, 2, 4 or 8 bars. Quantize choices: Off, 1/4, 1/8, 1/16. 28 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Options action from the screen/menu. C OPTIONS.\nWHAT: DOES       Loop Loop   Length Length       defines defines         the region. the repeating repeating   region. Quantize          Quantize aligns recorded      aligns events         recorded to the grid. Count-in note/sample       triggers delays recording. Play During to Recthe = ALL, MONITORED or\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1555,15 +2170,25 @@
         "screen",
         "screen-23"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:52+00:00",
-      "updated_at": "2026-09-01T05:30:52+00:00"
+      "updated_at": "2026-09-01T05:30:52+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-24": {
       "id": "concept-screen-24",
       "type": "concept",
       "title": "Screen 24: Step Sequencer",
-      "content": "Screen 24: Step Sequencer.\nHARDWARE: Pads Pads  1-61-6   select select       a sequencer a sequencer   lane on thislane screenon  this only.    screen Arrows move only. the stepArrows    move cursor. OK  togglesthe  step a step. M1 cursor.   OK = swing; M2   toggles = gate.      aB A page, step.CM1 length,       = swing; shift/nudge,     M2lane D clear   = after gate.    A page,PLAY/STOP confirmation.  B length,auditions C shift/nudge, the pattern. D clear lane after confirmation. PLAY/STOP audition pattern. Active steps trigger the sound assigned to their lane. Swing delays alternating subdivisions; Gate changes note/sample duration when supported.\nWHAT IT DOES: Active steps trigger the sound assigned to their lane. Swing delays alternating subdivisions; Gate\nSAVE/STATE: Pattern, lane assignments, length, swing/gate and step states save in the project.\nNOTES: The base grid is 16 steps; longer patterns use pages rather than requiring a wider physical display. 29 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Sequencer. B SEQ.\n",
+      "content": "Screen 24: Step Sequencer.\n\nUI (from mockup): SEQUENCER playing Pattern A, 16 steps, Lane 1 Kick. 6x16 step grid with active steps (lane1 pink, others green) and playhead. M1 SWING, M2 GATE, M3 VOLUME. Hint: arrows move cursor, OK toggle step, pad selects lane. Soft keys A PAGE, B LENGTH, C SHIFT, D CLEAR.\n\nWHAT IT DOES: Active steps trigger the sound assigned to their lane. Swing delays alternating subdivisions; Gate\nSAVE/STATE: Pattern, lane assignments, length, swing/gate and step states save in the project.\nNOTES: The base grid is 16 steps; longer patterns use pages rather than requiring a wider physical display. 29 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           LOOP-> -> LOOP       Sequencer. B SEQ.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "cassio",
@@ -1571,9 +2196,19 @@
         "screen",
         "screen-24"
       ],
-      "meta": {},
+      "meta": {
+        "repaired_at": "2026-09-02T17:53:16+00:00",
+        "repair_source": "cassio_curate"
+      },
       "created_at": "2026-09-01T05:30:54+00:00",
-      "updated_at": "2026-09-01T05:30:54+00:00"
+      "updated_at": "2026-09-01T05:30:54+00:00",
+      "workflow_state": "not_applicable",
+      "status": "canonical_spec",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "designing"
     },
     "concept-screen-25": {
       "id": "concept-screen-25",
@@ -1589,7 +2224,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:56+00:00",
-      "updated_at": "2026-09-01T05:30:56+00:00"
+      "updated_at": "2026-09-01T05:30:56+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-26": {
       "id": "concept-screen-26",
@@ -1605,7 +2247,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:57+00:00",
-      "updated_at": "2026-09-01T05:30:57+00:00"
+      "updated_at": "2026-09-01T05:30:57+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-27": {
       "id": "concept-screen-27",
@@ -1621,7 +2270,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:30:59+00:00",
-      "updated_at": "2026-09-01T05:30:59+00:00"
+      "updated_at": "2026-09-01T05:30:59+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-28": {
       "id": "concept-screen-28",
@@ -1637,7 +2293,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:01+00:00",
-      "updated_at": "2026-09-01T05:31:01+00:00"
+      "updated_at": "2026-09-01T05:31:01+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-29": {
       "id": "concept-screen-29",
@@ -1653,7 +2316,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:03+00:00",
-      "updated_at": "2026-09-01T05:31:03+00:00"
+      "updated_at": "2026-09-01T05:31:03+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-30": {
       "id": "concept-screen-30",
@@ -1669,7 +2339,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:05+00:00",
-      "updated_at": "2026-09-01T05:31:05+00:00"
+      "updated_at": "2026-09-01T05:31:05+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-31": {
       "id": "concept-screen-31",
@@ -1685,7 +2362,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:07+00:00",
-      "updated_at": "2026-09-01T05:31:07+00:00"
+      "updated_at": "2026-09-01T05:31:07+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-32": {
       "id": "concept-screen-32",
@@ -1701,7 +2385,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:09+00:00",
-      "updated_at": "2026-09-01T05:31:09+00:00"
+      "updated_at": "2026-09-01T05:31:09+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-33": {
       "id": "concept-screen-33",
@@ -1717,7 +2408,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:11+00:00",
-      "updated_at": "2026-09-01T05:31:11+00:00"
+      "updated_at": "2026-09-01T05:31:11+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-34": {
       "id": "concept-screen-34",
@@ -1733,7 +2431,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:13+00:00",
-      "updated_at": "2026-09-01T05:31:13+00:00"
+      "updated_at": "2026-09-01T05:31:13+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-35": {
       "id": "concept-screen-35",
@@ -1749,7 +2454,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:15+00:00",
-      "updated_at": "2026-09-01T05:31:15+00:00"
+      "updated_at": "2026-09-01T05:31:15+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-36": {
       "id": "concept-screen-36",
@@ -1765,7 +2477,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:16+00:00",
-      "updated_at": "2026-09-01T05:31:16+00:00"
+      "updated_at": "2026-09-01T05:31:16+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-37": {
       "id": "concept-screen-37",
@@ -1781,7 +2500,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:19+00:00",
-      "updated_at": "2026-09-01T05:31:19+00:00"
+      "updated_at": "2026-09-01T05:31:19+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-screen-38": {
       "id": "concept-screen-38",
@@ -1797,7 +2523,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:21+00:00",
-      "updated_at": "2026-09-01T05:31:21+00:00"
+      "updated_at": "2026-09-01T05:31:21+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-play": {
       "id": "concept-area-play",
@@ -1813,7 +2546,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:37+00:00",
-      "updated_at": "2026-09-01T05:31:37+00:00"
+      "updated_at": "2026-09-01T05:31:37+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-loop": {
       "id": "concept-area-loop",
@@ -1829,7 +2569,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:38+00:00",
-      "updated_at": "2026-09-01T05:31:38+00:00"
+      "updated_at": "2026-09-01T05:31:38+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-sound": {
       "id": "concept-area-sound",
@@ -1845,7 +2592,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:40+00:00",
-      "updated_at": "2026-09-01T05:31:40+00:00"
+      "updated_at": "2026-09-01T05:31:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-mix": {
       "id": "concept-area-mix",
@@ -1861,7 +2615,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:41+00:00",
-      "updated_at": "2026-09-01T05:31:41+00:00"
+      "updated_at": "2026-09-01T05:31:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-project": {
       "id": "concept-area-project",
@@ -1877,7 +2638,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:43+00:00",
-      "updated_at": "2026-09-01T05:31:43+00:00"
+      "updated_at": "2026-09-01T05:31:43+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-area-settings": {
       "id": "concept-area-settings",
@@ -1893,7 +2661,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:31:44+00:00",
-      "updated_at": "2026-09-01T05:31:44+00:00"
+      "updated_at": "2026-09-01T05:31:44+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-play-sound": {
       "id": "concept-workflow-play-sound",
@@ -1908,7 +2683,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:01+00:00",
-      "updated_at": "2026-09-01T05:32:01+00:00"
+      "updated_at": "2026-09-01T05:32:01+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-record-mic": {
       "id": "concept-workflow-record-mic",
@@ -1923,7 +2705,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:03+00:00",
-      "updated_at": "2026-09-01T05:32:03+00:00"
+      "updated_at": "2026-09-01T05:32:03+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-import": {
       "id": "concept-workflow-import",
@@ -1938,7 +2727,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:04+00:00",
-      "updated_at": "2026-09-01T05:32:04+00:00"
+      "updated_at": "2026-09-01T05:32:04+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-make-loop": {
       "id": "concept-workflow-make-loop",
@@ -1953,7 +2749,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:06+00:00",
-      "updated_at": "2026-09-01T05:32:06+00:00"
+      "updated_at": "2026-09-01T05:32:06+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-step-program": {
       "id": "concept-workflow-step-program",
@@ -1968,7 +2771,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:07+00:00",
-      "updated_at": "2026-09-01T05:32:07+00:00"
+      "updated_at": "2026-09-01T05:32:07+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "concept-workflow-save-project": {
       "id": "concept-workflow-save-project",
@@ -1983,7 +2793,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:09+00:00",
-      "updated_at": "2026-09-01T05:32:09+00:00"
+      "updated_at": "2026-09-01T05:32:09+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "instruction-pdf-graphed": {
       "id": "instruction-pdf-graphed",
@@ -1999,7 +2816,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:12+00:00",
-      "updated_at": "2026-09-01T05:32:12+00:00"
+      "updated_at": "2026-09-01T05:32:12+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-pdf-graph-complete": {
       "id": "finding-pdf-graph-complete",
@@ -2014,7 +2838,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:32:13+00:00",
-      "updated_at": "2026-09-01T05:32:13+00:00"
+      "updated_at": "2026-09-01T05:32:13+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-rails-milestone-a": {
       "id": "finding-rails-milestone-a",
@@ -2030,7 +2861,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T05:53:01+00:00",
-      "updated_at": "2026-09-01T05:53:01+00:00"
+      "updated_at": "2026-09-01T05:53:01+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-keyboard-vscreen-pwa": {
       "id": "finding-ui-keyboard-vscreen-pwa",
@@ -2047,7 +2885,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:06:33+00:00",
-      "updated_at": "2026-09-01T06:06:33+00:00"
+      "updated_at": "2026-09-01T06:06:33+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-fullbleed-layout": {
       "id": "finding-ui-fullbleed-layout",
@@ -2063,7 +2908,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:12:11+00:00",
-      "updated_at": "2026-09-01T06:12:11+00:00"
+      "updated_at": "2026-09-01T06:12:11+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-knobs-viz-autoboot": {
       "id": "finding-ui-knobs-viz-autoboot",
@@ -2080,7 +2932,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:17:18+00:00",
-      "updated_at": "2026-09-01T06:17:18+00:00"
+      "updated_at": "2026-09-01T06:17:18+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-octave-remap-held-midi": {
       "id": "finding-octave-remap-held-midi",
@@ -2096,7 +2955,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:28:05+00:00",
-      "updated_at": "2026-09-01T06:28:05+00:00"
+      "updated_at": "2026-09-01T06:28:05+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-boot-knobs-brand-0926": {
       "id": "finding-ui-boot-knobs-brand-0926",
@@ -2112,7 +2978,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:28:06+00:00",
-      "updated_at": "2026-09-01T06:28:06+00:00"
+      "updated_at": "2026-09-01T06:28:06+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-layout-menu-wave-topknob": {
       "id": "finding-ui-layout-menu-wave-topknob",
@@ -2129,7 +3002,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:49:08+00:00",
-      "updated_at": "2026-09-01T06:49:08+00:00"
+      "updated_at": "2026-09-01T06:49:08+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-brand-keys-balance": {
       "id": "finding-ui-brand-keys-balance",
@@ -2144,7 +3024,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:51:47+00:00",
-      "updated_at": "2026-09-01T06:51:47+00:00"
+      "updated_at": "2026-09-01T06:51:47+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-keyboard-height-50pct": {
       "id": "finding-ui-keyboard-height-50pct",
@@ -2158,7 +3045,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:56:39+00:00",
-      "updated_at": "2026-09-01T06:56:39+00:00"
+      "updated_at": "2026-09-01T06:56:39+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-no-text-select": {
       "id": "finding-ui-no-text-select",
@@ -2172,7 +3066,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T06:57:54+00:00",
-      "updated_at": "2026-09-01T06:57:54+00:00"
+      "updated_at": "2026-09-01T06:57:54+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-overhead-knob-realestate": {
       "id": "finding-ui-overhead-knob-realestate",
@@ -2187,7 +3088,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:18:09+00:00",
-      "updated_at": "2026-09-01T07:18:09+00:00"
+      "updated_at": "2026-09-01T07:18:09+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-pitch-wheel-nav-align": {
       "id": "finding-ui-pitch-wheel-nav-align",
@@ -2203,7 +3111,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:24:48+00:00",
-      "updated_at": "2026-09-01T07:24:48+00:00"
+      "updated_at": "2026-09-01T07:24:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-equal-spacing-se-scale": {
       "id": "finding-ui-equal-spacing-se-scale",
@@ -2218,7 +3133,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:32:40+00:00",
-      "updated_at": "2026-09-01T07:32:40+00:00"
+      "updated_at": "2026-09-01T07:32:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-hold-toggle-sticky-pitch": {
       "id": "finding-hold-toggle-sticky-pitch",
@@ -2233,7 +3155,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:33:48+00:00",
-      "updated_at": "2026-09-01T07:33:48+00:00"
+      "updated_at": "2026-09-01T07:33:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-midrow-axis-tighten": {
       "id": "finding-ui-midrow-axis-tighten",
@@ -2248,7 +3177,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:37:56+00:00",
-      "updated_at": "2026-09-01T07:37:56+00:00"
+      "updated_at": "2026-09-01T07:37:56+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-pad-row-gap-pack": {
       "id": "finding-ui-pad-row-gap-pack",
@@ -2263,7 +3199,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:40:19+00:00",
-      "updated_at": "2026-09-01T07:40:19+00:00"
+      "updated_at": "2026-09-01T07:40:19+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-mid-panel-flush": {
       "id": "finding-ui-mid-panel-flush",
@@ -2278,7 +3221,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:43:40+00:00",
-      "updated_at": "2026-09-01T07:43:40+00:00"
+      "updated_at": "2026-09-01T07:43:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-rails-milestone-b": {
       "id": "finding-rails-milestone-b",
@@ -2294,7 +3244,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T07:59:46+00:00",
-      "updated_at": "2026-09-01T07:59:46+00:00"
+      "updated_at": "2026-09-01T07:59:46+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-pads-unsquish-flush": {
       "id": "finding-ui-pads-unsquish-flush",
@@ -2309,7 +3266,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:06:35+00:00",
-      "updated_at": "2026-09-01T08:06:35+00:00"
+      "updated_at": "2026-09-01T08:06:35+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-fix-nan-naming-manage-root": {
       "id": "finding-fix-nan-naming-manage-root",
@@ -2326,7 +3290,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:16:24+00:00",
-      "updated_at": "2026-09-01T08:16:24+00:00"
+      "updated_at": "2026-09-01T08:16:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-play-live-root-orient": {
       "id": "finding-ui-play-live-root-orient",
@@ -2342,7 +3313,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:27:41+00:00",
-      "updated_at": "2026-09-01T08:27:41+00:00"
+      "updated_at": "2026-09-01T08:27:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-landscape-pad-squash-v2": {
       "id": "finding-ui-landscape-pad-squash-v2",
@@ -2358,7 +3336,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:34:58+00:00",
-      "updated_at": "2026-09-01T08:34:58+00:00"
+      "updated_at": "2026-09-01T08:34:58+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-lcd-nav-text-bump": {
       "id": "finding-ui-lcd-nav-text-bump",
@@ -2374,7 +3359,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:44:28+00:00",
-      "updated_at": "2026-09-01T08:44:28+00:00"
+      "updated_at": "2026-09-01T08:44:28+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-keyboard-shorter-midgap": {
       "id": "finding-ui-keyboard-shorter-midgap",
@@ -2389,7 +3381,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:49:37+00:00",
-      "updated_at": "2026-09-01T08:49:37+00:00"
+      "updated_at": "2026-09-01T08:49:37+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-roadmap-bplus-then-c": {
       "id": "finding-roadmap-bplus-then-c",
@@ -2405,7 +3404,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T08:57:16+00:00",
-      "updated_at": "2026-09-01T08:57:16+00:00"
+      "updated_at": "2026-09-01T08:57:16+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-rails-milestone-bplus": {
       "id": "finding-rails-milestone-bplus",
@@ -2423,7 +3429,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T09:07:27+00:00",
-      "updated_at": "2026-09-01T09:07:27+00:00"
+      "updated_at": "2026-09-01T09:07:27+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-kits-tab-edit-save": {
       "id": "finding-ui-kits-tab-edit-save",
@@ -2439,7 +3452,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T09:20:36+00:00",
-      "updated_at": "2026-09-01T09:20:36+00:00"
+      "updated_at": "2026-09-01T09:20:36+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-kit-save-drum-bend": {
       "id": "finding-ui-kit-save-drum-bend",
@@ -2455,7 +3475,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T10:14:52+00:00",
-      "updated_at": "2026-09-01T10:14:52+00:00"
+      "updated_at": "2026-09-01T10:14:52+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-fix-kit-pad-save-dup": {
       "id": "finding-fix-kit-pad-save-dup",
@@ -2471,7 +3498,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T10:46:23+00:00",
-      "updated_at": "2026-09-01T10:46:23+00:00"
+      "updated_at": "2026-09-01T10:46:23+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-fix-tape-pad-silent": {
       "id": "finding-fix-tape-pad-silent",
@@ -2486,7 +3520,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T10:48:38+00:00",
-      "updated_at": "2026-09-01T10:48:38+00:00"
+      "updated_at": "2026-09-01T10:48:38+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-drum-params-audible": {
       "id": "finding-drum-params-audible",
@@ -2501,7 +3542,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T10:54:22+00:00",
-      "updated_at": "2026-09-01T10:54:22+00:00"
+      "updated_at": "2026-09-01T10:54:22+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-knob-pitch-scale-up": {
       "id": "finding-ui-knob-pitch-scale-up",
@@ -2516,7 +3564,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T10:55:02+00:00",
-      "updated_at": "2026-09-01T10:55:02+00:00"
+      "updated_at": "2026-09-01T10:55:02+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-type-readable-bump": {
       "id": "finding-ui-type-readable-bump",
@@ -2531,7 +3586,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T11:00:30+00:00",
-      "updated_at": "2026-09-01T11:00:30+00:00"
+      "updated_at": "2026-09-01T11:00:30+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-fix-kit-ok-pick-trap": {
       "id": "finding-fix-kit-ok-pick-trap",
@@ -2546,7 +3608,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T11:04:48+00:00",
-      "updated_at": "2026-09-01T11:04:48+00:00"
+      "updated_at": "2026-09-01T11:04:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-kit-library-pad-audition": {
       "id": "finding-ui-kit-library-pad-audition",
@@ -2561,7 +3630,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T11:12:24+00:00",
-      "updated_at": "2026-09-01T11:12:24+00:00"
+      "updated_at": "2026-09-01T11:12:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-pad-kit-vol-user-pads-factory": {
       "id": "finding-pad-kit-vol-user-pads-factory",
@@ -2579,7 +3655,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T15:44:31+00:00",
-      "updated_at": "2026-09-01T15:44:31+00:00"
+      "updated_at": "2026-09-01T15:44:31+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-library-list-scrollbar": {
       "id": "finding-ui-library-list-scrollbar",
@@ -2595,7 +3678,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T16:49:36+00:00",
-      "updated_at": "2026-09-01T16:49:36+00:00"
+      "updated_at": "2026-09-01T16:49:36+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-ui-preload-splash-audio-unlock": {
       "id": "finding-ui-preload-splash-audio-unlock",
@@ -2613,7 +3703,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T16:52:01+00:00",
-      "updated_at": "2026-09-01T16:56:14+00:00"
+      "updated_at": "2026-09-01T16:56:14+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-rails-milestone-c": {
       "id": "finding-rails-milestone-c",
@@ -2633,7 +3730,14 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T20:42:27+00:00",
-      "updated_at": "2026-09-01T20:42:27+00:00"
+      "updated_at": "2026-09-01T20:42:27+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     },
     "finding-dev-https-lan-mic": {
       "id": "finding-dev-https-lan-mic",
@@ -2651,7 +3755,863 @@
       ],
       "meta": {},
       "created_at": "2026-09-01T20:55:48+00:00",
-      "updated_at": "2026-09-01T20:55:48+00:00"
+      "updated_at": "2026-09-01T20:55:48+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sampler-play-assign-viz": {
+      "id": "finding-sampler-play-assign-viz",
+      "type": "finding",
+      "title": "Sampler play, assign KEYS/PAD, viz, keep-on-export",
+      "content": "Fixed silent Sample Edit PLAY (await audio resume). Mic: arm on open, spectrum bars, gain default 1 + peak normalize. SampleVoice louder. Save D = library only (no key steal). C ASSIGN → KEYS | PAD | EXPORT; PAD does not change project.soundId. Discard confirm for unsaved takes. Export toasts clarify download ≠ library.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "mic",
+        "assign",
+        "pad",
+        "export",
+        "viz"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T21:47:20+00:00",
+      "updated_at": "2026-09-01T21:47:20+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sampler-ux-simplify": {
+      "id": "finding-sampler-ux-simplify",
+      "type": "finding",
+      "title": "Sampler UX: play unlock, trim, import, delete",
+      "content": "Simplified sampler to home+edit+assign. PLAY awaits resume+warmSilent (no NORM required). Home: OK edit, A MIC, B IMPORT (showPicker+toasts), C DEL. Edit: M1/M2 trim labels, A PLAY B SAVE C ASSIGN D BACK; auto-norm on capture/open; SAVE stays on edit; autosave dirty library sample on BACK. Assign: KEYS or PAD only.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "ux",
+        "play",
+        "trim",
+        "import",
+        "delete"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T21:57:11+00:00",
+      "updated_at": "2026-09-01T21:57:11+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-pad-sample-speed-ok-edit": {
+      "id": "finding-pad-sample-speed-ok-edit",
+      "type": "finding",
+      "title": "Pad sample at root; OK opens sample edit",
+      "content": "Pad sample hits use sample root MIDI (not #padMidi) so playbackRate=1. Preview pad slot same. Remap skips sample pads. #navOk routes SAMPLER_SCREENS to sampler.nav(ok); library OK on isSample opens Sample Edit. Mic copy: STOP→edit; D=BACK only.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "pad",
+        "pitch",
+        "nav"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:08:10+00:00",
+      "updated_at": "2026-09-01T22:08:10+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-pitch-mic-vol": {
+      "id": "finding-sample-pitch-mic-vol",
+      "type": "finding",
+      "title": "Sample pitch wheel + mic input volume",
+      "content": "Pitch wheel drives sampleVoice.setPitchBend and live playbackRate on active notes. Mic MediaRecorder records post-M1 gain via MediaStreamDestination; monitor routes through engine.master so M3 VOLUME works while recording.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "pitch",
+        "mic",
+        "volume"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:11:03+00:00",
+      "updated_at": "2026-09-01T22:11:03+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-edit-pages-fx": {
+      "id": "finding-sample-edit-pages-fx",
+      "type": "finding",
+      "title": "Sample edit pages: trim tune EQ FX (superseded)",
+      "content": "SUPERSEDED by finding-fx-library-sample-track: Sample Edit is now a collapsible settings list (LEVEL first, knobs follow cursor) instead of TRIM/TUNE/EQ/FX pages.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "sampler",
+        "superseded"
+      ],
+      "meta": {
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
+      },
+      "created_at": "2026-09-01T22:14:15+00:00",
+      "updated_at": "2026-09-02T06:50:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "superseded",
+      "verification": "not_applicable",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "developing"
+    },
+    "finding-hold-sample-loop": {
+      "id": "finding-hold-sample-loop",
+      "type": "finding",
+      "title": "HOLD loops sample pads/keys",
+      "content": "With HOLD on, sample pads/keys loop the trimmed region until latched off (second press). Oneshot auto-stop timer disabled while HOLD is active.",
+      "path": null,
+      "tags": [
+        "hold",
+        "sample",
+        "pad",
+        "loop"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:15:04+00:00",
+      "updated_at": "2026-09-01T22:15:04+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-edit-discoverability": {
+      "id": "finding-sample-edit-discoverability",
+      "type": "finding",
+      "title": "Sample edit path made explicit in UI copy",
+      "content": "Paths: SOUND→B SAMPLER→select→OK; or LIBRARY user sample→OK (opens Sample Edit). Hub/home/library/detail copy now say PRESS OK → SAMPLE EDIT / TRIM·TUNE·EQ·FX.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "ux",
+        "edit"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:20:05+00:00",
+      "updated_at": "2026-09-01T22:20:05+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-save-rename": {
+      "id": "finding-sample-save-rename",
+      "type": "finding",
+      "title": "Sample SAVE screen: rename, save as, trim",
+      "content": "Sample Edit B opens SAVE SAMPLE. D SAVE persists trim/tune/eq/fx in place. B RENAME names (and saves if already in library). C SAVE AS creates a new user sample copy.",
+      "path": null,
+      "tags": [
+        "sampler",
+        "save",
+        "rename"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:25:51+00:00",
+      "updated_at": "2026-09-01T22:25:51+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-new-kit-create": {
+      "id": "finding-new-kit-create",
+      "type": "finding",
+      "title": "Create blank kit without copying",
+      "content": "SOUND→C NEW KIT or Library KITS→+ NEW KIT→OK names an empty user kit and opens kit edit to assign pads. No factory kit copy required.",
+      "path": null,
+      "tags": [
+        "kit",
+        "library",
+        "ux"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:33:42+00:00",
+      "updated_at": "2026-09-01T22:33:42+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-loop-d1": {
+      "id": "finding-loop-d1",
+      "type": "finding",
+      "title": "LOOP D1: tracks, overdub, metro on PLAY",
+      "content": "LOOP D1: MENU→LOOP track view; Transport AudioContext clock; Metronome master-only (Hold TAP on PLAY/LOOP, Options for level/accent/count-in); LoopEngine PCM overdub from dry recTap; PLAY/STOP/REC wired; recovery persists loop buffers + metro prefs. SEQ deferred.",
+      "path": null,
+      "tags": [
+        "loop",
+        "transport",
+        "metronome",
+        "milestone"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T22:51:24+00:00",
+      "updated_at": "2026-09-01T22:51:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-tap-tempo-feel": {
+      "id": "finding-tap-tempo-feel",
+      "type": "finding",
+      "title": "Tap tempo clicks + live clock resync",
+      "content": "Short TAP: audible tapClick (even if metro off), BPM lock after 2+ taps, resyncFromNow if playing. Hold TAP still toggles metro. OK+▲▼ metro level on PLAY.",
+      "path": null,
+      "tags": [
+        "transport",
+        "metronome",
+        "tap"
+      ],
+      "meta": {},
+      "created_at": "2026-09-01T23:39:40+00:00",
+      "updated_at": "2026-09-01T23:39:40+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-drum-fx-delay-not-drive": {
+      "id": "finding-drum-fx-delay-not-drive",
+      "type": "finding",
+      "title": "Drum FX M2 is DELAY not DRIVE",
+      "content": "SNAP keeps SNAP+DRIVE. FX is ROOM+DELAY (per-hit sends). DrumVoice.delay separate from drive; delay bus no longer piggybacked on drive.",
+      "path": null,
+      "tags": [
+        "drums",
+        "edit",
+        "fx"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T00:08:00+00:00",
+      "updated_at": "2026-09-02T00:08:00+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-loop-full-length-on-stop": {
+      "id": "finding-loop-full-length-on-stop",
+      "type": "finding",
+      "title": "Loop takes always keep lengthBars",
+      "content": "stopRecord/finishRecord always writes a buffer of _recTarget samples (full loop length). Early REC-off pads silence; never truncates track length.",
+      "path": null,
+      "tags": [
+        "loop",
+        "record"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T00:24:49+00:00",
+      "updated_at": "2026-09-02T00:24:49+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-loop-track-vol-vs-master": {
+      "id": "finding-loop-track-vol-vs-master",
+      "type": "finding",
+      "title": "Loop M1 track vol independent of M3 master",
+      "content": "LOOP track view: M1 selected-track level, M2 pan, M3 master. Knob visuals read track level/pan. ensureGraph before refreshGains; levels persist.",
+      "path": null,
+      "tags": [
+        "loop",
+        "volume"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T00:26:52+00:00",
+      "updated_at": "2026-09-02T00:26:52+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "per-track-loop-bar-counts-55a375f4": {
+      "id": "per-track-loop-bar-counts-55a375f4",
+      "type": "finding",
+      "title": "Per-track loop bar counts",
+      "content": "Each LOOP track has its own lengthBars (1/2/4/8). Track menu LENGTH row adjusts selected track (resizes existing audio). Record/playback use that track length so tracks can loop at different periods. OPTIONS DEFAULT BARS sets project default and empty tracks only.",
+      "path": null,
+      "tags": [
+        "loop",
+        "length",
+        "per-track"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T00:29:24+00:00",
+      "updated_at": "2026-09-02T00:29:24+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-level-vs-master": {
+      "id": "finding-sample-level-vs-master",
+      "type": "finding",
+      "title": "Sample + track level independent of master",
+      "content": "LOOP: M1 = selected track level, M3 = master. Sample edit: M3 = sample level (patch.gain) not master; live setGain. PLAY with sample on keys: M1 LEVEL rides sample gain (persisted to user sound), M3 stays master. Pads still use kitVolume * pad.level * sample.gain.",
+      "path": null,
+      "tags": [
+        "loop",
+        "sample",
+        "volume"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T00:58:05+00:00",
+      "updated_at": "2026-09-02T00:58:05+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-keys-quiet-fix": {
+      "id": "finding-sample-keys-quiet-fix",
+      "type": "finding",
+      "title": "Fix quiet sample keys after LEVEL",
+      "content": "PLAY M1 LEVEL could duck sample.gain and putUserSound saved it. defaultPatch gain was 1 vs sample default 1.35; every keyDown re-applied patchFromSound and stomped. Fixed: DEFAULT_SAMPLE_GAIN 1.5, floor 0.15, repair gain&lt;0.75 on load, no double applyPatch on keyDown, louder noteOn cap 2.2, debounced IDB save.",
+      "path": null,
+      "tags": [
+        "sample",
+        "volume",
+        "bugfix"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T01:14:46+00:00",
+      "updated_at": "2026-09-02T01:14:46+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-grapher-only-no-graphify": {
+      "id": "finding-grapher-only-no-graphify",
+      "type": "finding",
+      "title": "graphify retired; grapher is canonical",
+      "content": "Decision (Sep 2026): graphify is retired for all time. Do not install, run, or reference graphify or graphify-out/. grapher (.grapher/knowledge.json) is the single shared knowledge graph: search before acting, write findings after. Rule .cursor/rules/graphify.mdc was deleted.",
+      "path": null,
+      "tags": [
+        "meta",
+        "tooling",
+        "grapher"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T06:16:41+00:00",
+      "updated_at": "2026-09-02T06:16:41+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-sample-full-length-crop-saveas": {
+      "id": "finding-sample-full-length-crop-saveas",
+      "type": "finding",
+      "title": "Samples play full length; Save As crops to trim",
+      "content": "SampleVoice.noteOn passed duration len/rate to src.start; Web Audio duration is in buffer seconds (not scaled by playbackRate), so pitched-up samples were truncated. Now start(t,start,len); added playSeconds(midi)=trimSec/rate. One-shot pad timer uses playSeconds (tune-aware) with no 8s cap; source ends naturally, timer only clears held/LED state. Save As (asNew) crops audio via sliceBuffer to trim, resets trim 0..1, refreshes draft peaks/duration; in-place SAVE keeps full audio + trim points. Keys remain gate for samples (user choice).",
+      "path": null,
+      "tags": [
+        "sample",
+        "pad",
+        "trim",
+        "save",
+        "bugfix"
+      ],
+      "meta": {
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
+      },
+      "created_at": "2026-09-02T06:18:07+00:00",
+      "updated_at": "2026-09-02T06:18:07+00:00",
+      "workflow_state": "not_applicable",
+      "status": "current",
+      "verification": "partially_verified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "developing"
+    },
+    "finding-fx-library-sample-track": {
+      "id": "finding-fx-library-sample-track",
+      "type": "finding",
+      "title": "FX library: shared sample/track processing chain",
+      "content": "Shared FX library for samples and loop tracks (Sep 2026).\n- audio/fx_params.js: single registry of ~100 params in ordered groups (MIX, SAMPLE, PITCH, LOOP, AMP ENV, TONE/EQ, FILTER, SATURATION, LO-FI, TAPE/ANALOG, VINYL/NOISE, DEVICE, REVERB, DELAY, MODULATION, AMP MOD, DYNAMICS, STEREO, PERFORM/GLITCH, CHARACTER). Each param: key/type/min/max/def/fmt/scope (\"s\" sample, \"t\" track, \"st\" both). Helpers: fxDefaults, sanitizeFx, nudgeFx (knob), stepFx (◀▶), fmtFx, fxKnob01, resolveFx (CHARACTER macro overlays lerped by charAmt), syncSeconds.\n- audio/fx_chain.js FxChain: input→preGain(gain)→[noise inject]→filter→filterDrive→sat→grit(bits/downsample/dropout/skip; lazy ScriptProcessor)→bass/mid/treble→tilt→device(bp+shaper wet/dry)→chorus/flanger(mod delay)→phaser(4 allpass)→tremolo→autopan→comp→limiter→M/S width(+swap)→level→pan→out, plus own reverb send (generated impulse per type/size/decay, tone LPF) and delay send (sync/free, feedback, ping-pong, clean/lofi/tape). Wow/flutter/vibrato exposed via attachRateMod(playbackRate). Noise generators (hiss/static/dust/crackle/hum) built lazily and gated by setActive().\n- voices/sample.js SampleVoice rewritten on FxChain: trim, fades, ADSR (ampAttack/ampDecay/ampSustain/ampRelease), pitch (root/tuneSemis/fine/octave/detune/speed/bend), reverse (cached reversed buffer), loop fwd/rev/pingpong (segment chaining w/ crossfade), stutter (bpm-synced slice), mono/retrigger/choke groups, tapeStart ramp, tapeStop(), per-trigger randStart/randPitch/randPan/randReverse. Sample output goes through chain → engine.dry (so loops still record it). Legacy fields kept: gain, trimStart/End, tuneSemis, padMode, reverb, delay, bassDb, trebleDb.\n- Key collisions with synth sanitizePatch avoided by naming: ampAttack.. (not attack/release), tilt (not tone). patchFromSound() seeds samples with fxDefaults so old saved samples don't inherit synth defaults (e.g. release 0.48). #applyProjectPatch no longer leaks synth project values into samples.\n- Loop tracks: LoopEngine creates one FxChain per track (dest engine.master, never re-recorded); mute/solo gate on chain.input; t.fx persisted in loop state; setTrackFx(id,key,val). Track sources get wow/flutter rate mod.\n- UI: screens/settings_list.js collapsible list shared by SAMPLE EDIT and new loop-fx screen (LOOP → track OK → \"FX / SETTINGS…\"). LEVEL is row 0; knobs follow the cursor (group header → first 3 params; param row → it + next two). M3 is only borrowed when a third param exists; else falls through to master. OK on header expands/collapses, on action row runs it (TRIM→CROP, NORMALIZE, TAPE STOP), otherwise previews. Not yet real: granular, time-stretch/formant/octaver/harmonizer (would need offline DSP/worklets).\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "fx",
+        "sampler",
+        "looper",
+        "knobs"
+      ],
+      "meta": {
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
+      },
+      "created_at": "2026-09-02T06:50:34+00:00",
+      "updated_at": "2026-09-02T06:50:34+00:00",
+      "workflow_state": "not_applicable",
+      "status": "current",
+      "verification": "partially_verified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": "developing"
+    },
+    "finding-crash-persist-storm": {
+      "id": "finding-crash-persist-storm",
+      "type": "finding",
+      "title": "Phone crash root cause: persist storm cloning loop audio",
+      "content": "Debug session 397b28 (Sep 2026). iPhone Safari page silently reloaded while turning knobs in LOOP. Runtime evidence: 710 \"persist recovery\" writes in one phone session, bursts up to 55/s on loop-tracks/loop-menu/sample-edit, each serializing 8.19 MB of track PCM (bufferToStored copies Float32 arrays, then IndexedDB structured-clones again). No window.error / unhandledrejection / pagehide preceded the reload (Hypotheses A JS error, D boot failure, E backgrounding REJECTED; B memory/IDB storm CONFIRMED) — consistent with WebKit's memory watchdog killing the tab.\nFix: app.js #persist() debounced (600 ms trailing) with #persistNow(); flushPersist() on pagehide/visibility hidden (cassio_controller). LoopEngine.serialize() caches stored PCM per buffer identity (#storedAudio; seeded from applyState) so level/pan/fx edits never re-copy audio. Verified headless: 60 rapid knob ticks → 1 write.\nRule of thumb: never call #persist from knob/tick handlers without coalescing; keep large PCM out of hot paths.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "crash",
+        "persistence",
+        "indexeddb",
+        "ios"
+      ],
+      "meta": {
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
+      },
+      "created_at": "2026-09-02T06:50:37+00:00",
+      "updated_at": "2026-09-02T06:50:37+00:00",
+      "workflow_state": "not_applicable",
+      "status": "historical",
+      "verification": "verified",
+      "evidence": [
+        {
+          "type": "observation",
+          "ref": "runtime",
+          "summary": "710 persist recovery writes; 55/s bursts; 8.19MB PCM clones"
+        },
+        {
+          "type": "test",
+          "ref": "headless",
+          "summary": "60 rapid knob ticks → 1 write after debounce fix"
+        }
+      ],
+      "source_refs": [],
+      "owners": [],
+      "stage": "maintaining"
+    },
+    "finding-loop-d2-step-sequencer": {
+      "id": "finding-loop-d2-step-sequencer",
+      "type": "finding",
+      "title": "LOOP D2: step sequencer (Screens 24–25)",
+      "content": "LOOP D2 — Step Sequencer, implemented Sep 2026.\n\nMODEL (store.js): project.seq = { current: \"A\"..\"D\", patterns: { A..D } }. Pattern = { length: 16|32|64, swing 0..1, gate 0.05..1 (default 0.5), lanes: 6 × steps[length] }. Step = { on, vel (def 0.85), accent (vel→1.0), tie (extends gate into next on step), shift (-0.5..0.5 step), gate (null = pattern gate, or per-step override) }. defaultSeq/sanitizeSeq/sanitizePattern/sanitizeStep; SEQ_PATTERNS/SEQ_LENGTHS/SEQ_LANES exports. Included in defaultProject and saveRecovery (`seq`); restored at boot via stepSeq.applyState(). Lane N = pad N: sound is whatever project.pads[N] is assigned, so kit switch re-voices the pattern.\n\nENGINE (audio/step_sequencer.js): StepSequencer(transport, trigger). 50 ms setTimeout lookahead loop, 0.25 s lookahead, absolute times from transport._origin: stepSec = beatSec/4; odd 16ths delayed swing*stepSec*0.5; plus step.shift*stepSec. Pattern wraps every `length` steps so step 1 = bar 1 of loop tracks. Per due step calls trigger(lane+1, { when, velocity, gateSec, step, accent }); gateSec = (tiedSteps-1 + gate)*stepSec. Trigger callbacks fire ~40 ms before `when` so voices schedule exactly. start(origin)/stop()/resync(origin)/playheadStep()/onStep(i, lanes) for LED flash. Smoke test: onsets within 1–3 ms of expected at 120 BPM.\n\nTRIGGER PATH (app.js): #padSound(n) → {slot, assigned, patch} shared by #padDown and #triggerPad(n, {when, velocity, gateSec}). #triggerPad never touches heldPads/HOLD; drums ignore gate; gate-mode samples and synth pads get noteOff(midi,false,{when: when+gateSec}). Voices: drum/glass_poly/sample noteOn(..., {when}) use t = max(ctx.currentTime, when); glass_poly/sample noteOff(..., {when}) use setTargetAtTime for future releases so the in-flight attack isn't cancelled. Output goes down the normal pad path (engine.dry) so a running pattern is recordable into a loop track.\n\nTRANSPORT WIRING: #transportPlay → stepSeq.start(origin); #transportStop → stepSeq.stop(); REC startRecAt → stepSeq.start(startTime) alongside loopEngine.startPlayback; tap-tempo resyncFromNow → stepSeq.resync(transport._origin).\n\nUI (seq_controller.js + screens/sequencer.js, SEQ_SCREENS = sequencer|step-edit): Entry LOOP track view soft key B \"SEQ…\" → seqCtl.open(); BACK/D → loop-tracks. Grid 6×16 per page; arrows move cursor (◀▶ wrap across pages), ▲ from lane 1 reaches header row where ◀▶ switch pattern A–D; OK toggles step (on release; hold OK 380 ms → Step Edit via app._okHoldTimer in #handleAction); pads 1–6 select lane (no audition); M1 swing, M2 gate, M3 master. Soft keys: A PAGE (cycles 16-step pages), B LENGTH 16→32→64→16 (extend by repeating pattern, truncate when shrinking), C SHIFT mode (◀▶ rotate lane ±1 step; C/OK/BACK exits), D CLEAR lane via confirm screen (confirmAction \"clear-seq-lane\"). Step Edit: M1 velocity, M2 per-step gate, ◀▶ micro-shift ±5%, ▲▼ step, A OFF, B ACCENT, C TIE, D/OK done. Playhead: seqCtl.startPlayheadLoop() rAF toggles .playhead on [data-seq-col] cells in place; render() only on structural changes. Pad LEDs flash via app.seqFlash + #onSeqStep. CSS: .seq-grid/.seq-row/.seq-cell.on/.accent/.tie/.lane-sel/.cursor/.playhead/.beat, .seq-header.selected.\n\nVERIFY: /tmp/cassio_smoke/seq_smoke.mjs (headless Chrome CDP, portrait emulation, https://127.0.0.1:3000): programs kick 1/5/9/13, asserts onsets, wrap, length/page cycling, hold-OK → step-edit, tap toggle, header pattern switch, shift rotate, pad lane select, clear confirm, persist round-trip, synth-lane gate path.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "sequencer",
+        "screen-24",
+        "screen-25",
+        "d2"
+      ],
+      "meta": {
+        "curation": {
+          "source": "cassio_acceptance",
+          "at": "2026-09-02T17:53:16+00:00"
+        }
+      },
+      "created_at": "2026-09-02T07:36:47+00:00",
+      "updated_at": "2026-09-02T07:36:47+00:00",
+      "workflow_state": "not_applicable",
+      "status": "current",
+      "verification": "verified",
+      "evidence": [
+        {
+          "type": "test",
+          "ref": "smoke",
+          "summary": "Smoke tests documented in finding content"
+        }
+      ],
+      "source_refs": [],
+      "owners": [],
+      "stage": "developing"
+    },
+    "finding-loop-record-overdub-fix": {
+      "id": "finding-loop-record-overdub-fix",
+      "type": "finding",
+      "title": "Loop overdub: boundary sync + play-during-rec monitor",
+      "content": "Fix (Sep 2026) for perceived loop record \"feedback/compounding\" when keyboard overdubbing while tracks play.\n\nROOT CAUSE (investigated): Not audio-graph feedback — loop tracks route to master only, recTap taps dry bus only (verified: 220Hz backing → 0 energy in silent overdub capture). Real bug was phase misalignment: REC-while-playing used engine.now() instead of next loop boundary, so overdub passes were mixed into loop-aligned buffers at wrong offsets → flam/doubling each cycle felt like compounding.\n\nP0: transport.nextLoopBoundary(origin, loopSec, now) — REC while playing snaps capture start to next downbeat; toast \"REC @ NEXT LOOP\" when wait >80ms.\n\nP1: project.loop.playDuringRec = all|monitored|off (default all). Loop Options row + soft key C cycle. During capture loop_engine.#audibleWhileRecording: off=silent backing, monitored=tracks with monitor true, all=unmuted backing (still respects mute/solo).\n\nP2: Recording track always silent during capture (#audibleWhileRecording returns false for _recTrack) — prevents hearing old take while laying new material.\n\nImmediate input.gain.setValueAtTime(0) when muted during record (not slow ramp).\n\nVERIFY: bin/smoke-loop-record (test/smoke/loop_record.mjs) — bleed test, alignment peak <500ms, playDuringRec off → rec+backing gain 0.\n",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "recording",
+        "bugfix"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T10:39:07+00:00",
+      "updated_at": "2026-09-02T10:39:11+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "screen-26-mixer-mix-area-7122e2de": {
+      "id": "screen-26-mixer-mix-area-7122e2de",
+      "type": "finding",
+      "title": "Screen 26 Mixer (MIX area)",
+      "content": "Implemented Screen 26 six-track mixer: MixController + renderMixer. Entry via MENU→MIX (mixReturnScreen menu) or LOOP track menu MIXER row. M1 track level, M2 pan, M3 master (app default). Soft keys A mute, B solo, C reset, D LOOP→loop-tracks. Pads 1–6 select track; arrows cycle. State persists via persistLoop on loop track level/pan/mute/solo. Smoke: test/smoke/mixer.mjs.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen-26",
+        "mixer",
+        "current"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T10:56:42+00:00",
+      "updated_at": "2026-09-02T10:56:42+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "screen-23-loop-options-loop-track-controls-7aa7f54d": {
+      "id": "screen-23-loop-options-loop-track-controls-7aa7f54d",
+      "type": "finding",
+      "title": "Screen 23 Loop Options + loop track controls",
+      "content": "Screen 23: quantize option (off/1/4/1/8/1/16) in store, loopEngine, options UI; soft keys A LENGTH B QUANT C MONITOR (play-during-rec) D DONE. Overdub snap uses nextGridPoint when quantize on. Screen 21 track view: soft keys A ARM B MUTE C SOLO D UNDO; header shows Q and MON; left/right also toggle mute/solo. SEQ and LOOP OPTIONS moved to track menu. Fix unstoppable loops: transport.stop() before stopRecord; onDone only restarts playback when transport.playing. Smoke: test/smoke/loop_control.mjs.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "v1",
+        "screen-23",
+        "screen-21",
+        "loop",
+        "current"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T11:07:33+00:00",
+      "updated_at": "2026-09-02T11:07:33+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "loop-track-level-nan-fix-a59c6ef9": {
+      "id": "loop-track-level-nan-fix-a59c6ef9",
+      "type": "finding",
+      "title": "Loop track level NaN fix",
+      "content": "Track volume (M1/mixer fader) failed when t.level was missing: Math.max(0, undefined) produced NaN in FxChain.apply, throwing on AudioParam.setTargetAtTime and breaking refreshGains for all tracks. Fix: #syncTrackMix coerces level/pan, mirrors to t.fx; setTrackLevel/setTrackPan helpers; applyState falls back to fx.level.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "mixer",
+        "bugfix",
+        "current"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T11:10:44+00:00",
+      "updated_at": "2026-09-02T11:10:44+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "loop-multi-track-timeline-hold-arrow-offset-scru-538b652b": {
+      "id": "loop-multi-track-timeline-hold-arrow-offset-scru-538b652b",
+      "type": "finding",
+      "title": "Loop multi-track timeline + hold-arrow offset scrub",
+      "content": "Screen 21 rebuilt as 6-lane timeline with clip blocks and playhead. Per-track offsetSec (persisted) phases loop playback via BufferSource start offset. Tap ◀▶ nudges one beat; hold ◀▶ (350ms) scrubs ±0.05s every 80ms. ▲▼ selects track; B/C mute/solo. Removed ◀▶ mute/solo from nav (soft keys only).",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "timeline",
+        "screen-21",
+        "current"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T11:15:51+00:00",
+      "updated_at": "2026-09-02T11:15:51+00:00",
+      "workflow_state": "not_applicable",
+      "status": "unclassified",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "checkpoint-current-audio-architecture": {
+      "id": "checkpoint-current-audio-architecture",
+      "type": "checkpoint",
+      "title": "Current: audio architecture",
+      "content": "Current winning audio stack (Sep 2026): shared FxChain/FxParams registry for samples and loop tracks; SampleVoice on FxChain; per-track loop engine. See finding-fx-library-sample-track (supersedes old sample-edit pages). Refresh with: grapher checkpoint refresh checkpoint-current-audio-architecture",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "developing",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "checkpoint-current-sampler": {
+      "id": "checkpoint-current-sampler",
+      "type": "checkpoint",
+      "title": "Current: sampler",
+      "content": "Current sampler UX and playback: full-length play, trim-aware Save As, gate behavior. See linked findings.",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "developing",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "checkpoint-current-loop-engine": {
+      "id": "checkpoint-current-loop-engine",
+      "type": "checkpoint",
+      "title": "Current: loop engine",
+      "content": "Current loop engine: D1 track view + D2 step sequencer (Screens 21–25). finding-loop-d2-step-sequencer is canonical implementation truth.",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "developing",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "checkpoint-current-ui-controls": {
+      "id": "checkpoint-current-ui-controls",
+      "type": "checkpoint",
+      "title": "Current: UI controls",
+      "content": "Current UI/control layer findings: layout, knobs, autoboot. Linked isolated UI findings apply here.",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "designing",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "checkpoint-current-persistence": {
+      "id": "checkpoint-current-persistence",
+      "type": "checkpoint",
+      "title": "Current: persistence",
+      "content": "Persistence rule: debounced persist (600ms), flush on pagehide; never hot-path PCM clone on knob ticks. Incident finding-crash-persist-storm is verified historical truth.",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "maintaining",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "checkpoint-current-roadmap": {
+      "id": "checkpoint-current-roadmap",
+      "type": "checkpoint",
+      "title": "Current: roadmap",
+      "content": "Roadmap checkpoint: Milestone B+ factory voices/presets then C Sampler. Refresh from roadmap findings.",
+      "path": null,
+      "tags": [
+        "checkpoint",
+        "cassio"
+      ],
+      "meta": {
+        "created_by": "cassio_curate"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "partially_verified",
+      "stage": "planning",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "updated_at": "2026-09-02T17:53:16+00:00"
+    },
+    "operating-precedence-agile-sdlc-43e05582": {
+      "id": "operating-precedence-agile-sdlc-43e05582",
+      "type": "decision",
+      "title": "Operating precedence: Agile SDLC",
+      "content": "CASSIO agents and Grapher curation operate under agile SDLC precedence. Lifecycle stages (ideation→designing→planning→developing→launching→maintaining) define where work sits, not just labels. Truth precedence when building: (1) verified current implementation, (2) canonical_spec scoped to intent, (3) proposed/designing as next increment, (4) historical/superseded as context only. Work in small developing increments; verify (smoke/tests) before marking current; supersede explicitly; graph deviations from manual rather than silent drift. Bulk v2 status fields are not authoritative until curated with evidence and explanations.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "agile",
+        "sdlc",
+        "precedence",
+        "decision",
+        "current"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T17:54:34+00:00",
+      "updated_at": "2026-09-02T17:54:40+00:00",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "step-sequencer-render-crash-trackmode-tdz-21f01c05": {
+      "id": "step-sequencer-render-crash-trackmode-tdz-21f01c05",
+      "type": "finding",
+      "title": "Step sequencer render crash (trackMode TDZ)",
+      "content": "renderSequencer() threw ReferenceError: Cannot access trackMode before initialization — trackMode was used in the lane loop before const declaration when per-track SEQ mode was added. Symptom: blank LCD opening STEP SEQ from loop track menu (OK → STEP SEQ). Fix: hoist trackId/trackMode above grid build in screens/sequencer.js. Access path unchanged: loop-tracks → OK → menu row STEP SEQ → seqCtl.open(trackId).",
+      "path": null,
+      "tags": [
+        "loop",
+        "sequencer",
+        "bugfix",
+        "maintaining"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T19:25:08+00:00",
+      "updated_at": "2026-09-02T19:25:08+00:00",
+      "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     }
   },
   "edges": [
@@ -4363,7 +6323,7 @@
     {
       "from": "finding-ui-landscape-pad-squash-v2",
       "to": "finding-ui-play-live-root-orient",
-      "rel": "related",
+      "rel": "supersedes",
       "created_at": "2026-09-01T08:35:00+00:00",
       "note": "Supersedes weak reflow"
     },
@@ -4642,6 +6602,450 @@
       "to": "finding-rails-milestone-c",
       "rel": "related",
       "created_at": "2026-09-01T20:55:50+00:00"
+    },
+    {
+      "from": "finding-sampler-play-assign-viz",
+      "to": "finding-rails-milestone-c",
+      "rel": "related",
+      "created_at": "2026-09-01T21:47:58+00:00"
+    },
+    {
+      "from": "finding-sampler-play-assign-viz",
+      "to": "concept-screen-20",
+      "rel": "related",
+      "created_at": "2026-09-01T21:47:58+00:00"
+    },
+    {
+      "from": "finding-sampler-play-assign-viz",
+      "to": "concept-screen-13",
+      "rel": "related",
+      "created_at": "2026-09-01T21:47:58+00:00"
+    },
+    {
+      "from": "finding-sampler-ux-simplify",
+      "to": "finding-sampler-play-assign-viz",
+      "rel": "related",
+      "created_at": "2026-09-01T21:57:12+00:00"
+    },
+    {
+      "from": "finding-sampler-ux-simplify",
+      "to": "finding-rails-milestone-c",
+      "rel": "related",
+      "created_at": "2026-09-01T21:57:13+00:00"
+    },
+    {
+      "from": "finding-pad-sample-speed-ok-edit",
+      "to": "finding-sampler-ux-simplify",
+      "rel": "related",
+      "created_at": "2026-09-01T22:08:12+00:00"
+    },
+    {
+      "from": "finding-sample-pitch-mic-vol",
+      "to": "finding-pad-sample-speed-ok-edit",
+      "rel": "related",
+      "created_at": "2026-09-01T22:11:04+00:00"
+    },
+    {
+      "from": "finding-sample-edit-pages-fx",
+      "to": "finding-sample-pitch-mic-vol",
+      "rel": "related",
+      "created_at": "2026-09-01T22:14:17+00:00"
+    },
+    {
+      "from": "finding-hold-sample-loop",
+      "to": "finding-sample-edit-pages-fx",
+      "rel": "related",
+      "created_at": "2026-09-01T22:15:06+00:00"
+    },
+    {
+      "from": "finding-loop-d1",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-01T22:51:25+00:00"
+    },
+    {
+      "from": "per-track-loop-bar-counts-55a375f4",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T00:29:37+00:00"
+    },
+    {
+      "from": "finding-sample-level-vs-master",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T00:58:06+00:00"
+    },
+    {
+      "from": "finding-sample-level-vs-master",
+      "to": "concept-area-sound",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T00:58:07+00:00"
+    },
+    {
+      "from": "finding-sample-keys-quiet-fix",
+      "to": "finding-sample-level-vs-master",
+      "rel": "related",
+      "created_at": "2026-09-02T01:14:49+00:00"
+    },
+    {
+      "from": "finding-grapher-only-no-graphify",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T06:16:43+00:00"
+    },
+    {
+      "from": "finding-sample-full-length-crop-saveas",
+      "to": "finding-sample-save-rename",
+      "rel": "related",
+      "created_at": "2026-09-02T06:18:09+00:00"
+    },
+    {
+      "from": "finding-sample-full-length-crop-saveas",
+      "to": "finding-hold-sample-loop",
+      "rel": "related",
+      "created_at": "2026-09-02T06:18:10+00:00"
+    },
+    {
+      "from": "finding-sample-full-length-crop-saveas",
+      "to": "concept-area-sound",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T06:18:10+00:00"
+    },
+    {
+      "from": "finding-fx-library-sample-track",
+      "to": "finding-sample-level-vs-master",
+      "rel": "related",
+      "created_at": "2026-09-02T06:50:39+00:00",
+      "note": "LEVEL row 0 replaces the M3 sample-level hack; knobs follow cursor"
+    },
+    {
+      "from": "finding-fx-library-sample-track",
+      "to": "finding-sample-edit-pages-fx",
+      "rel": "supersedes",
+      "created_at": "2026-09-02T06:50:39+00:00",
+      "note": "Supersedes TRIM/TUNE/EQ/FX pages with collapsible settings list"
+    },
+    {
+      "from": "finding-fx-library-sample-track",
+      "to": "finding-sample-keys-quiet-fix",
+      "rel": "related",
+      "created_at": "2026-09-02T06:50:39+00:00",
+      "note": "gain stays legacy key; preGain in FxChain"
+    },
+    {
+      "from": "finding-crash-persist-storm",
+      "to": "concept-persistence",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T06:50:40+00:00"
+    },
+    {
+      "from": "finding-crash-persist-storm",
+      "to": "finding-sample-level-vs-master",
+      "rel": "related",
+      "created_at": "2026-09-02T06:50:40+00:00",
+      "note": "Track level knob (M1 in LOOP) was the persist hot path"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "concept-screen-24",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T07:36:50+00:00",
+      "note": "Implements Screen 24 Step Sequencer"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "concept-screen-25",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T07:36:50+00:00",
+      "note": "Implements Screen 25 Step Edit"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "finding-loop-d1",
+      "rel": "related",
+      "created_at": "2026-09-02T07:36:50+00:00",
+      "note": "Builds on D1 transport/loop tracks; seq starts/stops with transport"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "concept-area-loop",
+      "rel": "related",
+      "created_at": "2026-09-02T07:36:51+00:00",
+      "note": "LOOP area feature"
+    },
+    {
+      "from": "finding-loop-record-overdub-fix",
+      "to": "finding-loop-d1",
+      "rel": "related",
+      "created_at": "2026-09-02T10:39:11+00:00",
+      "note": "Overdub capture fix on D1 loop engine"
+    },
+    {
+      "from": "finding-loop-record-overdub-fix",
+      "to": "concept-recording-behavior",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T10:39:11+00:00",
+      "note": "Implements play-during-rec monitor semantics"
+    },
+    {
+      "from": "screen-26-mixer-mix-area-7122e2de",
+      "to": "concept-screen-26",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T10:56:55+00:00"
+    },
+    {
+      "from": "screen-26-mixer-mix-area-7122e2de",
+      "to": "concept-area-mix",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T10:56:55+00:00"
+    },
+    {
+      "from": "screen-23-loop-options-loop-track-controls-7aa7f54d",
+      "to": "concept-screen-23",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T11:07:44+00:00"
+    },
+    {
+      "from": "screen-23-loop-options-loop-track-controls-7aa7f54d",
+      "to": "concept-screen-21",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T11:07:44+00:00"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "concept-screen-24",
+      "rel": "implements",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-loop-d2-step-sequencer",
+      "to": "concept-screen-24",
+      "rel": "verified_by",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "checkpoint-current-audio-architecture",
+      "to": "finding-fx-library-sample-track",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-audio-architecture",
+      "to": "finding-sample-level-vs-master",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-audio-architecture",
+      "to": "finding-sample-keys-quiet-fix",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-audio-architecture",
+      "to": "concept-area-sound",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-sampler",
+      "to": "finding-sample-full-length-crop-saveas",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-sampler",
+      "to": "finding-sample-save-rename",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-sampler",
+      "to": "finding-hold-sample-loop",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-sampler",
+      "to": "concept-area-sound",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-sampler",
+      "to": "concept-screen-12",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-loop-d2-step-sequencer",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-loop-d1",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "concept-area-loop",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "concept-screen-21",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "concept-screen-24",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-ui-controls",
+      "to": "finding-ui-fullbleed-layout",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-ui-controls",
+      "to": "finding-ui-knobs-viz-autoboot",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-persistence",
+      "to": "finding-crash-persist-storm",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-persistence",
+      "to": "concept-persistence",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-roadmap",
+      "to": "finding-roadmap-bplus-then-c",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "checkpoint-current-roadmap",
+      "to": "concept-cassio-project",
+      "rel": "derived_from",
+      "created_at": "2026-09-02T17:53:16+00:00",
+      "note": "checkpoint scope"
+    },
+    {
+      "from": "finding-octave-remap-held-midi",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-hold-toggle-sticky-pitch",
+      "to": "concept-area-sound",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-sample-edit-discoverability",
+      "to": "concept-area-sound",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-new-kit-create",
+      "to": "concept-area-sound",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-tap-tempo-feel",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-drum-fx-delay-not-drive",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-loop-full-length-on-stop",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-loop-track-vol-vs-master",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "loop-track-level-nan-fix-a59c6ef9",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "loop-multi-track-timeline-hold-arrow-offset-scru-538b652b",
+      "to": "concept-area-loop",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:16+00:00"
+    },
+    {
+      "from": "finding-ui-brand-keys-balance",
+      "to": "concept-area-ui",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:28+00:00"
+    },
+    {
+      "from": "finding-ui-no-text-select",
+      "to": "concept-area-ui",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:28+00:00"
+    },
+    {
+      "from": "finding-ui-midrow-axis-tighten",
+      "to": "concept-area-ui",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:53:28+00:00"
+    },
+    {
+      "from": "operating-precedence-agile-sdlc-43e05582",
+      "to": "concept-cassio-project",
+      "rel": "applies_to",
+      "created_at": "2026-09-02T17:54:40+00:00"
     }
   ]
 }
