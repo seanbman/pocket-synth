@@ -4612,6 +4612,51 @@
       "source_refs": [],
       "owners": [],
       "stage": null
+    },
+    "cassio-abstraction-sounds-song-1116fd88": {
+      "id": "cassio-abstraction-sounds-song-1116fd88",
+      "type": "finding",
+      "title": "CASSIO abstraction: sounds → song",
+      "content": "Two abstraction levels in LOOP: (1) Sound/element layer — pads 1–6 and KEYBOARD hold playable samples/synth hits (PLAY/SOUND); step lanes map to pad sounds. (2) Song layer — 6 loop tracks with PCM clips on the timeline (offset, mute/solo, length); project.seq patterns A–D are song-level rhythmic programs; track.seq is per-track step data stored on each loop track. UI: loop-tracks = song arrangement; PATTERN SEQ (loop options A or track menu) = 6-lane Screen 24; TRACK STEP SEQ (track menu) = single-lane Screen 24 for one track. Timeline restructure moved SEQ off soft key B (now MUTE); both seq modes restored via menu/options.",
+      "path": null,
+      "tags": [
+        "architecture",
+        "loop",
+        "sequencer",
+        "planning"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T19:55:14+00:00",
+      "updated_at": "2026-09-02T19:55:14+00:00",
+      "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "concept-area-ui": {
+      "id": "concept-area-ui",
+      "type": "concept",
+      "title": "UI area",
+      "content": "UI/control layer: hardware shell, LCD screens, knobs, soft keys, layout, splash, PWA. Distinct from audio engine and persistence. Checkpoint: checkpoint-current-ui-controls.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "area",
+        "ui"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T19:56:20+00:00",
+      "updated_at": "2026-09-02T19:56:20+00:00",
+      "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     }
   },
   "edges": [

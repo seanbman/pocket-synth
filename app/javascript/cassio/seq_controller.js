@@ -71,6 +71,7 @@ export class SeqController {
       a.toast(`TRK ${trackId} STEP SEQ`)
     } else {
       a.seqLane = a.seqLane || 0
+      a.toast(`PATTERN ${this.seq.current} · 6 LANES`)
     }
     a.seqCursor = a.seqCursor || 0
     a.seqHeader = false

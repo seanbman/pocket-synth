@@ -103,7 +103,8 @@ export function renderLoopTrackView(state) {
           <div class="loop-tgrid">${rows}</div>
         </div>
         <div class="muted loop-thint">▲▼ TRK · ◀▶ ±1s · TRK ${sel} @ ${selOff}s</div>
-        <div class="lib-hint">PADS + KEYS → TRK · REC → SELECTED TRK · B MUTE · C SOLO</div>
+        <div class="lib-hint">TIMELINE=song · OK→TRK MENU · MENU→OPTIONS→PATTERN SEQ</div>
+        <div class="lib-hint muted">PADS/KEYS=sounds · B MUTE · C SOLO · A ARM</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">ARM</span></div>
@@ -119,7 +120,8 @@ export function renderLoopTrackMenu(state) {
   const t = (state.loop?.tracks || []).find((x) => x.id === (state.loop?.selected || 1)) || {}
   const row = state.loopMenuIndex || 0
   const rows = [
-    "STEP SEQ…",
+    "TRACK STEP SEQ…",
+    "PATTERN SEQ…",
     "FX / SETTINGS…",
     `LENGTH ${t.lengthBars || state.loop?.lengthBars || 4} BARS`,
     `RECORD ${t.mode === "replace" ? "REPLACE" : "OVERDUB"}`,
@@ -149,7 +151,7 @@ export function renderLoopTrackMenu(state) {
       <div class="edit-body">
         <div class="sound-name">${esc(t.name || "TRACK")}</div>
         <div class="lib-list">${list}</div>
-        <div class="muted">▲▼ ROW · ◀▶ / OK CHANGE · D BACK</div>
+        <div class="muted">▲▼ ROW · ◀▶ / OK · TRACK vs PATTERN SEQ · D BACK</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">MODE</span></div>
@@ -161,7 +163,7 @@ export function renderLoopTrackMenu(state) {
   `
 }
 
-const OPTION_ROWS = ["length", "quantize", "countIn", "playDuringRec", "metroOn", "metroLevel", "metroAccent", "tempo"]
+const OPTION_ROWS = ["patternSeq", "length", "quantize", "countIn", "playDuringRec", "metroOn", "metroLevel", "metroAccent", "tempo"]
 const PLAY_DURING_LABELS = { all: "ALL", monitored: "MONITORED", off: "OFF" }
 const PLAY_DURING_HINT = "ALL / MONITORED / OFF CONTROLS BACKING TRACKS"
 
@@ -171,6 +173,7 @@ export function renderLoopOptions(state) {
   const key = OPTION_ROWS[row] || "length"
   const pdr = loop.playDuringRec || "all"
   const labels = {
+    patternSeq: "PATTERN SEQ (6 LANES · A–D)…",
     length: `SONG LENGTH ${loop.lengthBars || 4} BARS`,
     quantize: `QUANTIZE ${QUANTIZE_LABELS[loop.quantize] || loop.quantize || "1/16"}`,
     countIn: `COUNT-IN ${loop.countInBars ?? 1} BAR`,
@@ -199,12 +202,12 @@ export function renderLoopOptions(state) {
       <div class="edit-body">
         <div class="sound-name">OPTIONS</div>
         <div class="lib-list">${list}</div>
-        <div class="green">${key === "playDuringRec" ? PLAY_DURING_HINT : "▲▼ SELECT · ◀▶ CHANGE"}</div>
+        <div class="green">${key === "playDuringRec" ? PLAY_DURING_HINT : key === "patternSeq" ? "OK OPEN · PAD SOUNDS · SONG-LEVEL PATTERNS" : "▲▼ SELECT · ◀▶ CHANGE"}</div>
         <div class="muted">${key === "playDuringRec" ? "" : "METRO ALSO: HOLD TAP ON PLAY"}</div>
       </div>
       <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">LENGTH</span></div>
-        <div><span class="sk">B</span> <span class="green">QUANT</span></div>
+        <div><span class="sk">A</span> <span class="green">PATTERN</span></div>
+        <div><span class="sk">B</span> <span class="green">LENGTH</span></div>
         <div><span class="sk">C</span> <span class="green">MONITOR</span></div>
         <div><span class="sk">D</span> <span class="green">DONE</span></div>
       </div>

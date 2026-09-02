@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
+exec node "$ROOT/test/smoke/sequencer.mjs" "$@"

@@ -49,7 +49,7 @@ export class LoopController {
       return true
     }
     if (a.screen === "loop-options") {
-      if (key === "a") { a.loopOptIndex = 0; a.render() }
+      if (key === "a") { a.seqCtl.open(); return true }
       if (key === "b") { a.loopOptIndex = 1; a.render() }
       if (key === "c") this.#cyclePlayDuringRec()
       if (key === "d") { a.screen = "loop-tracks"; a.render() }
@@ -140,41 +140,49 @@ export class LoopController {
     if (a.screen === "loop-menu") {
       const t = a.loopEngine.selectedTrack
       if (dir === "up" || dir === "down") {
-        const n = 10
+        const n = 11
         a.loopMenuIndex = ((a.loopMenuIndex || 0) + (dir === "down" ? 1 : n - 1)) % n
         a.render()
       }
       if (dir === "left" || dir === "right" || dir === "ok") {
         const row = a.loopMenuIndex || 0
         if (row === 0) a.seqCtl.open(a.loopEngine.selected)
-        else if (row === 1) this.openTrackFx()
-        else if (row === 2) this.#nudgeTrackLength(dir === "left" ? -1 : 1)
-        else if (row === 3) this.#toggleMode()
-        else if (row === 4) this.#toggleMonitor()
-        else if (row === 5) {
+        else if (row === 1) a.seqCtl.open()
+        else if (row === 2) this.openTrackFx()
+        else if (row === 3) this.#nudgeTrackLength(dir === "left" ? -1 : 1)
+        else if (row === 4) this.#toggleMode()
+        else if (row === 5) this.#toggleMonitor()
+        else if (row === 6) {
           t.mute = !t.mute
           if (t.mute) t.solo = false
           a.loopEngine.refreshGains()
           a.toast(`MUTE ${t.mute ? "ON" : "OFF"}`)
           a.persistLoop?.()
           a.render()
-        } else if (row === 6) {
+        } else if (row === 7) {
           t.solo = !t.solo
           if (t.solo) t.mute = false
           a.loopEngine.refreshGains()
           a.toast(`SOLO ${t.solo ? "ON" : "OFF"}`)
           a.persistLoop?.()
           a.render()
-        } else if (row === 7 && dir === "ok") a.mixer.open("loop")
-        else if (row === 8 && dir === "ok") {
+        } else if (row === 8 && dir === "ok") a.mixer.open("loop")
+        else if (row === 9 && dir === "ok") {
           a.screen = "loop-options"
           a.loopOptIndex = 0
           a.render()
-        } else if (row === 9 && dir === "ok") this.#askClear()
+        } else if (row === 10 && dir === "ok") this.#askClear()
       }
       return true
     }
     if (a.screen === "loop-options") {
+      if (dir === "ok") {
+        const key = OPTION_ROWS[a.loopOptIndex || 0]
+        if (key === "patternSeq") {
+          a.seqCtl.open()
+          return true
+        }
+      }
       if (dir === "up" || dir === "down") {
         const n = OPTION_ROWS.length
         a.loopOptIndex = ((a.loopOptIndex || 0) + (dir === "down" ? 1 : n - 1)) % n
@@ -391,6 +399,7 @@ export class LoopController {
   #nudgeOption(dir) {
     const a = this.app
     const key = OPTION_ROWS[a.loopOptIndex || 0]
+    if (key === "patternSeq") return
     const loop = a.project.loop || (a.project.loop = {})
     if (key === "length") {
       const opts = LOOP_LENGTH_PRESETS
