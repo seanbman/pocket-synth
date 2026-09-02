@@ -70,7 +70,7 @@ export function renderSequencer(state) {
           <span class="muted" data-seq-playhead>${ph >= 0 ? `STEP ${ph + 1}` : ""}</span>
         </div>
         <div class="seq-grid">${rows.join("")}</div>
-        <div class="muted seq-hint">${trackMode ? `LANE ${trackId} · TRACK STEPS · ▲▼ PAD LANES` : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE"}</div>
+        <div class="muted seq-hint">${trackMode ? `LANE ${trackId} · TRACK STEPS · ▲▼ PAD LANES` : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE · PLAY = PATTERN ONLY"}</div>
       </div>
       <div class="lcd-soft">
         <div class="${pages > 1 ? "" : "soft-disabled"}"><span class="sk">A</span> <span class="green">PAGE</span></div>

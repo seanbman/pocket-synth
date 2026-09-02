@@ -273,7 +273,7 @@ export class CassioApp {
     await this.engine.start()
     this.transport.attach(this.engine)
     this.transport.onTick = (bar, beat, accent) => {
-      this.metro.click(accent)
+      if (this.#metroAudible()) this.metro.click(accent)
       if (LOOP_SCREENS.has(this.screen) || this.screen === "play") {
         // light UI refresh for playhead — throttle via rAF
         if (!this._loopUiRaf) {
@@ -2051,9 +2051,18 @@ export class CassioApp {
     if (this.transport.recording) return
     const origin = this.engine.now() + 0.05
     this.transport.playAt(origin)
-    this.loopEngine.startPlayback(origin)
+    if (this.#loopBackingAudible()) this.loopEngine.startPlayback(origin)
     this.stepSeq.start(origin)
     this.render()
+  }
+
+  /** Loop PCM + metronome — song-level audition (not isolated pattern edit). */
+  #loopBackingAudible() {
+    return LOOP_SCREENS.has(this.screen) || MIX_SCREENS.has(this.screen) || this.screen === "play"
+  }
+
+  #metroAudible() {
+    return this.metro.on && this.#loopBackingAudible()
   }
 
   #transportStop() {
