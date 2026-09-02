@@ -18,6 +18,10 @@ const MACRO_ALIASES = {
   cutoff: "brightness"
 }
 
+import { fxDefaults } from "cassio/audio/fx_params"
+
+export const DEFAULT_SAMPLE_GAIN = 1.5
+
 export function defaultPatch() {
   return {
     root: "C3",
@@ -44,7 +48,7 @@ export function defaultPatch() {
     noise: 0.5,
     trimStart: 0,
     trimEnd: 1,
-    gain: 1
+    gain: DEFAULT_SAMPLE_GAIN
   }
 }
 
@@ -88,7 +92,7 @@ export function sanitizePatch(patch) {
   p.noise = Math.min(1, Math.max(0, num(p.noise, d.noise)))
   p.trimStart = Math.min(0.99, Math.max(0, num(p.trimStart, 0)))
   p.trimEnd = Math.min(1, Math.max(p.trimStart + 0.005, num(p.trimEnd, 1)))
-  p.gain = Math.min(2, Math.max(0, num(p.gain, 1)))
+  p.gain = Math.min(2.5, Math.max(0.15, num(p.gain, DEFAULT_SAMPLE_GAIN)))
   return p
 }
 
@@ -97,7 +101,7 @@ function applyMacroDefault(base, macro) {
   const raw = macro.param || "brightness"
   const key = MACRO_ALIASES[raw] || raw
   if (key === "space") base.reverb = macro.default
-  else if (key in base || ["tone", "tuning", "decay", "snap", "noise", "drive", "pulseWidth", "motion", "brightness", "release", "reverb"].includes(key)) {
+  else if (key in base || ["tone", "tuning", "decay", "snap", "noise", "drive", "pulseWidth", "motion", "brightness", "release", "reverb", "delay"].includes(key)) {
     base[key] = macro.default
   }
   if (raw === "decay") {
@@ -109,7 +113,8 @@ function applyMacroDefault(base, macro) {
 }
 
 export function patchFromSound(sound, overrides = {}) {
-  const base = defaultPatch()
+  // Samples: fx defaults first so missing keys don't inherit synth defaults (e.g. release 0.48)
+  const base = isSample(sound) ? { ...defaultPatch(), ...fxDefaults("sample") } : defaultPatch()
   if (!sound) return sanitizePatch({ ...base, ...compact(overrides) })
   if (sound.root) base.root = sound.root
   applyMacroDefault(base, sound.macros?.m1)

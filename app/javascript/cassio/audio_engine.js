@@ -50,6 +50,16 @@ export class AudioEngine {
     this.dry.gain.value = 1
     this.dry.connect(this.master)
 
+    // Per-track record buses (live performance → loop track N).
+    this.recTaps = Array.from({ length: 6 }, () => {
+      const tap = this.ctx.createGain()
+      tap.gain.value = 1
+      return tap
+    })
+
+    // Legacy alias — do not connect dry here (avoids mixed recording).
+    this.recTap = this.recTaps[0]
+
     this.wetGain = this.ctx.createGain()
     this.wetGain.gain.value = this.space
     this.convolver = this.ctx.createConvolver()
@@ -138,7 +148,18 @@ export class AudioEngine {
     if (this.trebleEq) this.trebleEq.gain.setTargetAtTime(g, this.ctx.currentTime, 0.04)
   }
 
-  connectVoice(node, pan = 0) {
+  recTapForTrack(trackId) {
+    const i = Math.min(6, Math.max(1, trackId | 0)) - 1
+    return this.recTaps?.[i] || this.recTap
+  }
+
+  /** Route live performance audio into a track's record bus (1–6). */
+  tapRec(node, trackId) {
+    if (!node || !trackId) return
+    try { node.connect(this.recTapForTrack(trackId)) } catch (_) { /* ignore */ }
+  }
+
+  connectVoice(node, pan = 0, recTrack = null) {
     let src = node
     const p = Number(pan)
     if (Number.isFinite(p) && Math.abs(p) > 0.001 && this.ctx) {
@@ -150,6 +171,7 @@ export class AudioEngine {
     src.connect(this.dry)
     src.connect(this.wetGain)
     src.connect(this.delayGain)
+    if (recTrack) this.tapRec(src, recTrack)
   }
 
   now() {
