@@ -76,6 +76,7 @@ export class SeqController {
     a.seqCursor = a.seqCursor || 0
     a.seqHeader = false
     a.seqShiftMode = false
+    if (a.transport.playing) a.loopEngine.stopPlayback()
     a.screen = "sequencer"
     a.render()
   }

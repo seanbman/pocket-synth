@@ -586,7 +586,12 @@ export class CassioApp {
       this.vscreen.innerHTML = renderLoopTrackView(this.state())
       requestAnimationFrame(() => {
         this.#syncLoopTimeline()
-        requestAnimationFrame(() => this.#syncLoopTimeline())
+        requestAnimationFrame(() => {
+          this.#syncLoopTimeline()
+          if (this.transport.playing && this.#loopBackingAudible()) {
+            this.loopEngine.startPlayback(this.loopEngine._playOrigin || this.engine.now())
+          }
+        })
       })
     } else if (this.screen === "loop-menu") {
       this.vscreen.innerHTML = renderLoopTrackMenu(this.state())
