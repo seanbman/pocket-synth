@@ -2061,13 +2061,13 @@ export class CassioApp {
     this.render()
   }
 
-  /** Loop PCM + metronome — song-level audition (not isolated pattern edit). */
+  /** Loop PCM — song-level backing (not isolated pattern edit). Metronome is separate. */
   #loopBackingAudible() {
     return LOOP_SCREENS.has(this.screen) || MIX_SCREENS.has(this.screen) || this.screen === "play"
   }
 
   #metroAudible() {
-    return this.metro.on && this.#loopBackingAudible()
+    return this.metro.on
   }
 
   #transportStop() {

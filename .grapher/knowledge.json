@@ -4657,6 +4657,28 @@
       "source_refs": [],
       "owners": [],
       "stage": null
+    },
+    "sequencer-optional-metronome-4e4f5375": {
+      "id": "sequencer-optional-metronome-4e4f5375",
+      "type": "finding",
+      "title": "Sequencer optional metronome",
+      "content": "On SEQ screens PLAY runs step seq only (no loop PCM). Metronome is optional: #metroAudible() follows metro.on globally; HOLD TAP toggles. Loop PCM stays gated by #loopBackingAudible() on LOOP/MIX/PLAY only.",
+      "path": null,
+      "tags": [
+        "sequencer",
+        "metro",
+        "transport"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T20:44:42+00:00",
+      "updated_at": "2026-09-02T20:44:42+00:00",
+      "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
     }
   },
   "edges": [

@@ -48,7 +48,8 @@ export function renderSequencer(state) {
   const headerCls = header ? "selected" : ""
   const pageLabel = pages > 1 ? ` · PAGE ${page + 1}/${pages}` : ""
   const status = shift ? "SHIFT" : state.playing ? "▶" : ""
-  const title = trackMode ? `TRK ${trackId} SEQ ${status}` : `SEQUENCER ${status}`
+  const metro = state.metroOn ? " · METRO" : ""
+  const title = trackMode ? `TRK ${trackId} SEQ${metro} ${status}` : `SEQUENCER${metro} ${status}`
 
   return `
     <div class="lcd-screen sequencer-screen">
@@ -70,7 +71,7 @@ export function renderSequencer(state) {
           <span class="muted" data-seq-playhead>${ph >= 0 ? `STEP ${ph + 1}` : ""}</span>
         </div>
         <div class="seq-grid">${rows.join("")}</div>
-        <div class="muted seq-hint">${trackMode ? `LANE ${trackId} · TRACK STEPS · ▲▼ PAD LANES` : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE · PLAY = PATTERN ONLY"}</div>
+        <div class="muted seq-hint">${trackMode ? `LANE ${trackId} · TRACK STEPS · ▲▼ PAD LANES` : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE · PLAY = PATTERN · HOLD TAP METRO"}</div>
       </div>
       <div class="lcd-soft">
         <div class="${pages > 1 ? "" : "soft-disabled"}"><span class="sk">A</span> <span class="green">PAGE</span></div>
@@ -97,7 +98,7 @@ export function renderStepEdit(state) {
     <div class="lcd-screen step-edit-screen">
       <div class="lcd-status">
         <span class="pink">BPM ${state.bpm}</span>
-        <span class="status-mid">STEP EDIT</span>
+        <span class="status-mid">STEP EDIT${state.metroOn ? " · METRO" : ""}</span>
         <span class="battery"></span>
       </div>
       <div class="lcd-macros">
