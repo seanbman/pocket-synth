@@ -120,8 +120,8 @@ export function renderLoopTrackMenu(state) {
   const t = (state.loop?.tracks || []).find((x) => x.id === (state.loop?.selected || 1)) || {}
   const row = state.loopMenuIndex || 0
   const rows = [
-    "TRACK STEP SEQ…",
     "PATTERN SEQ…",
+    "TRACK STEP SEQ…",
     "FX / SETTINGS…",
     `LENGTH ${t.lengthBars || state.loop?.lengthBars || 4} BARS`,
     `RECORD ${t.mode === "replace" ? "REPLACE" : "OVERDUB"}`,

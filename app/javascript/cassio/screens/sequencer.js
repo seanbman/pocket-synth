@@ -23,9 +23,7 @@ export function renderSequencer(state) {
   const trackMode = trackId != null
 
   const rows = []
-  const laneStart = trackMode ? lane : 0
-  const laneEnd = trackMode ? lane + 1 : 6
-  for (let l = laneStart; l < laneEnd; l++) {
+  for (let l = 0; l < 6; l++) {
     const steps = seq.lanes?.[l] || []
     const cells = []
     for (let c = 0; c < PAGE; c++) {
@@ -72,7 +70,7 @@ export function renderSequencer(state) {
           <span class="muted" data-seq-playhead>${ph >= 0 ? `STEP ${ph + 1}` : ""}</span>
         </div>
         <div class="seq-grid">${rows.join("")}</div>
-        <div class="muted seq-hint">${trackMode ? "PAD SOUND · PLAYS ON LOOP · ARROWS · OK STEP" : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE"}</div>
+        <div class="muted seq-hint">${trackMode ? `LANE ${trackId} · TRACK STEPS · ▲▼ PAD LANES` : header ? "◀▶ PATTERN A–D · ▼ GRID" : shift ? "◀▶ MOVE LANE · OK/C DONE" : "ARROWS · OK STEP · HOLD OK EDIT · PAD = LANE"}</div>
       </div>
       <div class="lcd-soft">
         <div class="${pages > 1 ? "" : "soft-disabled"}"><span class="sk">A</span> <span class="green">PAGE</span></div>

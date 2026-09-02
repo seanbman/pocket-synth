@@ -162,15 +162,12 @@ export class SeqController {
         return true
       }
       if (dir === "up") {
-        if (this.#trackMode()) return true
         if (c.header) return true
-        if (c.lane === 0) a.seqHeader = true
-        else a.seqLane = c.lane - 1
+        a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, c.lane - 1))
         a.render()
         return true
       }
       if (dir === "down") {
-        if (this.#trackMode()) return true
         if (c.header) a.seqHeader = false
         else a.seqLane = Math.min(SEQ_LANES - 1, c.lane + 1)
         a.render()

@@ -69,10 +69,10 @@ try {
     app.seqCtl.back()
     const backToLoop = app.screen
 
-    // Per-track step seq via track menu row 0
+    // Per-track step seq via track menu row 1
     app.looper.openHome()
     app.loopEngine.select(2)
-    app.loopMenuIndex = 0
+    app.loopMenuIndex = 1
     app.screen = 'loop-menu'
     app.render()
     app.looper.nav('ok')
@@ -111,7 +111,7 @@ try {
     else fail(`track screen ${out.trackScreen}`)
     if (out.trackMode === 2) pass("track mode seqTrackId=2")
     else fail(`track mode id ${out.trackMode}`)
-    if (out.trackLanes === 1) pass("track grid shows 1 lane")
+    if (out.trackLanes === 6) pass("track grid shows 6 lanes")
     else fail(`track lanes ${out.trackLanes}`)
     if (out.toggled) pass("OK toggles step on")
     else fail("step toggle failed")

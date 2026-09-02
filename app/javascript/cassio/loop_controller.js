@@ -146,8 +146,8 @@ export class LoopController {
       }
       if (dir === "left" || dir === "right" || dir === "ok") {
         const row = a.loopMenuIndex || 0
-        if (row === 0) a.seqCtl.open(a.loopEngine.selected)
-        else if (row === 1) a.seqCtl.open()
+        if (row === 0) a.seqCtl.open()
+        else if (row === 1) a.seqCtl.open(a.loopEngine.selected)
         else if (row === 2) this.openTrackFx()
         else if (row === 3) this.#nudgeTrackLength(dir === "left" ? -1 : 1)
         else if (row === 4) this.#toggleMode()
