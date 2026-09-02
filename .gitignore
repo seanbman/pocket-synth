@@ -36,6 +36,16 @@
 # Local mkcert HTTPS materials (regenerate with bin/setup-https)
 /config/certs/
 /public/dev-ca.pem
+/public/dev-ca.crt
+
+# Headless smoke test Chrome profiles (regenerated per run)
+/test/smoke/.chrome-profile*/
+
+# Agent debug session logs
+/.cursor/debug*.log
+
+# Grapher backup snapshots (canonical: .grapher/knowledge.json)
+/.grapher/knowledge.*-backup-*.json
 
 
 /app/assets/builds/*
