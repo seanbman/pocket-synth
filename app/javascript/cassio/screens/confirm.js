@@ -24,10 +24,10 @@ export function renderConfirm(state) {
         ${lines.map((l) => `<div class="${l.tone || "muted"}">${esc(l.text)}</div>`).join("")}
       </div>
       <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">CANCEL</span></div>
+        <div><span class="sk">A</span> <span class="green">${esc(state.confirmAction === "discard-sample" ? "KEEP" : "CANCEL")}</span></div>
         <div></div>
         <div></div>
-        <div><span class="sk">D</span> <span class="green">DELETE</span></div>
+        <div><span class="sk">D</span> <span class="green">${esc(state.confirmOkLabel || "DELETE")}</span></div>
       </div>
     </div>
   `

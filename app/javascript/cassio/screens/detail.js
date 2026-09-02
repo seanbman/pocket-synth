@@ -9,6 +9,7 @@ export function renderDetail(state) {
   const patch = state.editPatch || {}
   const root = patch.root || s?.root || "C3"
   const isKit = s?.kind === "kit" || s?.voice === "kit"
+  const isSample = s?.voice === "sample"
   const voice = (s?.voice || "poly").toUpperCase()
   const isUser = s?.source === "user" || String(s?.id || "").startsWith("user-")
   const source = (s?.source || (isUser ? "user" : "factory")).toUpperCase()
@@ -19,7 +20,7 @@ export function renderDetail(state) {
   const dLabel = isUser ? "MORE" : (state.isFavorite ? "FAVORITED" : "FAVORITE")
   const playable = s?.playable !== false
   const aLabel = isKit ? "USE PADS" : "USE KEYS"
-  const bLabel = isKit ? "EDIT" : "EDIT"
+  const bLabel = isSample ? "TRIM" : "EDIT"
   const cLabel = isKit ? (isUser ? "SAVE" : "SAVE AS") : "ASSIGN"
 
   return `
@@ -53,7 +54,7 @@ export function renderDetail(state) {
               <span class="muted">ROOT</span>
               <span class="green root-value">${esc(root)}</span>
             </div>
-            <div class="param-hint">CHANGES THIS SOUND'S KEY</div>
+            <div class="param-hint">${isSample ? "B TRIM → SAMPLE EDIT (TRIM/TUNE/EQ/FX)" : "CHANGES THIS SOUND'S KEY"}</div>
             <div class="param-row"><span class="muted">VOICE</span> <span class="green">${esc(voice)}</span></div>
             <div class="param-row"><span class="muted">SOURCE</span> <span class="green">${esc(source)}</span></div>
             <div class="param-row"><span class="muted">PAD MODE</span> <span class="green">${esc(padMode)}</span></div>
@@ -67,6 +68,11 @@ export function renderDetail(state) {
           <div class="green">LOADS PAD ASSIGNMENTS</div>
           <div class="muted">KEYBOARD SOUND STAYS THE SAME.</div>
           <div class="muted" style="margin-top:0.35rem">${isUser ? "C SAVES THIS USER KIT IN PLACE." : "EDIT THEN SAVE AS USER KIT."}</div>
+          ` : isSample ? `
+          <div class="pink">SAMPLE</div>
+          <div class="green">B OPENS TRIM / TUNE / EQ / FX</div>
+          <div class="muted">OR: SOUND → SAMPLER → OK</div>
+          <div class="muted" style="margin-top:0.35rem">A LOADS ONTO KEYS</div>
           ` : `
           <div class="pink">MACROS</div>
           <div class="green">M1 ${esc(s?.macros?.m1?.label || "BRIGHTNESS")}</div>

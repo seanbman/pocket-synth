@@ -130,13 +130,14 @@ export class GlassPolyVoice {
     }
   }
 
-  noteOn(midi, velocity = 0.85) {
+  /** `when` (audio time) lets the step sequencer schedule notes sample-accurately. */
+  noteOn(midi, velocity = 0.85, { when = null, recTrack = null } = {}) {
     if (!this.engine.ready) return
     const key = String(midi)
     if (this.voices.has(key)) this.noteOff(midi, true)
 
     const ctx = this.engine.ctx
-    const t = ctx.currentTime
+    const t = Math.max(ctx.currentTime, Number(when) || 0)
     const osc1 = ctx.createOscillator()
     const osc2 = ctx.createOscillator()
     osc1.type = this.osc1Type
@@ -168,7 +169,7 @@ export class GlassPolyVoice {
     mix.connect(drive)
     drive.connect(filter)
     filter.connect(env)
-    this.engine.connectVoice(env, this.pan)
+    this.engine.connectVoice(env, this.pan, recTrack)
 
     if (this.motion > 0.02) {
       const lfo = ctx.createOscillator()
@@ -186,22 +187,28 @@ export class GlassPolyVoice {
     this.voices.set(key, { osc1, osc2, env, filter, mix, drive })
   }
 
-  noteOff(midi, immediate = false) {
+  noteOff(midi, immediate = false, { when = null } = {}) {
     const key = String(midi)
     const vox = this.voices.get(key)
     if (!vox) return
     this.voices.delete(key)
+    const ctx = this.engine.ctx
+    const now = ctx.currentTime
+    const t = Math.max(now, Number(when) || 0)
+    const rel = immediate ? 0.02 : this.release
     const lfo = this._lfos.get(key)
     if (lfo) {
       this._lfos.delete(key)
-      try { lfo.osc.stop() } catch { /* ignore */ }
+      try { lfo.osc.stop(t + rel + 0.02) } catch { /* ignore */ }
     }
-    const ctx = this.engine.ctx
-    const t = ctx.currentTime
-    const rel = immediate ? 0.02 : this.release
-    vox.env.gain.cancelScheduledValues(t)
-    vox.env.gain.setValueAtTime(Math.max(vox.env.gain.value, 0.0001), t)
-    vox.env.gain.exponentialRampToValueAtTime(0.0001, t + rel)
+    if (t > now + 0.001) {
+      // Scheduled release (sequencer gate): don't disturb the attack ramp already in flight
+      vox.env.gain.setTargetAtTime(0.0001, t, Math.max(0.005, rel / 4))
+    } else {
+      vox.env.gain.cancelScheduledValues(t)
+      vox.env.gain.setValueAtTime(Math.max(vox.env.gain.value, 0.0001), t)
+      vox.env.gain.exponentialRampToValueAtTime(0.0001, t + rel)
+    }
     vox.osc1.stop(t + rel + 0.02)
     vox.osc2.stop(t + rel + 0.02)
   }

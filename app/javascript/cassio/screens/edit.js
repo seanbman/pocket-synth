@@ -104,12 +104,12 @@ const DRUM_PAGES = {
   "edit-drum-fx": {
     title: "FX",
     m1: "ROOM",
-    m2: "DRIVE",
+    m2: "DELAY",
     soft: "FX",
     body(p) {
       return meter("ROOM", meterPct(p.reverb ?? 0), p.reverb ?? 0)
-        + meter("DRIVE", meterPct(p.drive ?? 0.1), p.drive ?? 0.1)
-        + `<div class="muted edit-hint">M1 PER-HIT REVERB SEND<br>M2 DRIVE + DELAY SPILL</div>`
+        + meter("DELAY", meterPct(p.delay ?? 0), p.delay ?? 0)
+        + `<div class="muted edit-hint">M1 PER-HIT REVERB · M2 PER-HIT DELAY<br>DRIVE LIVES ON SNAP</div>`
     }
   }
 }

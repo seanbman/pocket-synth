@@ -4,8 +4,9 @@ import { DrumVoice } from "cassio/voices/drum"
 import { SampleVoice } from "cassio/voices/sample"
 import { Transport } from "cassio/transport"
 import {
-  loadRecovery, saveRecovery, defaultProject, defaultPads,
-  listUserSounds, putUserSound, deleteUserSound, loadFavorites, saveFavorites
+  loadRecovery, saveRecovery, defaultProject, defaultPads, defaultLoop, defaultSeq,
+  listUserSounds, putUserSound, deleteUserSound, loadFavorites, saveFavorites,
+  quantizeGridSec
 } from "cassio/store"
 import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum, isSample } from "cassio/patch"
 import { renderBoot, renderBootError, renderSplash } from "cassio/screens/boot"
@@ -21,9 +22,30 @@ import { renderConfirm } from "cassio/screens/confirm"
 import { renderNameEntry } from "cassio/screens/name_entry"
 import {
   renderSoundHub, renderSamplerHome, renderMicRecord, renderSampleEdit,
-  renderSaveSample, renderExportPick
+  renderSampleSave, renderAssignSample
 } from "cassio/screens/sampler"
+import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx } from "cassio/screens/loop"
 import { SamplerController, SAMPLER_SCREENS } from "cassio/sampler_controller"
+import { LoopController, LOOP_SCREENS } from "cassio/loop_controller"
+import { SeqController, SEQ_SCREENS } from "cassio/seq_controller"
+import { MixController, MIX_SCREENS } from "cassio/mix_controller"
+import { renderSequencer, renderStepEdit } from "cassio/screens/sequencer"
+import { renderMixer } from "cassio/screens/mixer"
+import { StepSequencer } from "cassio/audio/step_sequencer"
+import { fxKnob01 } from "cassio/audio/fx_params"
+import { knobParamsAt } from "cassio/screens/settings_list"
+import { Metronome } from "cassio/audio/metronome"
+import { LoopEngine } from "cassio/audio/loop_engine"
+
+const NEW_KIT_ENTRY = {
+  id: "__new-kit__",
+  name: "+ NEW KIT",
+  kind: "kit",
+  voice: "kit",
+  category: "USER / KITS",
+  playable: false,
+  pads: []
+}
 
 const KEY_MAP = {
   KeyZ: 0, KeyS: 1, KeyX: 2, KeyD: 3, KeyC: 4, KeyV: 5, KeyG: 6,
@@ -55,9 +77,22 @@ export class CassioApp {
     this.padSynth = new GlassPolyVoice(this.engine)
     this.drums = new DrumVoice(this.engine)
     this.sampleVoice = new SampleVoice(this.engine)
+    this.sampleVoice.bpmSource = () => this.transport?.bpm
     this.sampler = new SamplerController(this)
     this.voice = this.synth
     this.transport = new Transport()
+    this.metro = new Metronome(this.engine)
+    this.loopEngine = new LoopEngine(this.engine, this.transport)
+    this.looper = new LoopController(this)
+    this.stepSeq = new StepSequencer(
+      this.transport,
+      (lane, opts) => this.#triggerPad(lane, { ...opts, fromSeq: true }),
+      { trackProvider: () => this.loopEngine.tracks }
+    )
+    this.stepSeq.onStep = (i, lanes) => this.#onSeqStep(i, lanes)
+    this.seqCtl = new SeqController(this)
+    this.seqFlash = new Set()
+    this.mixer = new MixController(this)
     this.factory = null
     this.userSounds = []
     this.favorites = []
@@ -92,14 +127,33 @@ export class CassioApp {
     this.sampleBuffer = null
     this.sampleDraft = null
     this.samplePeaks = null
+    this.sampleEditIndex = 0
+    this.sampleEditExpanded = null
     this.exportFormat = "wav"
     this.exportReturnScreen = "sample-edit"
+    this.padAssignReturnScreen = null
+    this.loopMenuIndex = 0
+    this.loopOptIndex = 0
+    this.playNavFocus = "root" // "root" | "metro" — OK toggles; ▲▼ adjust focus
+    this.confirmOkLabel = "DELETE"
+    this.confirmReturnScreen = "sound-manage"
     this.booting = true
     this.bootError = null
     this.splashDone = false
     this.audioUnlocked = false
     this._unlocking = null
     this._vizRaf = null
+    this._tapHoldTimer = null
+    this._tapHeld = false
+    this._loopNavHoldTimer = null
+    this._loopNavHoldInterval = null
+    this._loopNavHoldDir = null
+    this._loopNavSecMode = false
+    this.loopTimelineDirty = false
+    this.loopScrollLeft = 0
+    this.loopScrollTop = 0
+    this.loopScrollToTrack = null
+    this.seqTrackId = null
     this.#bindHardware()
     this.#bindPitchWheel()
     this.#bindKeyboardPointer()
@@ -147,6 +201,35 @@ export class CassioApp {
       this.#syncAllKnobVisuals()
       this.#persist()
     } catch (e) {
+      // #region agent log
+      fetch("http://127.0.0.1:7775/ingest/fa1177f6-1e5b-449a-b03a-5969bd555f1e", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "397b28" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "D",
+          location: "app.js:#bootThenLogoIntro",
+          message: "boot failed",
+          data: { message: String(e?.message || e), stack: String(e?.stack || "").slice(0, 600) },
+          timestamp: Date.now()
+        })
+      }).catch(() => {})
+      fetch("/debug_ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "D",
+          location: "app.js:#bootThenLogoIntro",
+          message: "boot failed",
+          data: { message: String(e?.message || e), stack: String(e?.stack || "").slice(0, 600) },
+          timestamp: Date.now()
+        }),
+        keepalive: true
+      }).catch(() => {})
+      // #endregion
       this.bootError = String(e.message || e) || "AUDIO INIT FAILED — TAP TO RETRY"
       this.#dismissPreload()
       this.render()
@@ -182,8 +265,29 @@ export class CassioApp {
     }
     this.transport.bpm = this.project.bpm
     if (this.project.kitVolume == null) this.project.kitVolume = 1
+    if (!this.project.loop) this.project.loop = defaultLoop()
+    if (!this.project.seq) this.project.seq = defaultSeq()
+    this.stepSeq.applyState(this.project.seq)
+    this.project.seq = this.stepSeq.seq
     this.#setBootProgress(0.8, "LOADING AUDIO…")
     await this.engine.start()
+    this.transport.attach(this.engine)
+    this.transport.onTick = (bar, beat, accent) => {
+      this.metro.click(accent)
+      if (LOOP_SCREENS.has(this.screen) || this.screen === "play") {
+        // light UI refresh for playhead — throttle via rAF
+        if (!this._loopUiRaf) {
+          this._loopUiRaf = requestAnimationFrame(() => {
+            this._loopUiRaf = null
+            if (LOOP_SCREENS.has(this.screen) || this.screen === "play") this.render()
+          })
+        }
+      }
+    }
+    this.metro.setOn(this.project.loop.metroOn !== false)
+    this.metro.setLevel(this.project.loop.metroLevel ?? 0.7)
+    this.metro.setAccent(this.project.loop.metroAccent !== false)
+    this.loopEngine.applyState(this.project.loop)
     this.drums.ensureNoiseCache()
     this.engine.setMasterVolume(this.project.masterVolume)
     this.#resolveSound(this.project.soundId)
@@ -280,8 +384,17 @@ export class CassioApp {
     if (isDrum(s)) {
       this.drums.applyPatch(fromSound)
     } else if (isSample(s)) {
+      // Samples own their whole patch (fx chain) — synth project values must not leak in.
+      const sp = patchFromSound(s, { root: this.project.root || s.root })
       this.sampler.loadBufferForSound(s)
-      this.sampleVoice.applyPatch(fromSound)
+      this.sampleVoice.applyPatch(sp)
+      // PLAY macros: level (not trim) · FX — independent of M3 master
+      const g = sp.gain != null && sp.gain >= 0.75 ? sp.gain : 1.5
+      this.sampleVoice.gain = g
+      s.macros = {
+        m1: { label: "LEVEL", param: "gain", default: g },
+        m2: { label: "FX", param: "reverb", default: sp.reverb ?? 0.2 }
+      }
     } else {
       this.synth.applyPatch(fromSound)
     }
@@ -308,7 +421,7 @@ export class CassioApp {
     if (isDrum(this.sound)) this.drums.applyPatch(p)
     else if (isSample(this.sound)) {
       this.sampler.loadBufferForSound(this.sound)
-      this.sampleVoice.applyPatch(p)
+      this.sampleVoice.applyPatch({ root: p.root })
     } else this.synth.applyPatch(p)
   }
 
@@ -317,7 +430,57 @@ export class CassioApp {
   }
 
   #keyboardIsSample() {
+    if (this.screen === "sample-edit" && this.sampleBuffer && this.sampleDraft) return true
     return isSample(this.sound)
+  }
+
+  /** Public persist for sampler assign flows. */
+  persistPublic() {
+    this.#persist()
+  }
+
+  /** Public transport stop for smoke tests. */
+  transportStopPublic() {
+    this.#transportStop()
+  }
+
+  /** Display name of the sound on pad n (sequencer lane labels). */
+  padSoundName(n) {
+    const { assigned } = this.#padSound(n)
+    return assigned ? String(assigned.name || assigned.id).toUpperCase() : "EMPTY"
+  }
+
+  askDiscardSample(returnScreen = "sample-edit") {
+    this.confirmTitle = "DISCARD TAKE?"
+    this.confirmLines = [
+      { text: this.sampleDraft?.name || "SAMPLE", tone: "green" },
+      { text: "NOT SAVED TO USER / SAMPLES.", tone: "muted" },
+      { text: "A KEEP · D DISCARD", tone: "muted" }
+    ]
+    this.confirmAction = "discard-sample"
+    this.confirmOkLabel = "DISCARD"
+    this.confirmReturnScreen = returnScreen
+    this.screen = "confirm"
+    this.render()
+  }
+
+  askDeleteSample(sound) {
+    if (!sound) {
+      this.toast("NO SAMPLE")
+      return
+    }
+    this.focusSound = sound
+    this.confirmTitle = "DELETE SAMPLE?"
+    this.confirmLines = [
+      { text: sound.name, tone: "green" },
+      { text: "THIS CANNOT BE UNDONE.", tone: "muted" },
+      { text: "A CANCEL · D DELETE", tone: "muted" }
+    ]
+    this.confirmAction = "delete-sound"
+    this.confirmOkLabel = "DELETE"
+    this.confirmReturnScreen = "sampler-home"
+    this.screen = "confirm"
+    this.render()
   }
 
   #soundById(id) {
@@ -367,7 +530,13 @@ export class CassioApp {
       nameDraft: this.nameDraft,
       confirmTitle: this.confirmTitle,
       confirmLines: this.confirmLines,
-      ...this.sampler.stateExtras()
+      confirmOkLabel: this.confirmOkLabel || "DELETE",
+      confirmAction: this.confirmAction,
+      playNavFocus: this.playNavFocus || "root",
+      ...this.sampler.stateExtras(),
+      ...this.looper.stateExtras(),
+      ...this.seqCtl.stateExtras(),
+      ...this.mixer.stateExtras()
     }
   }
 
@@ -375,11 +544,15 @@ export class CassioApp {
     this.#openLibrary()
   }
 
-  beginSampleName({ initial, returnScreen }) {
+  createNewKitFromHub() {
+    this.#createNewKit()
+  }
+
+  beginSampleName({ initial, returnScreen, mode = "save-sample" }) {
     this.#askName({
       initial: initial || "SAMPLE",
-      mode: "save-sample",
-      returnScreen: returnScreen || "save-sample"
+      mode,
+      returnScreen: returnScreen || "sample-save"
     })
   }
 
@@ -405,10 +578,26 @@ export class CassioApp {
       this.vscreen.innerHTML = renderMicRecord(this.state())
     } else if (this.screen === "sample-edit") {
       this.vscreen.innerHTML = renderSampleEdit(this.state())
-    } else if (this.screen === "save-sample") {
-      this.vscreen.innerHTML = renderSaveSample(this.state())
-    } else if (this.screen === "export-pick") {
-      this.vscreen.innerHTML = renderExportPick(this.state())
+    } else if (this.screen === "sample-save") {
+      this.vscreen.innerHTML = renderSampleSave(this.state())
+    } else if (this.screen === "assign-sample") {
+      this.vscreen.innerHTML = renderAssignSample(this.state())
+    } else if (this.screen === "loop-tracks") {
+      this.vscreen.innerHTML = renderLoopTrackView(this.state())
+      requestAnimationFrame(() => this.#syncLoopTimeline())
+    } else if (this.screen === "loop-menu") {
+      this.vscreen.innerHTML = renderLoopTrackMenu(this.state())
+    } else if (this.screen === "loop-options") {
+      this.vscreen.innerHTML = renderLoopOptions(this.state())
+    } else if (this.screen === "loop-fx") {
+      this.vscreen.innerHTML = renderLoopFx(this.state())
+    } else if (this.screen === "sequencer") {
+      this.vscreen.innerHTML = renderSequencer(this.state())
+      this.seqCtl.startPlayheadLoop()
+    } else if (this.screen === "step-edit") {
+      this.vscreen.innerHTML = renderStepEdit(this.state())
+    } else if (this.screen === "mixer") {
+      this.vscreen.innerHTML = renderMixer(this.state())
     } else if (this.screen === "library") {
       this.vscreen.innerHTML = renderLibrary(this.state())
       requestAnimationFrame(() => {
@@ -444,6 +633,11 @@ export class CassioApp {
   }
 
   #m1Value() {
+    if (this.screen === "loop-fx") return this.looper.fxKnob01(0) ?? 0
+    if (this.screen === "mixer" || this.screen === "loop-tracks" || this.screen === "loop-menu") {
+      return this.loopEngine.selectedTrack?.level ?? 1
+    }
+    if (this.screen === "sample-edit" && this.sampleDraft) return this.#sampleEditKnob01(0)
     if (this.screen === "pad-assign") return this.#selectedPad()?.level ?? 1
     if (this.screen === "edit-drum-tone") return this.editPatch?.tone ?? 0.5
     if (this.screen === "edit-drum-decay") return this.editPatch?.decay ?? 0.4
@@ -453,15 +647,21 @@ export class CassioApp {
     if (this.screen === "edit-env") return Math.min(1, (this.editPatch?.attack ?? 0.018) / 1.2)
     if (this.screen === "edit-eq") return ((this.editPatch?.bassDb ?? 0) + 12) / 24
     if (this.screen === "edit-fx") return this.editPatch?.reverb ?? 0
+    if (this.#keyboardIsSample()) return Math.min(1, (this.sampleVoice.gain ?? 1) / 2.5)
     return this.project.brightness
   }
 
   #m2Value() {
+    if (this.screen === "loop-fx") return this.looper.fxKnob01(1) ?? 0
+    if (this.screen === "mixer" || this.screen === "loop-tracks" || this.screen === "loop-menu") {
+      return ((this.loopEngine.selectedTrack?.pan ?? 0) + 1) / 2
+    }
+    if (this.screen === "sample-edit" && this.sampleDraft) return this.#sampleEditKnob01(1)
     if (this.screen === "pad-assign") return ((this.#selectedPad()?.pan ?? 0) + 1) / 2
     if (this.screen === "edit-drum-tone") return this.editPatch?.tuning ?? 0.5
     if (this.screen === "edit-drum-decay") return this.editPatch?.noise ?? 0.5
     if (this.screen === "edit-drum-snap") return this.editPatch?.drive ?? 0.1
-    if (this.screen === "edit-drum-fx") return this.editPatch?.drive ?? 0.1
+    if (this.screen === "edit-drum-fx") return this.editPatch?.delay ?? 0
     if (this.screen === "edit-shape") return this.editPatch?.resonance ?? 0.34
     if (this.screen === "edit-env") return Math.min(1, (this.editPatch?.release ?? 0.48) / 2.5)
     if (this.screen === "edit-eq") return ((this.editPatch?.trebleDb ?? 0) + 12) / 24
@@ -470,6 +670,14 @@ export class CassioApp {
   }
 
   #m3Value() {
+    if (this.screen === "sample-edit" && this.sampleDraft) {
+      const v = this.#sampleEditKnob01(2)
+      if (v != null) return v
+    }
+    if (this.screen === "loop-fx") {
+      const v = this.looper.fxKnob01(2)
+      if (v != null) return v
+    }
     if (this.screen === "pad-assign") {
       if (this.kitEditMode) return this.project.kitVolume ?? 1
       return this.#selectedPad()?.level ?? 1
@@ -478,6 +686,15 @@ export class CassioApp {
       return this.#selectedPad()?.level ?? 1
     }
     return this.project.masterVolume
+  }
+
+  /** Knob visual for SAMPLE EDIT: knobs follow the cursor row (null = unassigned). */
+  #sampleEditKnob01(i) {
+    const rows = this.sampler.editRows()
+    const knobs = knobParamsAt(rows, this.sampleEditIndex || 0)
+    const p = knobs[i]
+    if (!p) return i === 2 ? null : 0
+    return Math.min(1, Math.max(0, fxKnob01(p, this.sampleDraft[p.key] ?? p.def)))
   }
 
   #selectedPad() {
@@ -580,8 +797,83 @@ export class CassioApp {
     })
     this.root.querySelectorAll("[data-pad]").forEach((el) => {
       const n = Number(el.dataset.pad)
-      el.classList.toggle("active", this.heldPads.has(n))
+      el.classList.toggle("active", this.heldPads.has(n) || this.seqFlash.has(n))
     })
+  }
+
+  #onSeqStep(_i, lanes) {
+    for (const l of lanes) this.seqFlash.add(l + 1)
+    this.#syncLeds()
+    clearTimeout(this._seqFlashTimer)
+    this._seqFlashTimer = setTimeout(() => {
+      this.seqFlash.clear()
+      this.#syncLeds()
+    }, 90)
+  }
+
+  /** Resolve a pad's slot, sound and merged patch (shared by pads and the sequencer). */
+  #padSound(n) {
+    const slot = this.project.pads?.find((p) => p.pad === n)
+    const assigned = slot?.soundId ? this.#soundById(slot.soundId) : null
+    if (!assigned) return { slot, assigned: null, patch: null }
+    const patch = isKit(assigned) ? null : patchFromSound(assigned, {
+      ...(assigned.patch || {}),
+      ...(slot.patch || {})
+    })
+    return { slot, assigned, patch }
+  }
+
+  /**
+   * Fire pad n's sound at an exact audio time (step sequencer). Gate-mode samples and
+   * synth pads get a scheduled release at when + gateSec. Never touches held/HOLD state.
+   */
+  #activeRecTrack() {
+    if (!this.loopEngine.recording) return null
+    return this.loopEngine._recTrack?.id ?? this.loopEngine.selected
+  }
+
+  #recTrackForPad(_n) {
+    return this.#activeRecTrack()
+  }
+
+  /** Active loop capture bus — keyboard/overdub targets the armed recording track. */
+  #recTrackLive() {
+    return this.#activeRecTrack()
+  }
+
+  #inLoopPerformance() {
+    return LOOP_SCREENS.has(this.screen) || this.loopEngine.recording
+  }
+
+  #triggerPad(n, { when = null, velocity = 1, gateSec = null, recTrack = null } = {}) {
+    if (!this.engine.ready) return false
+    const track = recTrack ?? this.#recTrackForPad(n)
+    const { slot, assigned, patch } = this.#padSound(n)
+    if (!assigned || isKit(assigned) || assigned.playable === false) return false
+    const gain = Math.min(1, Math.max(0, velocity)) * this.#padGain(slot)
+    if (isDrum(assigned)) {
+      this.drums.applyPatch(patch)
+      this.drums.setPan(slot.pan ?? 0)
+      this.drums.noteOn(this.#padMidi(n), Math.min(1, 0.95 * gain), { when, recTrack: track })
+      return true
+    }
+    if (isSample(assigned)) {
+      this.sampler.loadBufferForSound(assigned)
+      this.sampleVoice.applyPatch(patch)
+      this.sampleVoice.setPan(slot.pan ?? 0)
+      const midi = noteNameToMidi(assigned.root || assigned.patch?.root || "C3")
+      const mode = slot.mode || assigned.padMode || "oneshot"
+      this.sampleVoice.noteOn(midi, Math.min(1, 0.95 * gain), { when, recTrack: track })
+      if (mode === "gate" && gateSec) this.sampleVoice.noteOff(midi, false, { when: (when ?? this.engine.now()) + gateSec })
+      return true
+    }
+    this.padSynth.applyPatch(patch)
+    this.padSynth.setPan(slot.pan ?? 0)
+    const midi = this.#padMidi(n)
+    this.padSynth.noteOn(midi, Math.min(1, 0.9 * gain), { when, recTrack: track })
+    const hold = gateSec ?? this.#synthHoldMs(patch) / 1000
+    this.padSynth.noteOff(midi, false, { when: (when ?? this.engine.now()) + hold })
+    return true
   }
 
   toast(msg) {
@@ -598,6 +890,32 @@ export class CassioApp {
   #fitChassis() {
     const chassis = this.root.querySelector(".chassis")
     if (chassis) chassis.style.transform = ""
+  }
+
+  /** Restore scroll + keep bar 1 visible when the song shrinks back to default length. */
+  #syncLoopTimeline() {
+    const scroller = this.vscreen.querySelector("[data-loop-scroll]")
+    if (!scroller) return
+
+    const defaultBars = this.loopEngine.lengthBars
+    const timelineBars = this.loopEngine.timelineBars()
+    if (timelineBars <= defaultBars) {
+      this.loopScrollLeft = 0
+    } else {
+      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
+      this.loopScrollLeft = Math.min(this.loopScrollLeft || 0, maxScroll)
+    }
+
+    scroller.scrollLeft = this.loopScrollLeft || 0
+    scroller.scrollTop = this.loopScrollTop || 0
+
+    if (!scroller.dataset.loopScrollBound) {
+      scroller.dataset.loopScrollBound = "1"
+      scroller.addEventListener("scroll", () => {
+        this.loopScrollLeft = scroller.scrollLeft
+        this.loopScrollTop = scroller.scrollTop
+      }, { passive: true })
+    }
   }
 
   #reflowPadsAfterPortrait() {
@@ -658,9 +976,88 @@ export class CassioApp {
     }
   }
 
+  /**
+   * Coalesce recovery writes. Knob turns called this up to 55×/s on the phone, and each
+   * write copied + structured-cloned all loop audio (~8 MB) — WebKit's memory watchdog
+   * then killed and reloaded the tab (crash evidence: debug session 397b28).
+   */
   #persist() {
+    clearTimeout(this._persistTimer)
+    this._persistTimer = setTimeout(() => this.#persistNow(), 600)
+  }
+
+  /** Flush a pending recovery write immediately (pagehide / backgrounding). */
+  flushPersist() {
+    if (!this._persistTimer) return
+    clearTimeout(this._persistTimer)
+    this._persistTimer = null
+    this.#persistNow()
+  }
+
+  #persistNow() {
+    this._persistTimer = null
+    if (!this.project.loop) this.project.loop = defaultLoop()
+    const loop = {
+      ...this.project.loop,
+      ...this.loopEngine.serialize(),
+      metroOn: this.metro.on,
+      metroLevel: this.metro.level,
+      metroAccent: this.metro.accent,
+      countInBars: this.project.loop.countInBars ?? 1
+    }
+    // #region agent log
+    try {
+      const audioBytes = (loop.tracks || []).reduce((n, t) => {
+        const chs = t.audio?.channels
+        if (!chs) return n
+        return n + chs.reduce((a, c) => a + (c?.byteLength || c?.length * 4 || 0), 0)
+      }, 0)
+      fetch("http://127.0.0.1:7775/ingest/fa1177f6-1e5b-449a-b03a-5969bd555f1e", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "397b28" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "B",
+          location: "app.js:#persist",
+          message: "persist recovery",
+          data: {
+            screen: this.screen,
+            soundId: this.project.soundId,
+            audioMB: Math.round(audioBytes / 1e4) / 100,
+            trackBuffers: (loop.tracks || []).map((t) => !!t.audio),
+            memMB: performance?.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null
+          },
+          timestamp: Date.now()
+        })
+      }).catch(() => {})
+      fetch("/debug_ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "B",
+          location: "app.js:#persist",
+          message: "persist recovery",
+          data: {
+            screen: this.screen,
+            soundId: this.project.soundId,
+            audioMB: Math.round(audioBytes / 1e4) / 100,
+            trackBuffers: (loop.tracks || []).map((t) => !!t.audio),
+            memMB: performance?.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null
+          },
+          timestamp: Date.now()
+        }),
+        keepalive: true
+      }).catch(() => {})
+    } catch (_) { /* ignore */ }
+    // #endregion
+    this.project.loop = loop
+    this.project.seq = this.stepSeq.serialize()
     saveRecovery({
       bpm: this.transport.bpm,
+      seq: this.project.seq,
       soundId: this.project.soundId,
       octave: this.project.octave,
       hold: this.project.hold,
@@ -676,8 +1073,45 @@ export class CassioApp {
       root: this.project.root,
       padBank: this.project.padBank,
       kitVolume: this.project.kitVolume ?? 1,
-      pads: this.project.pads
+      pads: this.project.pads,
+      loop
     })
+  }
+
+  persistLoop() {
+    this.#persist()
+  }
+
+  setMetroOn(on) {
+    this.metro.setOn(on)
+    if (!this.project.loop) this.project.loop = defaultLoop()
+    this.project.loop.metroOn = this.metro.on
+    this.toast(`METRO ${this.metro.on ? "ON" : "OFF"}`)
+    this.#persist()
+    this.render()
+  }
+
+  setMetroLevel(level) {
+    this.metro.setLevel(level)
+    if (!this.project.loop) this.project.loop = defaultLoop()
+    this.project.loop.metroLevel = this.metro.level
+    this.toast(`METRO ${Math.round(this.metro.level * 100)}%`)
+    this.#persist()
+    this.render()
+  }
+
+  #tapTempo() {
+    const result = this.transport.tap()
+    this.project.bpm = result.bpm
+    this.metro.tapClick()
+    if (this.transport.playing) {
+      this.transport.resyncFromNow()
+      this.stepSeq.resync(this.transport._origin)
+    }
+    if (result.locked) this.toast(`BPM ${result.bpm}`)
+    else this.toast("TAP TEMPO…")
+    this.render()
+    this.#persist()
   }
 
   #bindHardware() {
@@ -744,6 +1178,7 @@ export class CassioApp {
       this.synth.setPitchBend(v)
       this.padSynth.setPitchBend(v)
       this.drums.setPitchBend(v)
+      this.sampleVoice.setPitchBend(v)
       if (spring) wheel.classList.remove("is-dragging")
       else wheel.classList.add("is-dragging")
       applyVisual(v)
@@ -847,6 +1282,9 @@ export class CassioApp {
   }
 
   #nudgeKnob(which, delta) {
+    if (LOOP_SCREENS.has(this.screen) && this.looper.nudgeKnob(which, delta)) return
+    if (SEQ_SCREENS.has(this.screen) && this.seqCtl.nudgeKnob(which, delta)) return
+    if (MIX_SCREENS.has(this.screen) && this.mixer.nudgeKnob(which, delta)) return
     if (SAMPLER_SCREENS.has(this.screen) && this.sampler.nudgeKnob(which, delta)) return
 
     if (this.screen === "pad-assign") {
@@ -936,9 +1374,9 @@ export class CassioApp {
             this.drums.setReverb(this.editPatch.reverb)
             this.toast(`ROOM ${Math.round(this.editPatch.reverb * 100)}%`)
           } else {
-            this.editPatch.drive = Math.min(1, Math.max(0, (this.editPatch.drive ?? 0.1) + delta))
-            this.drums.setDrive(this.editPatch.drive)
-            this.toast(`DRIVE ${Math.round(this.editPatch.drive * 100)}%`)
+            this.editPatch.delay = Math.min(1, Math.max(0, (this.editPatch.delay ?? 0) + delta))
+            this.drums.setDelay(this.editPatch.delay)
+            this.toast(`DELAY ${Math.round(this.editPatch.delay * 100)}%`)
           }
         }
         this.editPatch = sanitizePatch(this.editPatch)
@@ -1017,6 +1455,52 @@ export class CassioApp {
       return next
     }
 
+    if (this.#keyboardIsSample()) {
+      if (param === "gain" || param === "level" || (slot === "m1" && param !== "reverb" && param !== "space" && param !== "delay")) {
+        const cur = this.sampleVoice.gain ?? s?.patch?.gain ?? 1.5
+        const next = Math.min(2.5, Math.max(0.15, cur + delta))
+        this.sampleVoice.setGain(next)
+        if (!s.patch) s.patch = {}
+        s.patch.gain = next
+        const stored = this.userSounds?.find((u) => u.id === s.id)
+        if (stored) {
+          if (!stored.patch) stored.patch = {}
+          stored.patch.gain = next
+          if (!stored.macros) stored.macros = {}
+          stored.macros.m1 = { label: "LEVEL", param: "gain", default: next }
+        }
+        s.macros = {
+          m1: { label: "LEVEL", param: "gain", default: next },
+          m2: s.macros?.m2 || { label: "FX", param: "reverb", default: s.patch?.reverb ?? 0.2 }
+        }
+        // Debounce IDB writes — every nudge was saving ducked levels
+        clearTimeout(this._sampleGainSaveTimer)
+        this._sampleGainSaveTimer = setTimeout(() => {
+          void putUserSound(s).catch(() => {})
+        }, 400)
+        this.toast(`SAMPLE ${Math.round(next * 100)}%`)
+        return
+      }
+      if (param === "space" || param === "reverb") {
+        const cur = s?.patch?.reverb ?? this.sampleVoice.p?.reverb ?? 0.2
+        const v = Math.min(1, Math.max(0, cur + delta))
+        this.sampleVoice.applyPatch({ reverb: v })
+        if (!s.patch) s.patch = {}
+        s.patch.reverb = v
+        this.toast(`${label} ${Math.round(v * 100)}%`)
+        return
+      }
+      if (param === "delay") {
+        const cur = s?.patch?.delay ?? this.sampleVoice.p?.delay ?? 0
+        const v = Math.min(1, Math.max(0, cur + delta))
+        this.sampleVoice.applyPatch({ delay: v })
+        if (!s.patch) s.patch = {}
+        s.patch.delay = v
+        this.toast(`${label} ${Math.round(v * 100)}%`)
+        return
+      }
+    }
+
     if (this.#keyboardIsDrum()) {
       if (param === "tone" || param === "brightness" || param === "color") {
         const v = nudge01("tone", "tone")
@@ -1082,6 +1566,18 @@ export class CassioApp {
         clearTimeout(this._stopHoldTimer)
         this._stopHoldTimer = null
       }
+      if (action === "tap") {
+        if (this._tapHoldTimer) {
+          clearTimeout(this._tapHoldTimer)
+          this._tapHoldTimer = null
+        }
+        if (this._tapHeld) {
+          this._tapHeld = false
+          return
+        }
+        void this.#ensureAudioRunning().then(() => this.#tapTempo())
+        return
+      }
       if (action === "back-menu") {
         if (this._menuHoldTimer) {
           clearTimeout(this._menuHoldTimer)
@@ -1093,13 +1589,23 @@ export class CassioApp {
         }
         this.#backTap()
       }
+      if (action === "nav-ok" && this._okHoldTimer !== undefined) {
+        // Sequencer: OK acts on release so a hold can open Step Edit instead
+        if (this._okHoldTimer) {
+          clearTimeout(this._okHoldTimer)
+          this._okHoldTimer = null
+          this.#navOk()
+        }
+        this._okHoldTimer = undefined
+      }
+      if (action === "nav-left" || action === "nav-right") {
+        this.#loopNavHorizontalUp()
+      }
       return
     }
     switch (action) {
       case "play":
-        this.#ensureAudioRunning()
-        this.transport.playPause()
-        this.render()
+        void this.#ensureAudioRunning().then(() => this.#transportPlay())
         break
       case "stop":
         this._stopHoldTimer = setTimeout(() => {
@@ -1107,20 +1613,22 @@ export class CassioApp {
           this.synth.allNotesOff()
           this.padSynth.allNotesOff()
           this.drums.allNotesOff()
+          this.sampleVoice.allNotesOff?.()
           this.engine.panic()
           this.toast("PANIC")
         }, 450)
-        this.transport.stop()
-        this.render()
+        this.#transportStop()
         break
       case "rec":
-        this.toast("REC — COMING SOON")
+        void this.#ensureAudioRunning().then(() => this.#transportRec())
         break
       case "tap":
-        this.transport.tap()
-        this.project.bpm = this.transport.bpm
-        this.render()
-        this.#persist()
+        this._tapHeld = false
+        this._tapHoldTimer = setTimeout(() => {
+          this._tapHoldTimer = null
+          this._tapHeld = true
+          this.setMetroOn(!this.metro.on)
+        }, 380)
         break
       case "back-menu":
         this._menuOpenedByHold = false
@@ -1137,13 +1645,23 @@ export class CassioApp {
         this.#nav("down")
         break
       case "nav-left":
-        this.#nav("left")
+        if (this.screen === "loop-tracks") this.#loopNavHorizontalDown("left")
+        else this.#nav("left")
         break
       case "nav-right":
-        this.#nav("right")
+        if (this.screen === "loop-tracks") this.#loopNavHorizontalDown("right")
+        else this.#nav("right")
         break
       case "nav-ok":
-        this.#navOk()
+        if (this.screen === "sequencer") {
+          this._okHoldTimer = setTimeout(() => {
+            this._okHoldTimer = null
+            this.seqCtl.openStepEdit()
+          }, 380)
+        } else {
+          this._okHoldTimer = undefined
+          this.#navOk()
+        }
         break
       default:
         break
@@ -1151,6 +1669,9 @@ export class CassioApp {
   }
 
   #backTap() {
+    if (LOOP_SCREENS.has(this.screen) && this.looper.back()) return
+    if (SEQ_SCREENS.has(this.screen) && this.seqCtl.back()) return
+    if (MIX_SCREENS.has(this.screen) && this.mixer.back()) return
     if (SAMPLER_SCREENS.has(this.screen) && this.sampler.back()) return
     if (this.screen === "menu") {
       this.#closeMenu()
@@ -1196,6 +1717,9 @@ export class CassioApp {
         this.kitEditMode = false
         this.focusSound = this.kitFocus || this.focusSound
         this.screen = "detail"
+      } else if (this.padAssignReturnScreen) {
+        this.screen = this.padAssignReturnScreen
+        this.padAssignReturnScreen = null
       } else {
         this.screen = "detail"
       }
@@ -1208,7 +1732,8 @@ export class CassioApp {
       return
     }
     if (this.screen === "confirm") {
-      this.screen = "sound-manage"
+      this.screen = this.confirmReturnScreen || "sound-manage"
+      this.confirmAction = null
       this.render()
       return
     }
@@ -1220,6 +1745,9 @@ export class CassioApp {
   }
 
   #softKey(key) {
+    if (LOOP_SCREENS.has(this.screen) && this.looper.softKey(key)) return
+    if (SEQ_SCREENS.has(this.screen) && this.seqCtl.softKey(key)) return
+    if (MIX_SCREENS.has(this.screen) && this.mixer.softKey(key)) return
     if (SAMPLER_SCREENS.has(this.screen) && this.sampler.softKey(key)) return
 
     if (this.screen === "menu") {
@@ -1302,7 +1830,8 @@ export class CassioApp {
 
     if (this.screen === "confirm") {
       if (key === "a") {
-        this.screen = "sound-manage"
+        this.screen = this.confirmReturnScreen || "sound-manage"
+        this.confirmAction = null
         this.render()
       }
       if (key === "d") this.#confirmDestructive()
@@ -1382,6 +1911,10 @@ export class CassioApp {
       if (key === "d") {
         if (this.kitEditMode) {
           this.#finishKitEditDone()
+        } else if (this.padAssignReturnScreen) {
+          this.screen = this.padAssignReturnScreen
+          this.padAssignReturnScreen = null
+          this.render()
         } else {
           this.screen = "play"
           this.render()
@@ -1409,6 +1942,7 @@ export class CassioApp {
         this.synth.allNotesOff()
         this.padSynth.allNotesOff()
         this.drums.allNotesOff()
+        this.sampleVoice.allNotesOff()
         this.heldKeys.clear()
         this.heldPads.clear()
         this.#syncLeds()
@@ -1418,6 +1952,7 @@ export class CassioApp {
           this.synth.setPitchBend(0)
           this.padSynth.setPitchBend(0)
           this.drums.setPitchBend(0)
+          this.sampleVoice.setPitchBend(0)
         }
       }
       this.render()
@@ -1452,7 +1987,104 @@ export class CassioApp {
       this.sampler.openHub()
       return
     }
+    if (area === "LOOP") {
+      this.looper.openHome()
+      return
+    }
+    if (area === "MIX") {
+      this.mixer.open("menu")
+      return
+    }
     this.toast(`${area} — COMING SOON`)
+  }
+
+  #transportPlay() {
+    this.loopEngine.ensureGraph()
+    if (this.transport.playing && !this.transport.recording) {
+      this.#transportStop()
+      return
+    }
+    if (this.transport.recording) return
+    const origin = this.engine.now() + 0.05
+    this.transport.playAt(origin)
+    this.loopEngine.startPlayback(origin)
+    this.stepSeq.start(origin)
+    this.render()
+  }
+
+  #transportStop() {
+    this.transport.stop()
+    if (this.loopEngine.recording) this.loopEngine.stopRecord()
+    this.loopEngine.stopPlayback()
+    this.stepSeq.stop()
+    this.#syncLeds()
+    this.render()
+  }
+
+  #transportRec() {
+    if (!this.project.loop) this.project.loop = defaultLoop()
+    // Second REC while recording: stop input, keep playing
+    if (this.transport.recording || this.loopEngine.recording) {
+      this.loopEngine.stopRecord()
+      this.transport.setRecording(false)
+      this.toast("REC OFF")
+      this.render()
+      this.#persist()
+      return
+    }
+
+    const track = this.loopEngine.armForRecord(this.loopEngine.selected)
+    const replace = track.mode === "replace"
+    const countIn = this.project.loop.countInBars ?? 1
+
+    const startRecAt = (startTime, { restartPlayback = true } = {}) => {
+      const ok = this.loopEngine.beginRecord(track.id, {
+        replace,
+        startTime,
+        onDone: () => {
+          this.transport.setRecording(false)
+          if (this.transport.playing) {
+            this.loopEngine.startPlayback(this.loopEngine._playOrigin || this.engine.now())
+          } else {
+            this.loopEngine.stopPlayback()
+          }
+          this.toast(`TRK ${track.id} TAKE`)
+          this.#persist()
+          this.render()
+        }
+      })
+      if (!ok) {
+        this.transport.setRecording(false)
+        this.toast("REC FAILED")
+        this.render()
+        return
+      }
+      this.transport.setRecording(true)
+      if (restartPlayback) {
+        this.loopEngine.startPlayback(startTime)
+        this.stepSeq.start(startTime)
+      }
+      this.toast(replace ? "REPLACE" : "RECORDING")
+      this.render()
+    }
+
+    if (this.transport.playing && !this.transport.countingIn) {
+      const bars = track.lengthBars || this.loopEngine.lengthBars
+      const loopSec = this.transport.loopSec(bars)
+      const origin = this.transport._origin
+      let startTime = this.transport.nextLoopBoundary(origin, loopSec, this.engine.now())
+      const qSec = quantizeGridSec(this.transport.bpm, this.project.loop?.quantize || this.loopEngine.quantize)
+      if (qSec > 0) startTime = this.transport.nextGridPoint(origin, qSec, Math.max(this.engine.now(), startTime))
+      if (startTime - this.engine.now() > 0.08) this.toast("REC @ NEXT LOOP")
+      startRecAt(startTime, { restartPlayback: false })
+      return
+    }
+
+    // From stop: count-in then record (also starts play clock)
+    this.transport.countIn(countIn, (startTime) => {
+      startRecAt(startTime, { restartPlayback: true })
+    })
+    this.render()
   }
 
   #libraryCategories() {
@@ -1490,8 +2122,13 @@ export class CassioApp {
     const cats = this.#libraryCategories()
     if (!cats.length) return raw
     if (!this.libCategory || !cats.includes(this.libCategory)) this.libCategory = cats[0]
-    if (cats.length === 1) return raw.filter((s) => (s.category || cats[0]) === this.libCategory)
-    return raw.filter((s) => (s.category || cats[0]) === this.libCategory)
+    let list = cats.length === 1
+      ? raw.filter((s) => (s.category || cats[0]) === this.libCategory)
+      : raw.filter((s) => (s.category || cats[0]) === this.libCategory)
+    if (this.libTab === "kits" && !this.libPickMode) {
+      list = [NEW_KIT_ENTRY, ...list]
+    }
+    return list
   }
 
   #setLibTab(tab) {
@@ -1603,7 +2240,7 @@ export class CassioApp {
     const s = list[this.libIndex]
     if (!s) return
     this.focusSound = s
-    if (s.playable === false) return
+    if (s.id === "__new-kit__" || s.playable === false) return
     this.#ensureAudioRunning()
     if (isKit(s)) {
       if (!this.libPickMode) this.#loadKitPads(s, { persist: false })
@@ -1659,7 +2296,54 @@ export class CassioApp {
     this.#persist()
   }
 
+  #clearLoopNavHold() {
+    if (this._loopNavHoldTimer) {
+      clearTimeout(this._loopNavHoldTimer)
+      this._loopNavHoldTimer = null
+    }
+    if (this._loopNavHoldInterval) {
+      clearInterval(this._loopNavHoldInterval)
+      this._loopNavHoldInterval = null
+    }
+    this._loopNavHoldDir = null
+  }
+
+  /** Loop timeline: tap ◀▶ = ±1s; hold ◀▶ = repeat ±1s. */
+  #loopNavHorizontalDown(dir) {
+    this.#clearLoopNavHold()
+    this._loopNavSecMode = false
+    this._loopNavHoldDir = dir
+    this._loopNavHoldTimer = setTimeout(() => {
+      this._loopNavHoldTimer = null
+      this._loopNavSecMode = true
+      const d = dir === "right" ? 1 : -1
+      this.looper.nudgeTrackOffsetSec(d, 1)
+      this._loopNavHoldInterval = setInterval(() => {
+        this.looper.nudgeTrackOffsetSec(d, 1)
+      }, 350)
+    }, 350)
+  }
+
+  #loopNavHorizontalUp() {
+    if (this.screen !== "loop-tracks") return
+    const dir = this._loopNavHoldDir
+    const secMode = this._loopNavSecMode
+    this.#clearLoopNavHold()
+    if (secMode) {
+      this.looper.finishTrackOffsetScrub()
+      this._loopNavSecMode = false
+      return
+    }
+    if (dir === "left" || dir === "right") {
+      this.looper.nudgeTrackOffsetBeat(dir === "right" ? 1 : -1)
+    }
+    this._loopNavSecMode = false
+  }
+
   #nav(dir) {
+    if (LOOP_SCREENS.has(this.screen) && this.looper.nav(dir)) return
+    if (SEQ_SCREENS.has(this.screen) && this.seqCtl.nav(dir)) return
+    if (MIX_SCREENS.has(this.screen) && this.mixer.nav(dir)) return
     if (SAMPLER_SCREENS.has(this.screen) && this.sampler.nav(dir)) return
 
     if (this.screen === "menu") {
@@ -1717,6 +2401,12 @@ export class CassioApp {
       return
     }
     if (this.screen === "play") {
+      if (this.playNavFocus === "metro") {
+        if (dir === "up") this.setMetroLevel(this.metro.level + 0.05)
+        if (dir === "down") this.setMetroLevel(this.metro.level - 0.05)
+        if (dir === "left" || dir === "right") this.setMetroOn(!this.metro.on)
+        return
+      }
       if (dir === "left") this.#shiftPlayRoot(-1)
       if (dir === "right") this.#shiftPlayRoot(1)
       if (dir === "up") this.#shiftPlayRoot(12)
@@ -1725,6 +2415,17 @@ export class CassioApp {
   }
 
   #navOk() {
+    if (LOOP_SCREENS.has(this.screen) && this.looper.nav("ok")) return
+    if (SEQ_SCREENS.has(this.screen) && this.seqCtl.nav("ok")) return
+    if (SAMPLER_SCREENS.has(this.screen) && this.sampler.nav("ok")) return
+
+    if (this.screen === "play") {
+      this.playNavFocus = this.playNavFocus === "metro" ? "root" : "metro"
+      this.toast(this.playNavFocus === "metro" ? "▲▼ METRO LVL · ◀▶ ON/OFF" : "▲▼ ROOT OCT")
+      this.render()
+      return
+    }
+
     if (this.screen === "menu") {
       this.#openArea()
       return
@@ -1733,6 +2434,10 @@ export class CassioApp {
       const list = this.#libraryList()
       const s = list[this.libIndex]
       if (!s) return
+      if (s.id === "__new-kit__") {
+        this.#createNewKit()
+        return
+      }
       if (this.libPickMode) {
         if (isKit(s)) {
           this.toast("PICK A SOUND")
@@ -1747,6 +2452,10 @@ export class CassioApp {
         this.render()
         this.#persist()
         this.toast(`PAD ${this.padSelect} ← ${s.name}`)
+        return
+      }
+      if (isSample(s)) {
+        void this.sampler.openFromSound(s)
         return
       }
       this.focusSound = s
@@ -1796,6 +2505,15 @@ export class CassioApp {
     this.render()
     this.#persist()
     this.toast(`KEYS ← ${s.name}`)
+  }
+
+  #createNewKit() {
+    this.libPickMode = false
+    this.#askName({
+      initial: "MY KIT",
+      mode: "kit-new",
+      returnScreen: this.screen === "library" ? "library" : "sound-hub"
+    })
   }
 
   #useKit() {
@@ -1900,16 +2618,27 @@ export class CassioApp {
       return
     }
     this.#ensureAudioRunning()
-    const midi = this.#padMidi(this.padSelect)
     const vel = Math.min(1, 0.95 * this.#padGain(slot))
     const pan = slot.pan ?? 0
     if (isDrum(assigned)) {
+      const midi = this.#padMidi(this.padSelect)
       const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
       this.drums.applyPatch(patch)
       this.drums.setPan(pan)
       this.drums.noteOn(midi, vel)
       return
     }
+    if (isSample(assigned)) {
+      const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
+      this.sampler.loadBufferForSound(assigned)
+      this.sampleVoice.applyPatch(patch)
+      this.sampleVoice.setPan(pan)
+      const midi = noteNameToMidi(assigned.root || assigned.patch?.root || "C3")
+      this.sampleVoice.noteOff(midi, true)
+      this.sampleVoice.noteOn(midi, vel)
+      return
+    }
+    const midi = this.#padMidi(this.padSelect)
     const patch = patchFromSound(assigned, { ...(assigned.patch || {}), ...(slot.patch || {}) })
     this.padSynth.applyPatch(patch)
     this.padSynth.setPan(pan)
@@ -2013,6 +2742,24 @@ export class CassioApp {
     this.render()
   }
 
+  async #finishKitNew(name) {
+    this.librarySnapshot = null
+    this.project.pads = [1, 2, 3, 4, 5, 6].map((n) => ({
+      pad: n,
+      soundId: null,
+      level: 1,
+      pan: 0,
+      mode: "oneshot",
+      patch: null
+    }))
+    this.project.kitVolume = 1
+    this.kitFocus = null
+    this.kitDirty = false
+    await this.#finishKitSave(name)
+    this.toast("NEW KIT · ASSIGN PADS")
+    this.#openKitEdit()
+  }
+
   #syncPadsAfterSoundSave(sound) {
     if (!sound?.id) return
     for (const p of this.project.pads || []) {
@@ -2039,6 +2786,7 @@ export class CassioApp {
         snap: p.snap,
         noise: p.noise,
         reverb: p.reverb,
+        delay: p.delay,
         drive: p.drive
       }
     }
@@ -2268,10 +3016,13 @@ export class CassioApp {
       return
     }
 
-    if (mode === "save-sample") {
-      if (this.sampleDraft) this.sampleDraft.name = v
-      this.screen = "save-sample"
-      this.render()
+    if (mode === "save-sample" || mode === "save-sample-rename") {
+      await this.sampler.commitRename(v)
+      return
+    }
+
+    if (mode === "save-sample-as") {
+      await this.sampler.commitSaveAs(v)
       return
     }
 
@@ -2282,6 +3033,11 @@ export class CassioApp {
 
     if (mode === "kit-save") {
       await this.#finishKitSave(v)
+      return
+    }
+
+    if (mode === "kit-new") {
+      await this.#finishKitNew(v)
       return
     }
 
@@ -2332,6 +3088,7 @@ export class CassioApp {
             snap: patch.snap,
             noise: patch.noise,
             reverb: patch.reverb,
+            delay: patch.delay,
             drive: patch.drive
           }
         : patch,
@@ -2389,6 +3146,7 @@ export class CassioApp {
         snap: patch.snap,
         noise: patch.noise,
         reverb: patch.reverb,
+        delay: patch.delay,
         drive: patch.drive
       }
     } else {
@@ -2488,11 +3246,32 @@ export class CassioApp {
       { text: "A CANCEL · D DELETE", tone: "muted" }
     ]
     this.confirmAction = "delete-sound"
+    this.confirmOkLabel = "DELETE"
+    this.confirmReturnScreen = "sound-manage"
     this.screen = "confirm"
     this.render()
   }
 
   async #confirmDestructive() {
+    if (this.confirmAction === "discard-sample") {
+      this.sampler.clearDraft()
+      this.sampler.releaseMic()
+      this.confirmAction = null
+      this.toast("DISCARDED")
+      this.screen = "sampler-home"
+      this.render()
+      return
+    }
+    if (this.confirmAction === "clear-loop-track") {
+      this.confirmAction = null
+      this.looper.clearSelected()
+      return
+    }
+    if (this.confirmAction === "clear-seq-lane") {
+      this.confirmAction = null
+      this.seqCtl.clearLaneConfirmed()
+      return
+    }
     if (this.confirmAction !== "delete-sound") return
     const s = this.focusSound
     if (!s || !isUserSound(s)) {
@@ -2518,6 +3297,13 @@ export class CassioApp {
     this.editPatch = null
     this.#persist()
     this.toast("DELETED")
+    this.confirmAction = null
+    if (this.confirmReturnScreen === "sampler-home") {
+      this.samplerIndex = 0
+      this.screen = "sampler-home"
+      this.render()
+      return
+    }
     this.libTab = isKit(s) ? "kits" : "user"
     this.libIndex = 0
     this.screen = "library"
@@ -2553,6 +3339,9 @@ export class CassioApp {
   }
 
   #baseMidi() {
+    if (this.screen === "sample-edit" && this.sampleDraft?.root) {
+      return noteNameToMidi(this.sampleDraft.root) + this.project.octave * 12
+    }
     const root = this.project.root || this.sound?.root || "C3"
     return noteNameToMidi(root) + this.project.octave * 12
   }
@@ -2577,7 +3366,7 @@ export class CassioApp {
     }
     for (const n of [...this.heldPads.keys()]) {
       const entry = this.heldPads.get(n)
-      if (!entry || entry.engine === "drum") continue
+      if (!entry || entry.engine === "drum" || entry.engine === "sample") continue
       const oldMidi = entry.midi
       const newMidi = this.#padMidi(n)
       if (oldMidi === newMidi) continue
@@ -2596,6 +3385,10 @@ export class CassioApp {
       return
     }
     void this.#ensureAudioRunning()
+    if (this.#inLoopPerformance()) {
+      this.#keyDownTrack(this.loopEngine.selected, degree)
+      return
+    }
     if (this.project.hold && this.heldKeys.has(degree)) {
       const midi = this.heldKeys.get(degree)
       this.heldKeys.delete(degree)
@@ -2619,16 +3412,113 @@ export class CassioApp {
       this.drums.applyPatch(patchFromSound(this.sound, this.sound?.patch || {}))
       this.drums.noteOn(midi)
     } else if (this.#keyboardIsSample()) {
-      this.sampler.loadBufferForSound(this.sound)
-      this.sampleVoice.applyPatch(patchFromSound(this.sound, this.sound?.patch || {}))
-      this.sampleVoice.noteOn(midi)
+      // #region agent log
+      fetch("http://127.0.0.1:7775/ingest/fa1177f6-1e5b-449a-b03a-5969bd555f1e", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "397b28" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "A",
+          location: "app.js:#keyDown:sample",
+          message: "sample keyDown",
+          data: {
+            screen: this.screen,
+            soundId: this.sound?.id,
+            gain: this.sampleVoice?.gain,
+            hasBuf: !!this.sampleVoice?.buffer,
+            midi
+          },
+          timestamp: Date.now()
+        })
+      }).catch(() => {})
+      fetch("/debug_ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "397b28",
+          runId: "crash-1",
+          hypothesisId: "A",
+          location: "app.js:#keyDown:sample",
+          message: "sample keyDown",
+          data: {
+            screen: this.screen,
+            soundId: this.sound?.id,
+            gain: this.sampleVoice?.gain,
+            hasBuf: !!this.sampleVoice?.buffer,
+            midi
+          },
+          timestamp: Date.now()
+        }),
+        keepalive: true
+      }).catch(() => {})
+      // #endregion
+      if (this.screen === "sample-edit" && this.sampleBuffer && this.sampleDraft) {
+        this.sampleVoice.setBuffer(this.sampleBuffer)
+        this.sampleVoice.applyPatch(this.sampleDraft)
+      } else {
+        // loadBufferForSound already applies patch + repaired gain
+        this.sampler.loadBufferForSound(this.sound)
+      }
+      this.sampleVoice.noteOn(midi, 0.95, { loop: !!this.project.hold })
     } else {
       this.synth.noteOn(midi)
     }
     this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
   }
 
+  #keyDownTrack(trackId, degree) {
+    const midi = this.#baseMidi() + degree
+    const recTrack = this.#recTrackLive()
+    const { slot, assigned, patch } = this.#padSound(trackId)
+    if (!assigned || isKit(assigned)) {
+      this.toast(`TRK ${trackId} EMPTY`)
+      return
+    }
+    if (this.heldKeys.has(degree)) {
+      this.#keyUpTrack(trackId, degree, { force: true })
+    }
+    this.heldKeys.set(degree, midi)
+    const vel = Math.min(1, 0.95 * this.#padGain(slot))
+    if (isDrum(assigned)) {
+      this.drums.applyPatch(patch)
+      this.drums.setPan(slot.pan ?? 0)
+      this.drums.noteOn(midi, vel, { recTrack })
+    } else if (isSample(assigned)) {
+      this.sampler.loadBufferForSound(assigned)
+      this.sampleVoice.applyPatch(patch)
+      this.sampleVoice.setPan(slot.pan ?? 0)
+      this.sampleVoice.noteOn(midi, vel, { loop: !!this.project.hold, recTrack })
+    } else {
+      this.padSynth.applyPatch(patch)
+      this.padSynth.setPan(slot.pan ?? 0)
+      this.padSynth.noteOn(midi, vel, { recTrack })
+    }
+    this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
+  }
+
+  #keyUpTrack(trackId, degree, { force = false } = {}) {
+    if (this.project.hold && !force) {
+      if (this.heldKeys.has(degree)) {
+        this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
+      }
+      return
+    }
+    this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.remove("active")
+    const midi = this.heldKeys.get(degree)
+    this.heldKeys.delete(degree)
+    if (midi == null) return
+    const { assigned } = this.#padSound(trackId)
+    if (isDrum(assigned)) this.drums.noteOff(midi)
+    else if (isSample(assigned)) this.sampleVoice.noteOff(midi)
+    else this.padSynth.noteOff(midi)
+  }
+
   #keyUp(degree, { force = false } = {}) {
+    if (this.#inLoopPerformance()) {
+      this.#keyUpTrack(this.loopEngine.selected, degree, { force })
+      return
+    }
     if (this.project.hold && !force) {
       if (this.heldKeys.has(degree)) {
         this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
@@ -2655,6 +3545,14 @@ export class CassioApp {
   }
 
   #padDown(n) {
+    if (SEQ_SCREENS.has(this.screen)) {
+      this.seqCtl.selectLane(n)
+      return
+    }
+    if (MIX_SCREENS.has(this.screen)) {
+      this.mixer.selectTrack(n)
+      return
+    }
     if (this.screen === "pad-assign") {
       this.padSelect = n
       this.render()
@@ -2699,8 +3597,7 @@ export class CassioApp {
       this.#syncLeds()
       return
     }
-    const slot = this.project.pads?.find((p) => p.pad === n)
-    const assigned = slot?.soundId ? this.#soundById(slot.soundId) : null
+    const { slot, assigned, patch } = this.#padSound(n)
     const midi = this.#padMidi(n)
 
     if (!assigned) {
@@ -2713,28 +3610,24 @@ export class CassioApp {
     }
 
     if (isDrum(assigned)) {
-      const patch = patchFromSound(assigned, {
-        ...(assigned.patch || {}),
-        ...(slot.patch || {})
-      })
       this.drums.applyPatch(patch)
       this.drums.setPan(slot.pan ?? 0)
       this.heldPads.set(n, { midi, engine: "drum" })
-      this.drums.noteOn(midi, Math.min(1, 0.95 * this.#padGain(slot)))
+      this.drums.noteOn(midi, Math.min(1, 0.95 * this.#padGain(slot)), { recTrack: this.#recTrackForPad(n) })
       this.#syncLeds()
       return
     }
 
     if (isSample(assigned)) {
-      const patch = patchFromSound(assigned, {
-        ...(assigned.patch || {}),
-        ...(slot.patch || {})
-      })
       this.sampler.loadBufferForSound(assigned)
       this.sampleVoice.applyPatch(patch)
       this.sampleVoice.setPan(slot.pan ?? 0)
+      // Pads play at sample root — chromatic #padMidi would pitch-shift (play too fast).
+      const midi = noteNameToMidi(assigned.root || assigned.patch?.root || "C3")
       const mode = slot.mode || assigned.padMode || "oneshot"
-      const oneshot = mode === "oneshot"
+      const holdOn = !!this.project.hold
+      // HOLD latches + loops; oneshot auto-stop only when HOLD is off.
+      const oneshot = mode === "oneshot" && !holdOn
       const vel = Math.min(1, 0.95 * this.#padGain(slot))
       if (this.heldPads.has(n)) {
         const prev = this.heldPads.get(n)
@@ -2743,6 +3636,9 @@ export class CassioApp {
       }
       const entry = { midi, engine: "sample", oneshot }
       if (oneshot) {
+        // Real playback time at this rate (tune-aware); no cap — long clips play to the end.
+        // The source ends on its own; this timer only clears held/LED state.
+        const playDur = Math.max(0.05, this.sampleVoice.playSeconds(midi))
         entry.timer = setTimeout(() => {
           const cur = this.heldPads.get(n)
           if (cur?.midi === midi && cur.engine === "sample") {
@@ -2750,10 +3646,10 @@ export class CassioApp {
             this.sampleVoice.noteOff(midi)
             this.#syncLeds()
           }
-        }, Math.min(8000, Math.max(200, (this.sampleVoice.buffer?.duration || 1) * 1000)))
+        }, Math.max(200, playDur * 1000 + 60))
       }
       this.heldPads.set(n, entry)
-      this.sampleVoice.noteOn(midi, vel)
+      this.sampleVoice.noteOn(midi, vel, { loop: holdOn, recTrack: this.#recTrackForPad(n) })
       this.#syncLeds()
       return
     }
@@ -2763,10 +3659,6 @@ export class CassioApp {
       return
     }
 
-    const patch = patchFromSound(assigned, {
-      ...(assigned.patch || {}),
-      ...(slot.patch || {})
-    })
     this.padSynth.applyPatch(patch)
     this.padSynth.setPan(slot.pan ?? 0)
     if (this.heldPads.has(n)) {
@@ -2789,12 +3681,12 @@ export class CassioApp {
       }, this.#synthHoldMs(patch))
     }
     this.heldPads.set(n, entry)
-    this.padSynth.noteOn(midi, vel)
+    this.padSynth.noteOn(midi, vel, { recTrack: this.#recTrackForPad(n) })
     this.#syncLeds()
   }
 
   #padUp(n, { force = false } = {}) {
-    if (this.screen === "pad-assign") return
+    if (this.screen === "pad-assign" || SEQ_SCREENS.has(this.screen)) return
     if (EDIT_SCREENS.has(this.screen) && isDrum(this.focusSound || this.sound)) {
       this.#syncLeds()
       return
@@ -2844,9 +3736,14 @@ export class CassioApp {
     window.addEventListener("keyup", (e) => {
       if (this.#namingActive() || e.target?.id === "cassio-name-field") return
       if (e.code in KEY_MAP) this.#keyUp(KEY_MAP[e.code])
+      if (e.code === "ArrowLeft" || e.code === "ArrowRight") {
+        this.#handleAction(e.code === "ArrowRight" ? "nav-right" : "nav-left", null, "up", e)
+      }
+      if (e.code === "Enter") this.#handleAction("nav-ok", null, "up", e)
       if (e.code >= "Digit1" && e.code <= "Digit6") this.#padUp(Number(e.code.slice(-1)))
     })
     window.addEventListener("blur", () => {
+      this.#loopNavHorizontalUp()
       this.#releaseAllPointerKeys()
       this.#releaseAllComputerKeys()
       for (const n of [...this.heldPads.keys()]) this.#padUp(n, { force: true })

@@ -18,6 +18,7 @@ export class DrumVoice {
     this.snap = 0.55
     this.noise = 0.5
     this.reverb = 0.1
+    this.delay = 0
     this.drive = 0.1
     this.pan = 0
     this.pitchBend = 0
@@ -64,6 +65,7 @@ export class DrumVoice {
       this.decay = Math.min(1, Math.max(0.02, Number(patch.release) || 0.4))
     }
     if (patch.reverb != null) this.reverb = clamp01(patch.reverb, 0.1)
+    if (patch.delay != null) this.delay = clamp01(patch.delay, 0)
     if (patch.drive != null) this.drive = clamp01(patch.drive, 0.1)
   }
 
@@ -73,17 +75,19 @@ export class DrumVoice {
   setSnap(v) { this.snap = clamp01(v, 0.55) }
   setNoise(v) { this.noise = clamp01(v, 0.5) }
   setReverb(v) { this.reverb = clamp01(v, 0.1) }
+  setDelay(v) { this.delay = clamp01(v, 0) }
   setDrive(v) { this.drive = clamp01(v, 0.1) }
   setPan(v) { this.pan = Math.min(1, Math.max(-1, Number(v) || 0)) }
   setPitchBend(semitones) {
     this.pitchBend = Math.min(2, Math.max(-2, semitones))
   }
 
-  noteOn(midi = 60, velocity = 0.9) {
+  /** `when` (audio time) lets the step sequencer schedule hits sample-accurately. */
+  noteOn(midi = 60, velocity = 0.9, { when = null, recTrack = null } = {}) {
     if (!this.engine.ready) return
     const id = `d${++this._seq}`
     const ctx = this.engine.ctx
-    const t = ctx.currentTime
+    const t = Math.max(ctx.currentTime, Number(when) || 0)
     const out = ctx.createGain()
     const driveBoost = 0.85 + this.drive * 1.1
     out.gain.value = Math.min(1.4, velocity * driveBoost)
@@ -100,15 +104,16 @@ export class DrumVoice {
     const conv = this.engine.convolver
     const delayIn = this.engine.delay
     bus.connect(dry)
+    if (recTrack) this.engine.tapRec(bus, recTrack)
     if (conv && this.reverb > 0.01) {
       const send = ctx.createGain()
       send.gain.value = this.reverb * 0.95
       bus.connect(send)
       send.connect(conv)
     }
-    if (delayIn && this.drive > 0.15) {
+    if (delayIn && this.delay > 0.01) {
       const dsend = ctx.createGain()
-      dsend.gain.value = (this.drive - 0.15) * 0.45
+      dsend.gain.value = this.delay * 0.55
       bus.connect(dsend)
       dsend.connect(delayIn)
     }
@@ -123,7 +128,7 @@ export class DrumVoice {
 
     const dur = 0.05 + this.decay * (type === "openhat" ? 1.1 : type === "kick" ? 0.85 : 0.55)
     this.active.set(id, out)
-    setTimeout(() => this.active.delete(id), (dur + 0.35) * 1000)
+    setTimeout(() => this.active.delete(id), (dur + 0.35 + Math.max(0, t - ctx.currentTime)) * 1000)
   }
 
   noteOff(_midi, _immediate = false) {

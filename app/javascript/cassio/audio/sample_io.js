@@ -41,6 +41,27 @@ export function storedToBuffer(ctx, stored) {
   return buf
 }
 
+/** In-place peak normalize toward targetPeak (maxBoost caps quiet-take amplification). */
+export function peakNormalizeBuffer(buf, targetPeak = 0.9, maxBoost = 8) {
+  if (!buf) return buf
+  let peak = 0
+  for (let c = 0; c < buf.numberOfChannels; c++) {
+    const data = buf.getChannelData(c)
+    for (let i = 0; i < data.length; i++) {
+      const v = Math.abs(data[i])
+      if (v > peak) peak = v
+    }
+  }
+  if (peak < 1e-6) return buf
+  const scale = Math.min(maxBoost, targetPeak / peak)
+  if (Math.abs(scale - 1) < 0.02) return buf
+  for (let c = 0; c < buf.numberOfChannels; c++) {
+    const data = buf.getChannelData(c)
+    for (let i = 0; i < data.length; i++) data[i] *= scale
+  }
+  return buf
+}
+
 /** Slice trim region (0..1) into a new AudioBuffer. */
 export function sliceBuffer(ctx, buf, trimStart = 0, trimEnd = 1) {
   if (!buf) return null

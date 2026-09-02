@@ -18,14 +18,28 @@ export function renderLibrary(state) {
     `<div class="lib-row ${i === idx ? "selected" : ""}">${esc(s.name)}</div>`
   ).join("")
 
+  const isNewKit = sel?.id === "__new-kit__"
+  const isSample = sel?.voice === "sample"
+  const isKitSel = sel?.kind === "kit" || sel?.voice === "kit"
+  const okHint = isNewKit
+    ? "OK → CREATE EMPTY KIT"
+    : sel?.playable === false
+      ? "NO ENGINE"
+      : pick
+        ? "OK → ASSIGN PAD"
+        : isKitSel
+          ? "OK → KIT DETAIL"
+          : isSample
+            ? "OK → SAMPLE EDIT"
+            : "OK → DETAIL"
   const detail = sel ? `
     <div class="lib-detail-box">
       <div class="lib-detail-name">${esc(sel.name)}</div>
-      <div class="muted">${esc(sel.kind === "kit" || sel.voice === "kit" ? "KIT" : (sel.voice || "—")).toUpperCase()} / ${esc(sel.kind === "kit" ? "PADS" : (sel.root || "C3"))}</div>
-      <div class="green">M1 ${esc(sel.kind === "kit" ? "BANK" : (sel.macros?.m1?.label || "—"))}</div>
-      <div class="green">M2 ${esc(sel.kind === "kit" ? "LOAD" : (sel.macros?.m2?.label || "—"))}</div>
-      <div class="lib-hint">${sel.playable === false ? "NO ENGINE" : pick ? "OK → ASSIGN PAD" : sel.kind === "kit" || sel.voice === "kit" ? "OK → KIT DETAIL" : "OK DETAIL"}</div>
-      <div class="muted">${pick ? `PAD ${state.padSelect || 1}` : sel.kind === "kit" || sel.voice === "kit" ? "A USE PADS ON DETAIL" : "KEYS/PADS PREVIEW"}</div>
+      <div class="muted">${isNewKit ? "CREATE" : esc(isKitSel ? "KIT" : (sel.voice || "—")).toUpperCase()} / ${isNewKit ? "6 EMPTY PADS" : esc(isKitSel ? "PADS" : (sel.root || "C3"))}</div>
+      <div class="green">${isNewKit ? "NAME IT · THEN ASSIGN SOUNDS" : `M1 ${esc(isKitSel ? "BANK" : (sel.macros?.m1?.label || "—"))}`}</div>
+      <div class="green">${isNewKit ? "NO COPY OF A FACTORY KIT" : `M2 ${esc(isKitSel ? "LOAD" : (sel.macros?.m2?.label || "—"))}`}</div>
+      <div class="lib-hint">${okHint}</div>
+      <div class="muted">${pick ? `PAD ${state.padSelect || 1}` : isNewKit ? "OR SOUND → C NEW KIT" : isKitSel ? "A USE PADS ON DETAIL" : isSample ? "TRIM · TUNE · EQ · FX" : "KEYS/PADS PREVIEW"}</div>
     </div>` : `<div class="lib-detail-box muted">EMPTY</div>`
 
   const tabs = pick
