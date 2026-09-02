@@ -10,7 +10,6 @@ if ! command -v mkcert >/dev/null 2>&1; then
   exit 1
 fi
 
-# Local CA (may need sudo once for desktop trust; phone still needs manual install)
 mkcert -install 2>/dev/null || {
   echo "Note: mkcert CA not in system trust store (sudo may be required)."
   echo "Phone: install $(mkcert -CAROOT)/rootCA.pem as a trusted CA."
@@ -23,17 +22,16 @@ if [[ -n "${IP:-}" ]]; then
 fi
 
 cd "$CERT_DIR"
-mkcert -cert-file localhost+lan.pem -key-file localhost+lan-key.pem "${NAMES[@]}"
+# Avoid '+' in filenames — Puma ssl:// query strings treat + as space.
+mkcert -cert-file lan.pem -key-file lan-key.pem "${NAMES[@]}"
 
-# Public CA cert for phone download (not the private key)
 CA_ROOT="$(mkcert -CAROOT)"
 cp "$CA_ROOT/rootCA.pem" "$ROOT/public/dev-ca.pem"
+cp -f "$ROOT/public/dev-ca.pem" "$ROOT/public/dev-ca.crt"
 
 echo
-echo "Certs ready in config/certs/"
+echo "Certs ready in config/certs/ (lan.pem / lan-key.pem)"
 echo "  names: ${NAMES[*]}"
-echo "Phone CA: $ROOT/public/dev-ca.pem  (also at $CA_ROOT/rootCA.pem)"
+echo "Phone CA: http://${IP:-LAN}:3080/dev-ca.crt  (after bin/dev-https)"
 echo
 echo "Next: bin/dev-https"
-echo "Then on phone: open https://${IP:-localhost}:3000/dev-ca.pem , install CA, enable trust,"
-echo "then open https://${IP:-localhost}:3000/"

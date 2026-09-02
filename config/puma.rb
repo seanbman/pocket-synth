@@ -28,16 +28,9 @@
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
-# HTTPS LAN (bin/dev-https) or plain HTTP (bin/dev).
-if ENV["SSL_KEY"] && ENV["SSL_CERT"]
-  ssl_bind ENV.fetch("SSL_BIND", "0.0.0.0"), ENV.fetch("PORT", "3000"), {
-    key: ENV["SSL_KEY"],
-    cert: ENV["SSL_CERT"]
-  }
-else
-  # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-  port ENV.fetch("PORT", 3000)
-end
+# Plain HTTP port for bin/dev. HTTPS LAN uses `rails server -b ssl://…`
+# from Procfile.dev-https (avoids filename encoding issues in query strings).
+port ENV.fetch("PORT", 3000)
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart

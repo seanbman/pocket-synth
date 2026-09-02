@@ -5,18 +5,18 @@ set -e
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-CERT="$ROOT/config/certs/localhost+lan.pem"
-KEY="$ROOT/config/certs/localhost+lan-key.pem"
+CERT="$ROOT/config/certs/lan.pem"
+KEY="$ROOT/config/certs/lan-key.pem"
 
 if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
   echo "Missing certs — running bin/setup-https first…"
   "$ROOT/bin/setup-https"
 fi
 
-# Ensure phone-downloadable CA is present
 if [ ! -f "$ROOT/public/dev-ca.pem" ]; then
   cp "$(mkcert -CAROOT)/rootCA.pem" "$ROOT/public/dev-ca.pem"
 fi
+cp -f "$ROOT/public/dev-ca.pem" "$ROOT/public/dev-ca.crt"
 
 if ! gem list foreman -i --silent; then
   echo "Installing foreman..."
@@ -25,24 +25,27 @@ fi
 
 IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
 export PORT="${PORT:-3000}"
-export SSL_BIND="${SSL_BIND:-0.0.0.0}"
 export SSL_CERT="$CERT"
 export SSL_KEY="$KEY"
 export HTTPS_LAN=1
 export RUBY_DEBUG_OPEN="true"
 export RUBY_DEBUG_LAZY="true"
 
-# Plain HTTP for first-time CA install (browsers won't trust HTTPS until CA is installed).
 CA_PORT="${CA_PORT:-3080}"
+cleanup() {
+  if [ -n "${CA_PID:-}" ]; then kill "$CA_PID" 2>/dev/null || true; fi
+}
+trap cleanup EXIT INT TERM
+
 if command -v python3 >/dev/null 2>&1; then
   python3 -m http.server "$CA_PORT" --bind 0.0.0.0 --directory "$ROOT/public" >/tmp/cassio-ca-http.log 2>&1 &
   CA_PID=$!
-  trap 'kill "$CA_PID" 2>/dev/null || true' EXIT INT TERM
+  sleep 0.3
 fi
 
 echo "CASSIO HTTPS → https://localhost:${PORT}/  https://${IP:-LAN}:${PORT}/"
-echo "Phone step 1 (once): http://${IP:-LAN}:${CA_PORT}/dev-ca.pem  → install + trust CA"
+echo "Phone step 1 (once): http://${IP:-LAN}:${CA_PORT}/dev-ca.crt  → install + trust CA"
 echo "Phone step 2:        https://${IP:-LAN}:${PORT}/"
 echo
 
-exec foreman start -f Procfile.dev "$@"
+exec foreman start -f Procfile.dev-https "$@"
