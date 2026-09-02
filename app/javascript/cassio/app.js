@@ -24,7 +24,7 @@ import {
   renderSoundHub, renderSamplerHome, renderMicRecord, renderSampleEdit,
   renderSampleSave, renderAssignSample
 } from "cassio/screens/sampler"
-import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx } from "cassio/screens/loop"
+import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx, LOOP_BAR_WIDTH_PX } from "cassio/screens/loop"
 import { SamplerController, SAMPLER_SCREENS } from "cassio/sampler_controller"
 import { LoopController, LOOP_SCREENS } from "cassio/loop_controller"
 import { SeqController, SEQ_SCREENS } from "cassio/seq_controller"
@@ -152,7 +152,7 @@ export class CassioApp {
     this.loopTimelineDirty = false
     this.loopScrollLeft = 0
     this.loopScrollTop = 0
-    this.loopScrollToTrack = null
+    this.loopScrollFollow = true
     this.seqTrackId = null
     this.#bindHardware()
     this.#bindPitchWheel()
@@ -584,7 +584,10 @@ export class CassioApp {
       this.vscreen.innerHTML = renderAssignSample(this.state())
     } else if (this.screen === "loop-tracks") {
       this.vscreen.innerHTML = renderLoopTrackView(this.state())
-      requestAnimationFrame(() => this.#syncLoopTimeline())
+      requestAnimationFrame(() => {
+        this.#syncLoopTimeline()
+        requestAnimationFrame(() => this.#syncLoopTimeline())
+      })
     } else if (this.screen === "loop-menu") {
       this.vscreen.innerHTML = renderLoopTrackMenu(this.state())
     } else if (this.screen === "loop-options") {
@@ -892,30 +895,71 @@ export class CassioApp {
     if (chassis) chassis.style.transform = ""
   }
 
-  /** Restore scroll + keep bar 1 visible when the song shrinks back to default length. */
+  /** Restore scroll; optionally pan to keep the selected track clip in view. */
   #syncLoopTimeline() {
     const scroller = this.vscreen.querySelector("[data-loop-scroll]")
     if (!scroller) return
 
     const defaultBars = this.loopEngine.lengthBars
     const timelineBars = this.loopEngine.timelineBars()
-    if (timelineBars <= defaultBars) {
+    const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
+
+    if (maxScroll <= 0) {
       this.loopScrollLeft = 0
+    } else if (this.loopScrollFollow !== false) {
+      this.#followLoopTimelineScroll(scroller, maxScroll)
+    } else if (timelineBars <= defaultBars) {
+      this.loopScrollLeft = Math.min(this.loopScrollLeft || 0, maxScroll)
     } else {
-      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
       this.loopScrollLeft = Math.min(this.loopScrollLeft || 0, maxScroll)
     }
 
-    scroller.scrollLeft = this.loopScrollLeft || 0
-    scroller.scrollTop = this.loopScrollTop || 0
+    this.#applyLoopScroll(scroller)
 
     if (!scroller.dataset.loopScrollBound) {
       scroller.dataset.loopScrollBound = "1"
       scroller.addEventListener("scroll", () => {
+        if (this._loopScrollProgrammatic) return
         this.loopScrollLeft = scroller.scrollLeft
         this.loopScrollTop = scroller.scrollTop
+        this.loopScrollFollow = false
       }, { passive: true })
     }
+  }
+
+  /** Pan horizontal scroll so the selected track clip stays visible. */
+  #followLoopTimelineScroll(scroller, maxScroll) {
+    const le = this.loopEngine
+    const t = le.selectedTrack
+    if (!t) return
+
+    const timelineBars = le.timelineBars()
+    const timelineSec = le.timelineSec()
+    const timelineW = timelineBars * LOOP_BAR_WIDTH_PX
+    if (timelineSec <= 0 || timelineW <= 0) return
+
+    const offPx = ((t.offsetSec ?? 0) / timelineSec) * timelineW
+    const trackBars = t.lengthBars || le.lengthBars
+    const clipW = Math.max(8, (trackBars / timelineBars) * timelineW - 2)
+    const clipEnd = offPx + clipW
+    const viewW = scroller.clientWidth
+    const margin = 36
+    let scroll = this.loopScrollLeft || 0
+
+    if (offPx < scroll + margin) {
+      scroll = Math.max(0, offPx - margin)
+    } else if (clipEnd > scroll + viewW - margin) {
+      scroll = Math.min(maxScroll, clipEnd - viewW + margin)
+    }
+
+    this.loopScrollLeft = scroll
+  }
+
+  #applyLoopScroll(scroller) {
+    this._loopScrollProgrammatic = true
+    scroller.scrollLeft = this.loopScrollLeft || 0
+    scroller.scrollTop = this.loopScrollTop || 0
+    this._loopScrollProgrammatic = false
   }
 
   #reflowPadsAfterPortrait() {

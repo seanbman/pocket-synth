@@ -92,7 +92,7 @@ export function renderLoopTrackView(state) {
       </div>
       <div class="loop-timeline-body">
         <div class="pink loop-tmeta">${barMeta}/${beatsPerBar} · Q ${q} · MON ${monLabel} · ${esc(state.playhead || "1:1")}</div>
-        <div class="loop-timeline-scroll" data-loop-scroll>
+        <div class="loop-timeline-scroll" data-loop-scroll style="--loop-timeline-w:${timelineW}px">
           <div class="loop-ruler-row">
             <div class="loop-tlabel loop-tlabel-spacer"></div>
             <div class="loop-ruler" style="width:${timelineW}px">

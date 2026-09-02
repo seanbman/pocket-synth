@@ -128,6 +128,7 @@ export class LoopController {
       if (dir === "up" || dir === "down") {
         const d = dir === "down" ? 1 : 5
         a.loopEngine.select(((a.loopEngine.selected - 1 + d) % 6) + 1)
+        a.loopScrollFollow = true
         a.render()
       }
       if (dir === "ok") {
@@ -459,6 +460,7 @@ export class LoopController {
     const id = a.loopEngine.selected
     const sec = a.loopEngine.nudgeTrackOffset(id, dir > 0 ? 1 : -1)
     const bars = a.loopEngine.timelineBars()
+    a.loopScrollFollow = true
     a.toast(`TRK ${id} ${sec}s · ${bars}B`)
     a.persistLoop?.()
     a.render()
@@ -469,6 +471,7 @@ export class LoopController {
     const a = this.app
     const id = a.loopEngine.selected
     const sec = a.loopEngine.nudgeTrackOffset(id, (dir > 0 ? 1 : -1) * step)
+    a.loopScrollFollow = true
     a.loopTimelineDirty = true
     if (!a._loopOffsetUiRaf) {
       a._loopOffsetUiRaf = requestAnimationFrame(() => {
@@ -485,7 +488,8 @@ export class LoopController {
     a.loopTimelineDirty = false
     const t = a.loopEngine.selectedTrack
     const bars = a.loopEngine.timelineBars()
-    if (bars <= a.loopEngine.lengthBars) a.loopScrollLeft = 0
+    a.loopScrollFollow = true
+    if (bars <= a.loopEngine.lengthBars && (t.offsetSec ?? 0) <= 0) a.loopScrollLeft = 0
     a.toast(`TRK ${t.id} ${Math.round(t.offsetSec ?? 0)}s · ${bars}B`)
     a.persistLoop?.()
     a.render()

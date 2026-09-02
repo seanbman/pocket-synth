@@ -93,11 +93,24 @@ try {
     const solo = le.tracks[0].solo
 
     app.screen = 'loop-options'
-    app.loopOptIndex = 1
+    app.loopOptIndex = 2
     app.looper.nav('right')
     const quantize = le.quantize
 
-    return { playingAfterStop, sourcesAfterStop, muted, solo, quantize, fatal: null }
+    le.select(3)
+    le.tracks[2].buffer = buf
+    le.setTrackOffset(3, 10)
+    app.looper.openHome()
+    app.loopScrollFollow = true
+    app.render()
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+    const scroller = app.vscreen.querySelector('[data-loop-scroll]')
+    const scrollLeft = scroller?.scrollLeft ?? 0
+    const scrollWidth = scroller?.scrollWidth ?? 0
+    const clientWidth = scroller?.clientWidth ?? 0
+    const offsetSec = le.tracks[2].offsetSec
+
+    return { playingAfterStop, sourcesAfterStop, muted, solo, quantize, scrollLeft, scrollWidth, clientWidth, offsetSec, fatal: null }
   })()`)
 
   if (out.fatal) fail(out.fatal)
@@ -112,6 +125,10 @@ try {
     else fail("solo soft key failed")
     if (out.quantize && out.quantize !== "1/16") pass(`quantize cycled (${out.quantize})`)
     else fail(`quantize not cycled (${out.quantize})`)
+    if (out.offsetSec === 10) pass("track offset set to 10s")
+    else fail(`offset ${out.offsetSec}`)
+    if (out.scrollLeft > 0) pass(`timeline panned (${out.scrollLeft}px)`)
+    else fail(`timeline did not pan (scrollLeft=${out.scrollLeft} sw=${out.scrollWidth} cw=${out.clientWidth})`)
   }
 } catch (e) {
   fail(e.message)

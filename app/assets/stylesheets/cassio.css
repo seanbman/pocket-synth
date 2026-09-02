@@ -947,9 +947,13 @@ html, body {
   border-radius: 2px;
   background: #040404;
 }
+.loop-ruler-row,
+.loop-tgrid {
+  min-width: calc(3.35rem + var(--loop-timeline-w, 208px));
+}
 .loop-ruler-row {
   display: grid;
-  grid-template-columns: 3.2rem 1fr;
+  grid-template-columns: 3.2rem max-content;
   gap: 0.15rem;
   position: sticky;
   top: 0;
