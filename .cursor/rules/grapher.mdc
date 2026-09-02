@@ -1,47 +1,177 @@
 ---
-description: Use grapher before acting; ingest dirs with LLM understanding of files/images
+description: Use grapher before acting; Cursor must deeply understand every file and media asset—not path-only stubs
 alwaysApply: true
 ---
 
 # grapher — shared agent knowledge
 
+**Cursor is the enriching LLM.** `grapher` only stores and retrieves what **you** write. A path in the graph is a pointer, not understanding. You must **deeply consume, understand, and graph** the meaning of every asset — documents, **images**, **videos**, **audio/sound files**, and anything else pending.
+
+## Critical: media is not path metadata
+
+**Unacceptable:** nodes whose `content` is empty, filename-only, or “image at path X”.  
+**Required:** `content` that reflects real comprehension (what it shows/sounds like, structure, text/UI in frame, speech/music/ambient detail, narrative, relevance to the project).
+
+- **Images:** use vision/`Read` on the actual pixels. Describe composition, subjects, text/OCR, UI chrome, diagrams, colors, and project meaning.
+- **Videos:** inspect the media (frames/playback via available tools). Graph scenes, on-screen text, actions, timeline highlights, and how it informs the project — not just the `.mp4` path.
+- **Audio / sound:** listen or otherwise extract meaning (speech, music, SFX, tone). Graph transcript/summary of what is heard and why it matters — not just the `.mp3`/`.wav` path.
+
+If you cannot fully perceive a media file with available tools, say so in `content` and still record everything you *can* determine; do not pretend a path equals understanding.
+
 ## Before acting
 
 ```bash
-grapher search "<what you need>"
-grapher get <id>
-grapher neighbors <id> --depth 2
+grapher search "<what you need>" --exclude-superseded
+grapher get checkpoint-current-loop-engine   # topic entry points (see below)
+grapher neighbors <finding-or-concept-id> --depth 2
+grapher audit
 ```
 
-## Ingest a directory (LLM does the understanding)
+**Checkpoint entry points** (prefer over raw search when orienting):
 
-grapher does **not** OCR or vision — **you** read/view files, then write grounded summaries into the graph.
+- `checkpoint-current-loop-engine`
+- `checkpoint-current-sampler`
+- `checkpoint-current-persistence`
+- `checkpoint-current-audio-architecture`
+- `checkpoint-current-ui-controls`
+- `checkpoint-current-roadmap`
+
+**Do not use** `docs/cassio-brain-revised.json` as canonical — it has the bad bulk-inference pass. Canonical brain: `.grapher/knowledge.json` in this repo only.
+
+**Curation commands** (grapher repo; run from cassio with default graph):
 
 ```bash
-grapher ingest ./path/to/dir          # stubs pending nodes for docs/images
-# optional: grapher scan ./path       # status only, no writes
+grapher migrate reset-truth --yes          # undo bad inference
+grapher migrate infer-preview              # audit before applying
+grapher migrate infer-apply --only-high-confidence --yes
+grapher curate cassio                      # CASSIO acceptance pack
+grapher curate compact                     # suggest related → precise rels
+grapher checkpoint refresh <id>            # after enriching scope
 ```
 
-For **each** item in `pending`:
+166+ nodes may stay `unclassified` until curated — that is intentional; do not bulk-infer without preview/approval.
 
-1. Open the file: `Read` for text; for images use the image Read tool so you actually see it
-2. Write a concise, factual summary (what it is, key facts, how it relates to the project)
-3. Upsert and clear pending:
+When multiple nodes cover the same topic, prefer **current** or **canonical_spec** status. Check supersession edges (`supersedes`) before treating older nodes as truth. **Read `content` and evidence** — do not trust `status`/`verification` from bulk migration without corroboration (misclassified nodes are worse than `unclassified`).
 
-```bash
-grapher add --id <node_id> --type document|image --title "<name>" \
-  --path <path> --content "<your summary>" --tags relevant,tags
+## Agile SDLC precedence (how we work)
+
+Software work follows the **lifecycle stage order** — this is precedence, not decoration:
+
+`ideation` → `designing` → `planning` → `developing` → `launching` → `maintaining`
+
+**Truth precedence when coding or advising:**
+
+1. **Verified current implementation** (`current` + evidence / smoke / `verified_by`) — what the repo actually does now
+2. **Canonical spec** (`canonical_spec`) — frozen product intent (e.g. V1 manual); scope-bound, may be **deviated from** intentionally
+3. **Proposed / designing** — next increment; build toward this, do not treat as shipped
+4. **Historical / superseded** — context only; never implement from these without checking supersession chain
+
+**Agile rules for agents:**
+
+- **Small increments**: ship working slices (developing → verify → graph finding → next)
+- **Stage honesty**: tag new findings with the stage they belong to; incidents/fixes → `maintaining`; roadmap → `planning`
+- **Verify before “current”**: status `current` requires corroboration (test, code path, or explicit user sign-off) — not keyword inference
+- **Supersede explicitly**: when behavior replaces old behavior, `grapher curate supersede NEW OLD` — not prose-only or generic `related`
+- **Checkpoints over sprawl**: prefer checkpoint nodes summarizing winning state over duplicating manual screens
+- **Manual vs code**: manual = designing/canonical_spec; shipped code = developing/current; gaps are **deviations** to graph, not silent overrides
+
+Default posture: **iterate in `developing`, verify, then curate the brain** — not big-bang spec-first builds against stale graph metadata.
+
+## Commit protocol (required)
+
+**Commit all reasonable amounts of change** before moving on or ending a session. Do not leave substantial WIP uncommitted across agent handoffs.
+
+**When to commit**
+
+- **Do commit:** a working slice (feature, fix, test pass, curation pass, rule/doc update tied to shipped behavior)
+- **Do not commit:** half-broken experiments, secrets (`.env`, keys), or noise (`tmp/`, debug logs) — finish or revert first
+- **One logical change per commit** when possible; split unrelated work (e.g. loop UI vs grapher curation) into separate commits
+
+**Message format** — detailed, why-first, with **grapher node IDs**:
+
+```
+<short subject line — imperative, ~72 chars>
+
+<1–3 sentences: what changed and why, not a file list.>
+
+Graph:
+- implements / verified_by: <finding-or-checkpoint-id>
+- references: <concept-screen-NN or spec node>
+- supersedes: <old-id> (if behavior replaced)
+- stage: developing | maintaining | planning
+
+Tests: <smoke command or manual step, if any>
 ```
 
-Long summary:
+**Before committing**
+
+1. Run relevant smoke/tests for the area touched
+2. Upsert or update grapher **findings** for non-trivial work (`grapher add --type finding …`, link with `implements` / `verified_by` / `deviates_from` as appropriate)
+3. `git status` + `git diff` — stage only what belongs in this slice
+4. Commit with the message above; **never** skip hooks or force-push unless the user explicitly asks
+
+**Example**
+
+```
+Fix step sequencer render crash after per-track SEQ mode.
+
+trackMode was referenced before const initialization in renderSequencer(),
+blanking the LCD when opening STEP SEQ from the loop track menu.
+
+Graph:
+- verified_by: finding-loop-d2-step-sequencer
+- references: concept-screen-24, checkpoint-current-loop-engine
+- stage: maintaining
+
+Tests: node import of renderSequencer; bin/smoke-loop-control
+```
+
+Agents in adjacent repos (e.g. `/home/sean/Documents/experiments/grapher`) follow the same rule for tooling changes that affect CASSIO curation; cite cassio graph nodes when the commit is product-facing.
+
+## Truth status (required for findings, decisions, specs)
+
+Set explicit truth status when adding or updating nodes:
+
+- `current` — reflects present reality
+- `canonical_spec` — authoritative specification or plan
+- `proposed` — draft or under consideration
+- `superseded` — replaced; link with `grapher curate supersede NEW OLD`
+- `historical` — past context, still useful
+- `deprecated` / `rejected` — do not act on
+
+Use `grapher curate status <id> <status>` or include status when enriching nodes. Do not overload tags for truth.
+
+## Lifecycle stages
+
+Tag work with lifecycle stage when relevant (`--stage` on init; node `stage` field):
+
+`ideation` → `designing` → `planning` → `developing` → `launching` → `maintaining`
+
+Graph kinds (`knowledge`, `design`, `decision`, `roadmap`, etc.) describe *what* the graph emphasizes; stages describe *where* work sits. Both are orthogonal.
+
+## Ingest a directory — full deep coverage required
+
+When the user points grapher at a directory, **all** documents, images, videos, and audio in that directory must be ingested with deep understanding. Do not skip media. Do not leave pending stubs. Do not stop at paths.
 
 ```bash
-grapher add --id <node_id> --type image --title "..." --path "..." --content - <<'EOF'
-...summary...
-EOF
+grapher ingest ./path/to/dir
+```
+
+Then for **every** item in `pending`:
+
+1. **Consume it deeply** (read / see / watch / listen — as appropriate)
+2. **Understand it** in project context
+3. **Graph that understanding** (path is secondary; `content` is the knowledge):
+
+```bash
+grapher add --id <node_id> --type document|image|video|audio --title "<name>" \
+  --path <path> --content "<deep grounded understanding>" --tags relevant,tags
 ```
 
 4. `grapher link` related nodes (`references`, `depicts`, `applies_to`, `related`, …)
+5. Confirm with `grapher scan <DIR>` — **pending 0**, all target files **indexed**. Keep going until done.
+
+Path-only or shallow media nodes = **failed ingest**.
 
 ## Persist other discoveries
 
@@ -52,6 +182,7 @@ grapher add --type finding --title "..." --content "..." --tags ...
 Rules:
 
 - Prefer search over re-deriving known context
-- Summaries in `content`; originals via `--path` — do not dump whole files into the graph
-- After ingest, process **all** pending (or say what’s left) before moving on
+- Put understanding in `content`; keep originals via `--path`
+- Media (image/video/audio) is first-class and must be deeply graphed
 - `.grapher/knowledge.json` is shared memory across agents/sessions
+- Use `grapher … --json` when you need to parse results
