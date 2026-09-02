@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+URL="${CASSIO_URL:-https://127.0.0.1:3000/}"
+echo "smoke-loop-record → $URL"
+exec node test/smoke/loop_record.mjs "$URL"
