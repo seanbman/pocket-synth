@@ -116,7 +116,7 @@ export function renderLoopTrackView(state) {
         </div>
         <div class="muted loop-thint">TAP ROW · ▲▼ LANE · ◀▶ ±1s · L${sel}${selEmpty ? "" : ` @ ${selOff}s`}</div>
         <div class="lib-hint">${hintOk} · HOLD B PATTERN · HOLD C OPTIONS</div>
-        <div class="lib-hint muted">A +LANE · HOLD A −LANE · ${selEmpty ? "D LIST" : "D SAVE/UNDO"} · B MUTE · C SOLO</div>
+        <div class="lib-hint muted">REC · PIANO → TRACK · A +LANE · HOLD A −LANE · ${selEmpty ? "D LIST" : "D SAVE/UNDO"} · B MUTE · C SOLO</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">+LANE</span></div>

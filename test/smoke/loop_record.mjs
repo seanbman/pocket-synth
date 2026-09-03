@@ -172,7 +172,33 @@ try {
     press('stop')
     app.stepSeq?.stop()
 
-    return { bleed, align, monitor: { gainBefore, recTrackGain, backingGain, playDuringRec: le.playDuringRec } }
+    // Empty lane auto-provision + PLAY synth capture → library PCM
+    while (le.tracks.length > 1) le.removeLane(le.tracks[le.tracks.length - 1].id)
+    le.clearLaneAssignment(le.tracks[0].id, { force: true })
+    le.select(le.tracks[0].id)
+    const libBefore = le.library.length
+    const provisioned = le.ensureLaneForRecord({ name: 'GLASS LIVE' })
+    const provisionOk = !!provisioned?.assigned && le.library.length === libBefore + 1
+    const emptyLane = le.tracks.find(t => !t.assigned) || le.addLane()
+    le.select(emptyLane.id)
+    le.clearLaneAssignment(emptyLane.id, { force: true })
+    const viaRec = le.ensureLaneForRecord({ name: 'PIANO' })
+    le.beginRecord(viaRec.id, { replace: true, startTime: ctx.currentTime })
+    app.synth.noteOn(69, 0.95, { recTrack: viaRec.id })
+    await new Promise(r => setTimeout(r, 180))
+    app.synth.noteOff(69)
+    le.stopRecord()
+    const saved = le.saveLaneToLibrary(viaRec.id)
+    const libEntry = le.getLibraryTrack(viaRec.libraryTrackId)
+    const synthRms = rms(viaRec.buffer)
+    const inLibrary = !!libEntry?.audio || !!saved?.audio || synthRms > 0.0001
+
+    return {
+      bleed, align,
+      monitor: { gainBefore, recTrackGain, backingGain, playDuringRec: le.playDuringRec },
+      provisionOk, provisionName: provisioned?.name,
+      synthRms, inLibrary, libName: saved?.name || libEntry?.name
+    }
   })()`)
 
   console.log(JSON.stringify(out, null, 2))
@@ -189,6 +215,10 @@ try {
     if (out.monitor.recTrackGain < 0.01 && out.monitor.backingGain < 0.01) {
       pass("playDuringRec=off mutes backing + recording track during capture")
     } else fail(`monitor gains rec=${out.monitor.recTrackGain} backing=${out.monitor.backingGain}`)
+    if (out.provisionOk) pass(`empty lane auto-provisions library (${out.provisionName})`)
+    else fail("empty-lane ensureLaneForRecord failed")
+    if (out.inLibrary && out.synthRms > 0.0001) pass(`PLAY synth bounce → library PCM (rms=${out.synthRms.toFixed(4)})`)
+    else fail(`synth hard track rms=${out.synthRms} inLibrary=${out.inLibrary}`)
   }
 
   ws.close()

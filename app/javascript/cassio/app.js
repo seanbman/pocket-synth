@@ -2282,6 +2282,20 @@ export class CassioApp {
       return
     }
 
+    // Empty lane: auto-provision a hard library track named from the PLAY sound.
+    if (!this.loopEngine.selectedTrack?.assigned) {
+      const soundName = this.sound && !isKit(this.sound)
+        ? String(this.sound.name || "").trim().slice(0, 18)
+        : null
+      const lane = this.loopEngine.ensureLaneForRecord({ name: soundName || null })
+      if (!lane?.assigned) {
+        this.toast("PICK TRACK FIRST")
+        this.looper.openTrackList({ assignLane: this.loopEngine.selected })
+        return
+      }
+      this.toast(`REC → ${lane.name}`)
+    }
+
     const track = this.loopEngine.armForRecord(this.loopEngine.selected)
     if (!track) {
       this.toast("PICK TRACK FIRST")
@@ -2302,7 +2316,8 @@ export class CassioApp {
           } else {
             this.loopEngine.stopPlayback()
           }
-          this.toast(`TRK ${track.id} TAKE`)
+          const entry = this.loopEngine.saveLaneToLibrary(track.id)
+          this.toast(entry ? `SAVED ${entry.name}` : `TRK ${track.id} TAKE`)
           this.#persist()
           this.render()
         }
@@ -3744,29 +3759,28 @@ export class CassioApp {
   #keyDownTrack(trackId, degree) {
     const midi = this.#baseMidi() + degree
     const recTrack = this.#recTrackLive()
-    const { slot, assigned, patch } = this.#padSound(trackId)
-    if (!assigned || isKit(assigned)) {
-      this.toast(`TRK ${trackId} EMPTY`)
+    // LOOP piano uses the PLAY sound (synth modules), bounced via recTap when recording.
+    const sound = this.sound
+    if (!sound || isKit(sound) || sound.playable === false) {
+      this.toast("PICK SOUND")
       return
     }
     if (this.heldKeys.has(degree)) {
       this.#keyUpTrack(trackId, degree, { force: true })
     }
     this.heldKeys.set(degree, midi)
-    const vel = Math.min(1, 0.95 * this.#padGain(slot))
-    if (isDrum(assigned)) {
+    const patch = patchFromSound(sound, sound.patch || {})
+    const vel = 0.9
+    if (isDrum(sound)) {
       this.drums.applyPatch(patch)
-      this.drums.setPan(slot.pan ?? 0)
       this.drums.noteOn(midi, vel, { recTrack })
-    } else if (isSample(assigned)) {
-      this.sampler.loadBufferForSound(assigned)
+    } else if (isSample(sound)) {
+      this.sampler.loadBufferForSound(sound)
       this.sampleVoice.applyPatch(patch)
-      this.sampleVoice.setPan(slot.pan ?? 0)
       this.sampleVoice.noteOn(midi, vel, { loop: !!this.project.hold, recTrack })
     } else {
-      this.padSynth.applyPatch(patch)
-      this.padSynth.setPan(slot.pan ?? 0)
-      this.padSynth.noteOn(midi, vel, { recTrack })
+      this.synth.applyPatch(patch)
+      this.synth.noteOn(midi, vel, { recTrack })
     }
     this.root.querySelector(`[data-action="key-${degree}"]`)?.classList.add("active")
   }
@@ -3782,10 +3796,9 @@ export class CassioApp {
     const midi = this.heldKeys.get(degree)
     this.heldKeys.delete(degree)
     if (midi == null) return
-    const { assigned } = this.#padSound(trackId)
-    if (isDrum(assigned)) this.drums.noteOff(midi)
-    else if (isSample(assigned)) this.sampleVoice.noteOff(midi)
-    else this.padSynth.noteOff(midi)
+    if (this.#keyboardIsDrum()) this.drums.noteOff(midi)
+    else if (this.#keyboardIsSample()) this.sampleVoice.noteOff(midi)
+    else this.synth.noteOff(midi)
   }
 
   #keyUp(degree, { force = false } = {}) {

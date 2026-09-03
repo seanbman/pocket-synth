@@ -1,6 +1,6 @@
 {
   "checkpoint_id": "checkpoint-current-loop-engine",
-  "refreshed_at": "2026-09-03T08:54:59+00:00",
+  "refreshed_at": "2026-09-03T09:13:53+00:00",
   "title": "Current: loop engine",
   "node_ids": [
     "finding-loop-d2-step-sequencer",
@@ -9,7 +9,8 @@
     "concept-screen-21",
     "concept-screen-24",
     "finding-lane-ux-cleanup",
-    "finding-lane-clip-window-audio"
+    "finding-lane-clip-window-audio",
+    "finding-live-synth-hard-tracks"
   ],
   "graph_version": 2
 }

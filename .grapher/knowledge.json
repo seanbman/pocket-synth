@@ -4494,7 +4494,7 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-03T08:54:59+00:00"
+      "updated_at": "2026-09-03T09:13:53+00:00"
     },
     "checkpoint-current-ui-controls": {
       "id": "checkpoint-current-ui-controls",
@@ -4790,6 +4790,30 @@
       "meta": {},
       "created_at": "2026-09-03T08:54:57+00:00",
       "updated_at": "2026-09-03T08:54:58+00:00",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-live-synth-hard-tracks": {
+      "id": "finding-live-synth-hard-tracks",
+      "type": "finding",
+      "title": "Live piano/synth REC bounces to hard library tracks",
+      "content": "LOOP keyboard now plays the PLAY sound (synth modules / samples / drums), not the pad for the lane id. While recording, noteOn passes recTrack so GlassPoly/Sample/Drum tap recTap into the armed lane PCM.\n\nEmpty-lane REC: ensureLaneForRecord() creates a library track (named from the PLAY sound) and assigns it before armForRecord. Take complete (onDone / stopRecord) calls saveLaneToLibrary so the bounce is a hard droppable asset on TRACK LIST. Timeline pink clip is lane.buffer.\n\nHint: REC · PIANO → TRACK. Pads unchanged. Mic still not on loop recTap.\n\nVerified: bin/smoke-loop-record — empty-lane provision + PLAY synth energy in library PCM.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "record",
+        "synth",
+        "library"
+      ],
+      "meta": {},
+      "created_at": "2026-09-03T09:13:50+00:00",
+      "updated_at": "2026-09-03T09:13:53+00:00",
       "status": "current",
       "workflow_state": "not_applicable",
       "verification": "unverified",
@@ -7350,6 +7374,31 @@
       "to": "finding-lane-clip-window-audio",
       "rel": "derived_from",
       "created_at": "2026-09-03T08:54:59+00:00"
+    },
+    {
+      "from": "finding-live-synth-hard-tracks",
+      "to": "concept-recording-behavior",
+      "rel": "implements",
+      "created_at": "2026-09-03T09:13:53+00:00"
+    },
+    {
+      "from": "finding-live-synth-hard-tracks",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T09:13:53+00:00"
+    },
+    {
+      "from": "finding-live-synth-hard-tracks",
+      "to": "finding-loop-record-overdub-fix",
+      "rel": "related",
+      "created_at": "2026-09-03T09:13:53+00:00",
+      "note": "Same recTap capture; source is PLAY voice"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-live-synth-hard-tracks",
+      "rel": "derived_from",
+      "created_at": "2026-09-03T09:13:53+00:00"
     }
   ]
 }

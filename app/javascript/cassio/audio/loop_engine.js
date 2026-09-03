@@ -437,6 +437,20 @@ export class LoopEngine {
     return true
   }
 
+  /** Ensure selected lane has a library track so REC can arm (auto-create if empty). */
+  ensureLaneForRecord({ name = null } = {}) {
+    const lane = this.tracks.find((t) => t.id === this.selected) || this.tracks[0]
+    if (!lane) return null
+    if (lane.assigned) return lane
+    const entry = this.createLibraryTrack({
+      name: name || nextLibraryTrackName(this.library),
+      lengthBars: this.lengthBars
+    })
+    this.assignLibraryToLane(lane.id, entry.id)
+    this.select(lane.id)
+    return this.tracks.find((t) => t.id === lane.id) || null
+  }
+
   getLibraryTrack(libraryId) {
     return this.library.find((e) => e.id === libraryId) || null
   }
