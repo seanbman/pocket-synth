@@ -779,6 +779,26 @@ html, body {
   min-height: 0;
   overflow: hidden;
 }
+.loop-menu-screen .edit-body,
+.loop-options-screen .edit-body,
+.track-list-screen .edit-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.loop-menu-screen .sound-name,
+.loop-options-screen .sound-name,
+.track-list-screen .sound-name,
+.loop-menu-screen .muted,
+.loop-options-screen .muted {
+  flex-shrink: 0;
+}
+.loop-menu-screen .lib-list,
+.loop-options-screen .lib-list,
+.track-list-screen .lib-list {
+  flex: 1;
+  min-height: 0;
+}
 .edit-meter { margin: 0.35rem 0; }
 .meter-track {
   height: 0.45rem;
@@ -1006,6 +1026,8 @@ html, body {
   grid-template-columns: 3.2rem max-content;
   gap: 0.15rem;
   align-items: center;
+  cursor: pointer;
+  touch-action: pan-x pan-y;
 }
 .loop-trow.sel .loop-tlabel { color: var(--pink); }
 .loop-trow.sel .loop-lane { outline: 1px solid var(--pink); outline-offset: -1px; }
@@ -1039,6 +1061,8 @@ html, body {
 }
 .loop-clip.tone-a { background: var(--pink); }
 .loop-clip.tone-b { background: var(--green); }
+.loop-clip.seq { opacity: 0.85; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); }
+.loop-trow.empty .loop-tlabel { opacity: 0.55; }
 .loop-ph {
   position: absolute;
   top: 0;

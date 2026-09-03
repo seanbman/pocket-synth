@@ -4494,7 +4494,7 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-03T07:34:02+00:00"
     },
     "checkpoint-current-ui-controls": {
       "id": "checkpoint-current-ui-controls",
@@ -4517,7 +4517,7 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-03T07:33:25+00:00"
     },
     "checkpoint-current-persistence": {
       "id": "checkpoint-current-persistence",
@@ -4673,6 +4673,77 @@
       "created_at": "2026-09-02T20:44:42+00:00",
       "updated_at": "2026-09-02T20:44:42+00:00",
       "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "mutually-exclusive-loop-vs-seq-play-context-c23181ba": {
+      "id": "mutually-exclusive-loop-vs-seq-play-context-c23181ba",
+      "type": "finding",
+      "title": "Mutually exclusive loop vs seq play context",
+      "content": "Transport PLAY sets playContext to loop (timeline/MIX/PLAY) or seq (sequencer screens). #applyPlayContext runs loop PCM OR step seq, never both. StepSequencer modes: global pattern A–D or single track pattern when editing track step seq — no longer auto-plays all track.seq from loop view. Screen changes while playing flip context via #onPlayContextBoundary.",
+      "path": null,
+      "tags": [
+        "transport",
+        "sequencer",
+        "loop",
+        "architecture"
+      ],
+      "meta": {},
+      "created_at": "2026-09-02T21:11:27+00:00",
+      "updated_at": "2026-09-02T21:11:27+00:00",
+      "status": "unclassified",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "track-library-growing-arrangement-lanes-62804b6f": {
+      "id": "track-library-growing-arrangement-lanes-62804b6f",
+      "type": "finding",
+      "title": "Track library + growing arrangement lanes",
+      "content": "Arrangement lanes are variable (create/delete). Empty lane has no track — OK opens TRACK LIST with preview/select/NEW/DEL. Assigning places a working copy: pink clip width=lengthBars, offsetSec=horizontal position; clips render for PCM and/or track.seq hits. Edit on the fly marks dirty; SAVE writes to library; replace/unassign with dirty confirms discard. Loop playContext schedules PCM + arrangement step seq together; sequencer screens still isolate pattern edit. Migrates legacy fixed 6 loop.tracks into library+lanes.",
+      "path": null,
+      "tags": [
+        "loop",
+        "arrangement",
+        "library",
+        "sequencer",
+        "architecture"
+      ],
+      "meta": {},
+      "created_at": "2026-09-03T05:41:59+00:00",
+      "updated_at": "2026-09-03T05:43:14+00:00",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-lane-ux-cleanup": {
+      "id": "finding-lane-ux-cleanup",
+      "type": "finding",
+      "title": "Lane UX: menu scroll, TRACK N names, DROP PATTERN, hold-A delete",
+      "content": "Lane UX cleanup (Sep 2026), verified by bin/smoke-loop-control + bin/smoke-sequencer.\n\nMENU SCROLL: .loop-menu-screen .edit-body is a flex column with min-height:0 so .lib-list overflows; app.js render for loop-menu / loop-options / track-list scrollIntoView({block:nearest}) on .lib-row.selected (same as library).\n\nNAMES: empty lanes always EMPTY. Assigned lanes show the full library name (capped, no .split().pop() role labels like SHAKER). New library tracks default to TRACK 1, TRACK 2, … via nextLibraryTrackName. sanitizeLaneDisplayName strips mockup/pad presets (Drums, Bass, Chord, Lead, Fx, Shaker, Kick 01, TRK N, …) on create, hydrate, and legacy loop.tracks migrate; custom names like MY LOOP are kept.\n\nPATTERN ON LANE: TRACK STEP SEQ is removed from the track menu and Hold B. Hold B on the timeline opens global Pattern Seq (A–D, 6 pad lanes). Menu row DROP PATTERN {A}… bakes a working copy of project.seq.patterns[current] onto the selected lane (empty lanes get a new library track). Stored as lane/library.pattern (sanitizePattern), not shared live reference. Clip length = ceil(steps/16) bars unless PCM is longer. Arrangement PLAY schedules each lane's baked 6-lane pattern (StepSequencer #armBakedPattern, offsetSec applied); legacy track.seq still hydrates into a one-lane pattern bake if no pattern blob. Library Save writes the working copy; Pattern Seq editor remains the catalog.\n\nDELETE LANE: A +LANE still adds. Hold A opens DELETE LANE confirm (same as menu DELETE LANE). Last-lane guard unchanged (NEED 1 LANE). Hints: HOLD B PATTERN · A +LANE · HOLD A −LANE.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "arrangement",
+        "pattern",
+        "ui"
+      ],
+      "meta": {},
+      "created_at": "2026-09-03T07:33:21+00:00",
+      "updated_at": "2026-09-03T07:33:24+00:00",
+      "status": "current",
       "workflow_state": "not_applicable",
       "verification": "unverified",
       "evidence": [],
@@ -7113,6 +7184,80 @@
       "to": "concept-cassio-project",
       "rel": "applies_to",
       "created_at": "2026-09-02T17:54:40+00:00"
+    },
+    {
+      "from": "mutually-exclusive-loop-vs-seq-play-context-c23181ba",
+      "to": "cassio-abstraction-sounds-song-1116fd88",
+      "rel": "related",
+      "created_at": "2026-09-03T05:42:02+00:00"
+    },
+    {
+      "from": "track-library-growing-arrangement-lanes-62804b6f",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T05:43:13+00:00"
+    },
+    {
+      "from": "track-library-growing-arrangement-lanes-62804b6f",
+      "to": "cassio-abstraction-sounds-song-1116fd88",
+      "rel": "related",
+      "created_at": "2026-09-03T05:43:13+00:00"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T07:33:24+00:00",
+      "note": "Lane UX on current loop engine"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "checkpoint-current-ui-controls",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T07:33:24+00:00",
+      "note": "Menu scroll + hold-A/B hints"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "track-library-growing-arrangement-lanes-62804b6f",
+      "rel": "related",
+      "created_at": "2026-09-03T07:33:24+00:00",
+      "note": "Builds on library + growing lanes"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "finding-loop-d2-step-sequencer",
+      "rel": "related",
+      "created_at": "2026-09-03T07:33:25+00:00",
+      "note": "DROP PATTERN bakes Screen 24 onto a lane"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "concept-screen-21",
+      "rel": "implements",
+      "created_at": "2026-09-03T07:33:25+00:00",
+      "note": "Timeline labels EMPTY / TRACK N; hold A/B"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "concept-screen-22",
+      "rel": "implements",
+      "created_at": "2026-09-03T07:33:25+00:00",
+      "note": "Track menu scroll + DROP PATTERN"
+    },
+    {
+      "from": "finding-lane-ux-cleanup",
+      "to": "concept-screen-24",
+      "rel": "implements",
+      "created_at": "2026-09-03T07:33:25+00:00",
+      "note": "Hold B Pattern Seq; baked pattern on arrangement play"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-lane-ux-cleanup",
+      "rel": "derived_from",
+      "created_at": "2026-09-03T07:34:01+00:00",
+      "note": "Lane UX cleanup is current loop engine truth"
     }
   ]
 }

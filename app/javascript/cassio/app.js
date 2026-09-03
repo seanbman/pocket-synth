@@ -25,6 +25,7 @@ import {
   renderSampleSave, renderAssignSample
 } from "cassio/screens/sampler"
 import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx, LOOP_BAR_WIDTH_PX } from "cassio/screens/loop"
+import { renderTrackList } from "cassio/screens/track_list"
 import { SamplerController, SAMPLER_SCREENS } from "cassio/sampler_controller"
 import { LoopController, LOOP_SCREENS } from "cassio/loop_controller"
 import { SeqController, SEQ_SCREENS } from "cassio/seq_controller"
@@ -36,6 +37,7 @@ import { fxKnob01 } from "cassio/audio/fx_params"
 import { knobParamsAt } from "cassio/screens/settings_list"
 import { Metronome } from "cassio/audio/metronome"
 import { LoopEngine } from "cassio/audio/loop_engine"
+import { storedToBuffer } from "cassio/audio/sample_io"
 
 const NEW_KIT_ENTRY = {
   id: "__new-kit__",
@@ -149,11 +151,16 @@ export class CassioApp {
     this._loopNavHoldInterval = null
     this._loopNavHoldDir = null
     this._loopNavSecMode = false
+    this._softHoldKey = null
+    this._softHoldTimer = null
+    this._softHeld = null
     this.loopTimelineDirty = false
     this.loopScrollLeft = 0
     this.loopScrollTop = 0
     this.loopScrollFollow = true
     this.seqTrackId = null
+    this.playContext = null // null | "loop" | "seq" — only one auditions at a time
+    this._renderScreen = undefined
     this.#bindHardware()
     this.#bindPitchWheel()
     this.#bindKeyboardPointer()
@@ -444,6 +451,74 @@ export class CassioApp {
     this.#transportStop()
   }
 
+  /** Public transport play for smoke tests. */
+  transportPlayPublic() {
+    return this.#transportPlay()
+  }
+
+  /** Public play-context apply for loop controller undo/restart. */
+  applyPlayContextPublic(origin) {
+    this.#applyPlayContext(origin)
+  }
+
+  /** Preview a library track from the track list (seq and/or PCM). */
+  previewLibraryTrack(entry, origin) {
+    this.stopLibraryPreview()
+    if (!entry || !this.engine?.ready) return
+    const t0 = origin ?? this.engine.now() + 0.05
+    this._libPreviewSources = []
+    if (entry.audio && this.engine.ctx) {
+      const buf = storedToBuffer(this.engine.ctx, entry.audio)
+      if (buf) {
+        const src = this.engine.ctx.createBufferSource()
+        src.buffer = buf
+        src.connect(this.engine.master)
+        try { src.start(t0) } catch (_) { /* ignore */ }
+        this._libPreviewSources.push(src)
+      }
+    }
+    const previewTrack = {
+      id: -1,
+      assigned: true,
+      mute: false,
+      padSlot: entry.padSlot || 1,
+      seq: entry.seq
+    }
+    this._libPreviewTracks = [previewTrack]
+    this._libPreviewPrevProvider = this.stepSeq.trackProvider
+    this.stepSeq.trackProvider = () => this._libPreviewTracks
+    if (!this.transport.playing) {
+      this.transport.playAt(t0)
+      this._libPreviewStartedTransport = true
+    }
+    this.stepSeq.start(t0, { mode: "arrangement" })
+  }
+
+  stopLibraryPreview() {
+    if (this._libPreviewSources) {
+      for (const src of this._libPreviewSources) {
+        try { src.stop(0) } catch (_) { /* ignore */ }
+      }
+      this._libPreviewSources = []
+    }
+    if (this._libPreviewPrevProvider) {
+      this.stepSeq.trackProvider = this._libPreviewPrevProvider
+      this._libPreviewPrevProvider = null
+    }
+    this._libPreviewTracks = null
+    if (this._libPreviewStartedTransport) {
+      this._libPreviewStartedTransport = false
+      if (this.playContext == null) {
+        this.transport.stop()
+        this.stepSeq.stop()
+      }
+    } else if (this.playContext === "loop" && this.transport.playing) {
+      this.#applyPlayContext()
+    } else if (!this.transport.playing) {
+      this.stepSeq.stop()
+    }
+  }
+
   /** Display name of the sound on pad n (sequencer lane labels). */
   padSoundName(n) {
     const { assigned } = this.#padSound(n)
@@ -562,6 +637,9 @@ export class CassioApp {
 
   render() {
     this.#stopViz()
+    const prevScreen = this._renderScreen
+    this._renderScreen = this.screen
+    if (prevScreen !== undefined && prevScreen !== this.screen) this.#onPlayContextBoundary()
     if (this.bootError) {
       this.vscreen.innerHTML = renderBootError(this.bootError)
     } else if (!this.splashDone || this.screen === "splash") {
@@ -586,19 +664,25 @@ export class CassioApp {
       this.vscreen.innerHTML = renderLoopTrackView(this.state())
       requestAnimationFrame(() => {
         this.#syncLoopTimeline()
-        requestAnimationFrame(() => {
-          this.#syncLoopTimeline()
-          if (this.transport.playing && this.#loopBackingAudible()) {
-            this.loopEngine.startPlayback(this.loopEngine._playOrigin || this.engine.now())
-          }
-        })
+        requestAnimationFrame(() => this.#syncLoopTimeline())
       })
     } else if (this.screen === "loop-menu") {
       this.vscreen.innerHTML = renderLoopTrackMenu(this.state())
+      requestAnimationFrame(() => {
+        this.vscreen.querySelector(".lib-row.selected")?.scrollIntoView({ block: "nearest" })
+      })
     } else if (this.screen === "loop-options") {
       this.vscreen.innerHTML = renderLoopOptions(this.state())
+      requestAnimationFrame(() => {
+        this.vscreen.querySelector(".lib-row.selected")?.scrollIntoView({ block: "nearest" })
+      })
     } else if (this.screen === "loop-fx") {
       this.vscreen.innerHTML = renderLoopFx(this.state())
+    } else if (this.screen === "track-list") {
+      this.vscreen.innerHTML = renderTrackList(this.state())
+      requestAnimationFrame(() => {
+        this.vscreen.querySelector(".lib-row.selected")?.scrollIntoView({ block: "nearest" })
+      })
     } else if (this.screen === "sequencer") {
       this.vscreen.innerHTML = renderSequencer(this.state())
       this.seqCtl.startPlayheadLoop()
@@ -930,13 +1014,37 @@ export class CassioApp {
         this.loopScrollFollow = false
       }, { passive: true })
     }
+    this.#bindLoopTimelineTap()
+  }
+
+  /** Tap a timeline row to focus that track without opening the track menu. */
+  #bindLoopTimelineTap() {
+    const grid = this.vscreen.querySelector(".loop-tgrid")
+    if (!grid || grid.dataset.loopTapBound) return
+    grid.dataset.loopTapBound = "1"
+    let downX = 0
+    let downY = 0
+    grid.addEventListener("pointerdown", (e) => {
+      if (this.screen !== "loop-tracks") return
+      downX = e.clientX
+      downY = e.clientY
+    }, { passive: true })
+    grid.addEventListener("pointerup", (e) => {
+      if (this.screen !== "loop-tracks") return
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) > 12) return
+      const row = e.target.closest(".loop-trow[data-track-id]")
+      if (!row) return
+      const id = Number(row.dataset.trackId)
+      if (!id) return
+      this.looper.selectTrack(id)
+    })
   }
 
   /** Pan horizontal scroll so the selected track clip stays visible. */
   #followLoopTimelineScroll(scroller, maxScroll) {
     const le = this.loopEngine
     const t = le.selectedTrack
-    if (!t) return
+    if (!t?.assigned) return
 
     const timelineBars = le.timelineBars()
     const timelineSec = le.timelineSec()
@@ -1155,7 +1263,7 @@ export class CassioApp {
     this.metro.tapClick()
     if (this.transport.playing) {
       this.transport.resyncFromNow()
-      this.stepSeq.resync(this.transport._origin)
+      this.#applyPlayContext(this.transport._origin)
     }
     if (result.locked) this.toast(`BPM ${result.bpm}`)
     else this.toast("TAP TEMPO…")
@@ -1600,7 +1708,36 @@ export class CassioApp {
 
   #handleAction(action, el, phase, event) {
     if (action.startsWith("soft-")) {
-      if (phase === "down") this.#softKey(action.split("-")[1])
+      const key = action.split("-")[1]
+      if (this.screen === "loop-tracks" && (key === "a" || key === "b" || key === "c")) {
+        if (phase === "down") {
+          this._softHeld = null
+          this._softHoldKey = key
+          this._softHoldTimer = setTimeout(() => {
+            this._softHoldTimer = null
+            this._softHeld = key
+            if (key === "a") {
+              this.looper.askDeleteLane("loop-tracks")
+            } else if (key === "b") {
+              this.seqCtl.open()
+            } else {
+              this.screen = "loop-options"
+              this.loopOptIndex = 0
+              this.render()
+            }
+          }, 380)
+        } else if (this._softHoldKey === key) {
+          if (this._softHoldTimer) {
+            clearTimeout(this._softHoldTimer)
+            this._softHoldTimer = null
+          }
+          if (!this._softHeld) this.#softKey(key)
+          this._softHeld = null
+          this._softHoldKey = null
+        }
+        return
+      }
+      if (phase === "down") this.#softKey(key)
       return
     }
     if (action.startsWith("pad-")) {
@@ -2056,8 +2193,8 @@ export class CassioApp {
     if (this.transport.recording) return
     const origin = this.engine.now() + 0.05
     this.transport.playAt(origin)
-    if (this.#loopBackingAudible()) this.loopEngine.startPlayback(origin)
-    this.stepSeq.start(origin)
+    this.playContext = this.#resolvePlayContext()
+    this.#applyPlayContext(origin)
     this.render()
   }
 
@@ -2066,8 +2203,61 @@ export class CassioApp {
     return LOOP_SCREENS.has(this.screen) || MIX_SCREENS.has(this.screen) || this.screen === "play"
   }
 
+  #seqAudible() {
+    return SEQ_SCREENS.has(this.screen)
+  }
+
   #metroAudible() {
     return this.metro.on
+  }
+
+  #resolvePlayContext() {
+    if (this.#seqAudible()) return "seq"
+    if (this.#loopBackingAudible()) return "loop"
+    return "loop"
+  }
+
+  /** Keep loop PCM and step-seq audition mutually exclusive while transport runs. */
+  #onPlayContextBoundary() {
+    if (!this.transport.playing) return
+    const onSeq = this.#seqAudible()
+    const onLoop = this.#loopBackingAudible()
+    if (onSeq && this.playContext !== "seq") {
+      this.playContext = "seq"
+      this.#applyPlayContext()
+    } else if (onLoop && !onSeq && this.playContext !== "loop") {
+      this.playContext = "loop"
+      this.#applyPlayContext()
+    }
+  }
+
+  #applyPlayContext(origin) {
+    if (!this.transport.playing) {
+      this.stepSeq.stop()
+      this.loopEngine.stopPlayback()
+      return
+    }
+    const t = origin ?? this.transport._origin ?? this.engine.now()
+    if (this.playContext === "seq") {
+      this.loopEngine.stopPlayback()
+      this.#startStepSeq(t)
+    } else {
+      // Arrangement: PCM clips + per-lane step patterns together
+      this.loopEngine.startPlayback(t)
+      this.stepSeq.start(t, { mode: "arrangement" })
+    }
+  }
+
+  #startStepSeq(origin) {
+    if (!this.#seqAudible()) {
+      this.stepSeq.stop()
+      return
+    }
+    const trackId = this.seqTrackId
+    this.stepSeq.start(origin, {
+      mode: trackId != null ? "track" : "global",
+      trackId: trackId ?? undefined
+    })
   }
 
   #transportStop() {
@@ -2075,6 +2265,7 @@ export class CassioApp {
     if (this.loopEngine.recording) this.loopEngine.stopRecord()
     this.loopEngine.stopPlayback()
     this.stepSeq.stop()
+    this.playContext = null
     this.#syncLeds()
     this.render()
   }
@@ -2092,6 +2283,11 @@ export class CassioApp {
     }
 
     const track = this.loopEngine.armForRecord(this.loopEngine.selected)
+    if (!track) {
+      this.toast("PICK TRACK FIRST")
+      this.looper.openTrackList({ assignLane: this.loopEngine.selected })
+      return
+    }
     const replace = track.mode === "replace"
     const countIn = this.project.loop.countInBars ?? 1
 
@@ -2119,8 +2315,8 @@ export class CassioApp {
       }
       this.transport.setRecording(true)
       if (restartPlayback) {
-        this.loopEngine.startPlayback(startTime)
-        this.stepSeq.start(startTime)
+        this.playContext = "loop"
+        this.#applyPlayContext(startTime)
       }
       this.toast(replace ? "REPLACE" : "RECORDING")
       this.render()
@@ -3323,6 +3519,26 @@ export class CassioApp {
     if (this.confirmAction === "clear-loop-track") {
       this.confirmAction = null
       this.looper.clearSelected()
+      return
+    }
+    if (this.confirmAction === "delete-lane") {
+      this.confirmAction = null
+      this.looper.confirmDeleteLane()
+      return
+    }
+    if (this.confirmAction === "unassign-lane-dirty") {
+      this.confirmAction = null
+      this.looper.confirmUnassignDirty()
+      return
+    }
+    if (this.confirmAction === "replace-lane-dirty") {
+      this.confirmAction = null
+      this.looper.confirmReplaceDirty()
+      return
+    }
+    if (this.confirmAction === "delete-library-track") {
+      this.confirmAction = null
+      this.looper.confirmDeleteLibraryTrack()
       return
     }
     if (this.confirmAction === "clear-seq-lane") {

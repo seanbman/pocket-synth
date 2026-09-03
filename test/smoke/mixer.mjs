@@ -57,6 +57,10 @@ try {
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
 
+    const le = app.loopEngine
+    const lib = le.createLibraryTrack({ name: 'MIX2' })
+    le.assignLibraryToLane(2, lib.id)
+
     app.mixer.open('menu')
     if (app.screen !== 'mixer') return { fatal: 'mixer not open', screen: app.screen }
 

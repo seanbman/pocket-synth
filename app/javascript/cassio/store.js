@@ -257,6 +257,10 @@ export function sanitizeTrackSeq(seq) {
   return out
 }
 
+export function trackSeqHasHits(seq) {
+  return Array.isArray(seq?.steps) && seq.steps.some((s) => s?.on)
+}
+
 /** Step sequencer state: four patterns (A–D), six lanes = pads 1–6. */
 export function defaultSeq() {
   const patterns = {}
@@ -320,6 +324,103 @@ export function quantizeGridSec(bpm, quantize) {
   return 0
 }
 
+/** Bars implied by a step pattern (16ths → bars @ 4/4). */
+export function seqLengthBars(seq) {
+  const steps = seq?.length || 16
+  return Math.max(1, Math.ceil(steps / 16))
+}
+
+export function patternHasHits(p) {
+  return Array.isArray(p?.lanes) && p.lanes.some((lane) => Array.isArray(lane) && lane.some((s) => s?.on))
+}
+
+/** Lift a single-lane track.seq into a 6-lane pattern (legacy). */
+export function trackSeqToPattern(seq, padSlot = 1) {
+  const length = SEQ_LENGTHS.includes(seq?.length) ? seq.length : 16
+  const out = defaultPattern(length)
+  out.swing = clamp01(seq?.swing, 0)
+  out.gate = clamp01(seq?.gate, 0.5)
+  if (!trackSeqHasHits(seq)) return out
+  const idx = Math.min(SEQ_LANES - 1, Math.max(0, (padSlot | 0) - 1))
+  const steps = Array.isArray(seq.steps) ? seq.steps : []
+  for (let i = 0; i < length; i++) out.lanes[idx][i] = sanitizeStep(steps[i])
+  return out
+}
+
+const LEGACY_LANE_NAMES = new Set([
+  "drums", "drum", "bass", "chord", "chrd", "lead", "fx", "empty",
+  "shaker", "kick", "snare", "hat", "clap", "tom", "perc", "rim",
+  "kick01", "kick02", "snare01", "snare02"
+])
+
+export function sanitizeLaneDisplayName(name, id = 1) {
+  const raw = String(name || "").trim()
+  if (!raw || raw.toUpperCase() === "EMPTY") return `TRACK ${id}`
+  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()
+  if (LEGACY_LANE_NAMES.has(key) || /^trk\s*\d+$/.test(key)) return `TRACK ${id}`
+  if (/^(kick|snare|hat|shaker|clap|tom|perc|rim|drums?|bass|chord|chrd|lead|fx|empty)(\s*\d+)?$/.test(key)) {
+    return `TRACK ${id}`
+  }
+  return raw.slice(0, 18)
+}
+
+export function nextLibraryTrackName(existing = []) {
+  const used = new Set((existing || []).map((e) => String(e.name || "").toUpperCase()))
+  let n = existing.length + 1
+  let name = `TRACK ${n}`
+  while (used.has(name)) {
+    n += 1
+    name = `TRACK ${n}`
+  }
+  return name
+}
+
+export function newTrackLibraryId() {
+  return `trk_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`
+}
+
+/** Named reusable track asset (library). */
+export function defaultLibraryTrack({ id = null, name = "NEW TRACK", lengthBars = 4, padSlot = 1 } = {}) {
+  return {
+    id: id || newTrackLibraryId(),
+    name: String(name || "NEW TRACK").slice(0, 18),
+    lengthBars: Math.max(1, Math.round(Number(lengthBars) || 4)),
+    padSlot: Math.min(6, Math.max(1, padSlot | 0) || 1),
+    level: 1,
+    pan: 0,
+    fx: {},
+    seq: defaultTrackSeq(),
+    pattern: null,
+    audio: null,
+    updatedAt: Date.now()
+  }
+}
+
+/** Arrangement lane (empty until a library track is assigned). */
+export function defaultArrangementLane(id, lengthBars = 4) {
+  return {
+    id,
+    assigned: false,
+    libraryTrackId: null,
+    dirty: false,
+    name: "EMPTY",
+    armed: false,
+    mute: false,
+    solo: false,
+    monitor: true,
+    mode: "overdub",
+    level: 1,
+    pan: 0,
+    offsetSec: 0,
+    lengthBars,
+    padSlot: Math.min(6, Math.max(1, ((id - 1) % 6) + 1)),
+    fx: {},
+    audio: null,
+    seq: defaultTrackSeq(),
+    pattern: null
+  }
+}
+
 export function defaultLoop() {
   return {
     lengthBars: 4,
@@ -330,6 +431,12 @@ export function defaultLoop() {
     metroLevel: 0.7,
     metroAccent: true,
     selected: 1,
+    trackLibrary: [],
+    arrangement: {
+      selectedLaneId: 1,
+      lanes: [1, 2, 3, 4, 5, 6].map((n) => defaultArrangementLane(n, 4))
+    },
+    // Legacy fixed slots — kept for migration of older recovery blobs.
     tracks: [1, 2, 3, 4, 5, 6].map((n) => ({
       id: n,
       name: `TRK ${n}`,

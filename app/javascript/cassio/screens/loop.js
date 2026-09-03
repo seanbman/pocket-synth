@@ -54,21 +54,29 @@ export function renderLoopTrackView(state) {
 
   const clipTone = (id) => (id % 2 === 1 ? "a" : "b")
   const rows = tracks.map((t) => {
+    const assigned = t.assigned !== false && t.assigned !== undefined
+      ? !!t.assigned
+      : true
+    const empty = t.empty || !assigned
     const off = t.offsetSec ?? 0
     const offPx = timelineSec > 0 ? (off / timelineSec) * timelineW : 0
     const trackBars = t.lengthBars || timelineBars
     const clipW = Math.max(8, (trackBars / timelineBars) * timelineW - 2)
+    const hasClip = !empty && (t.hasClip || t.buffer || t.hasSeq)
     const flags = [
+      t.dirty ? "●" : "",
       t.mute ? "M" : t.solo ? "S" : "",
       t.armed ? "A" : "",
-      t.buffer ? "" : "○"
+      empty ? "○" : ""
     ].filter(Boolean).join("")
-    const label = esc(String(t.name || `TRK ${t.id}`).split(" ").pop())
-    const clip = t.buffer
-      ? `<div class="loop-clip tone-${clipTone(t.id)}" data-track-id="${t.id}" style="left:${offPx}px;width:${clipW}px"></div>`
+    const label = empty
+      ? "EMPTY"
+      : esc(String(t.name || `TRACK ${t.id}`).slice(0, 12))
+    const clip = hasClip
+      ? `<div class="loop-clip tone-${clipTone(t.id)}${t.hasSeq && !t.buffer ? " seq" : ""}" data-track-id="${t.id}" style="left:${offPx}px;width:${clipW}px"></div>`
       : ""
     return `
-      <div class="loop-trow ${t.id === sel ? "sel" : ""}">
+      <div class="loop-trow ${t.id === sel ? "sel" : ""} ${empty ? "empty" : ""}" data-track-id="${t.id}">
         <div class="loop-tlabel">${t.id} ${label}${flags ? ` <span class="muted">${flags}</span>` : ""}</div>
         <div class="loop-lane" style="width:${timelineW}px">
           ${barGrid}
@@ -78,6 +86,10 @@ export function renderLoopTrackView(state) {
       </div>`
   }).join("")
 
+  const selEmpty = !!(selTrack.empty || selTrack.assigned === false)
+  const hintOk = selEmpty ? "OK→TRACK LIST" : "OK→TRK MENU"
+  const softD = selEmpty ? "LIST" : (selTrack.dirty ? "SAVE" : "UNDO")
+
   return `
     <div class="lcd-screen loop-track-screen">
       <div class="lcd-status">
@@ -86,8 +98,8 @@ export function renderLoopTrackView(state) {
         <span class="battery"></span>
       </div>
       <div class="lcd-macros">
-        <span class="green">M1 TRACK ${Math.round((selTrack.level ?? 1) * 100)}%</span>
-        <span class="green">M2 PAN ${Math.round((selTrack.pan ?? 0) * 100)}</span>
+        <span class="green">M1 TRACK ${selEmpty ? "—" : `${Math.round((selTrack.level ?? 1) * 100)}%`}</span>
+        <span class="green">M2 PAN ${selEmpty ? "—" : Math.round((selTrack.pan ?? 0) * 100)}</span>
         <span class="green">M3 MASTER</span>
       </div>
       <div class="loop-timeline-body">
@@ -102,15 +114,15 @@ export function renderLoopTrackView(state) {
           </div>
           <div class="loop-tgrid">${rows}</div>
         </div>
-        <div class="muted loop-thint">▲▼ TRK · ◀▶ ±1s · TRK ${sel} @ ${selOff}s</div>
-        <div class="lib-hint">TIMELINE=song · OK→TRK MENU · MENU→OPTIONS→PATTERN SEQ</div>
-        <div class="lib-hint muted">PADS/KEYS=sounds · B MUTE · C SOLO · A ARM</div>
+        <div class="muted loop-thint">TAP ROW · ▲▼ LANE · ◀▶ ±1s · L${sel}${selEmpty ? "" : ` @ ${selOff}s`}</div>
+        <div class="lib-hint">${hintOk} · HOLD B PATTERN · HOLD C OPTIONS</div>
+        <div class="lib-hint muted">A +LANE · HOLD A −LANE · ${selEmpty ? "D LIST" : "D SAVE/UNDO"} · B MUTE · C SOLO</div>
       </div>
       <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">ARM</span></div>
+        <div><span class="sk">A</span> <span class="green">+LANE</span></div>
         <div><span class="sk">B</span> <span class="green">MUTE${selTrack.mute ? " ●" : ""}</span></div>
         <div><span class="sk">C</span> <span class="green">SOLO${selTrack.solo ? " ●" : ""}</span></div>
-        <div><span class="sk">D</span> <span class="green">UNDO</span></div>
+        <div><span class="sk">D</span> <span class="green">${softD}</span></div>
       </div>
     </div>
   `
@@ -118,20 +130,37 @@ export function renderLoopTrackView(state) {
 
 export function renderLoopTrackMenu(state) {
   const t = (state.loop?.tracks || []).find((x) => x.id === (state.loop?.selected || 1)) || {}
+  const empty = !!(t.empty || t.assigned === false)
   const row = state.loopMenuIndex || 0
-  const rows = [
-    "PATTERN SEQ…",
-    "TRACK STEP SEQ…",
-    "FX / SETTINGS…",
-    `LENGTH ${t.lengthBars || state.loop?.lengthBars || 4} BARS`,
-    `RECORD ${t.mode === "replace" ? "REPLACE" : "OVERDUB"}`,
-    `MONITOR ${t.monitor ? "ON" : "OFF"}`,
-    `MUTE ${t.mute ? "ON" : "OFF"}`,
-    `SOLO ${t.solo ? "ON" : "OFF"}`,
-    "MIXER…",
-    "LOOP OPTIONS…",
-    "CLEAR TRACK…"
-  ]
+  const letter = state.seqCurrent || "A"
+  const rows = empty
+    ? [
+      "PICK TRACK…",
+      `DROP PATTERN ${letter}…`,
+      "PATTERN SEQ…",
+      "+ LANE",
+      "DELETE LANE",
+      "TRACK LIST…",
+      "LOOP OPTIONS…"
+    ]
+    : [
+      "PATTERN SEQ…",
+      `DROP PATTERN ${letter}…`,
+      "FX / SETTINGS…",
+      `LENGTH ${t.lengthBars || state.loop?.lengthBars || 4} BARS`,
+      `RECORD ${t.mode === "replace" ? "REPLACE" : "OVERDUB"}`,
+      `MONITOR ${t.monitor ? "ON" : "OFF"}`,
+      `MUTE ${t.mute ? "ON" : "OFF"}`,
+      `SOLO ${t.solo ? "ON" : "OFF"}`,
+      "SAVE TO LIBRARY…",
+      "REPLACE FROM LIST…",
+      "MIXER…",
+      "LOOP OPTIONS…",
+      "+ LANE",
+      "DELETE LANE",
+      "CLEAR AUDIO…",
+      "UNASSIGN LANE…"
+    ]
   const list = rows.map((label, i) =>
     `<div class="lib-row ${i === row ? "selected" : ""}">${esc(label)}</div>`
   ).join("")
@@ -140,7 +169,7 @@ export function renderLoopTrackMenu(state) {
     <div class="lcd-screen loop-menu-screen">
       <div class="lcd-status">
         <span class="pink">BPM ${state.bpm}</span>
-        <span class="status-mid">TRACK ${t.id || 1} MENU</span>
+        <span class="status-mid">LANE ${t.id || 1} MENU${t.dirty ? " · ●" : ""}</span>
         <span class="battery"></span>
       </div>
       <div class="lcd-macros">
@@ -149,14 +178,14 @@ export function renderLoopTrackMenu(state) {
         <span class="green">M3 MASTER</span>
       </div>
       <div class="edit-body">
-        <div class="sound-name">${esc(t.name || "TRACK")}</div>
+        <div class="sound-name">${esc(empty ? "EMPTY LANE" : (t.name || "TRACK"))}</div>
         <div class="lib-list">${list}</div>
-        <div class="muted">▲▼ ROW · ◀▶ / OK · TRACK vs PATTERN SEQ · D BACK</div>
+        <div class="muted">▲▼ ROW · OK · D BACK</div>
       </div>
       <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">MODE</span></div>
-        <div><span class="sk">B</span> <span class="green">MONITOR</span></div>
-        <div><span class="sk">C</span> <span class="green">CLEAR</span></div>
+        <div><span class="sk">A</span> <span class="green">${empty ? "PICK" : "MODE"}</span></div>
+        <div><span class="sk">B</span> <span class="green">${empty ? "—" : "MONITOR"}</span></div>
+        <div><span class="sk">C</span> <span class="green">${empty ? "—" : "CLEAR"}</span></div>
         <div><span class="sk">D</span> <span class="green">BACK</span></div>
       </div>
     </div>

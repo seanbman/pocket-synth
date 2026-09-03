@@ -1,0 +1,10 @@
+{
+  "checkpoint_id": "checkpoint-current-ui-controls",
+  "refreshed_at": "2026-09-03T07:33:25+00:00",
+  "title": "Current: UI controls",
+  "node_ids": [
+    "finding-ui-fullbleed-layout",
+    "finding-ui-knobs-viz-autoboot"
+  ],
+  "graph_version": 2
+}

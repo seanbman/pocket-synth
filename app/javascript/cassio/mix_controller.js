@@ -84,8 +84,9 @@ export class MixController {
   selectTrack(n) {
     const a = this.app
     if (a.screen !== "mixer") return
+    if (!a.loopEngine.tracks.some((t) => t.id === n)) return
     a.loopEngine.select(n)
-    a.toast(`TRK ${n}`)
+    a.toast(`LANE ${n}`)
     a.render()
   }
 
@@ -116,12 +117,13 @@ export class MixController {
     return {
       mixerTracks: le.tracks.map((t) => ({
         id: t.id,
-        name: t.name,
+        name: t.assigned ? t.name : "EMPTY",
         level: t.level ?? 1,
         pan: t.pan ?? 0,
         mute: !!t.mute,
         solo: !!t.solo,
-        hasAudio: !!t.buffer
+        hasAudio: !!t.buffer,
+        assigned: !!t.assigned
       })),
       mixerSelected: le.selected
     }

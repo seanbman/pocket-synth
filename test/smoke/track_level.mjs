@@ -39,6 +39,8 @@ try {
       await app.ensureAudioRunningPublic()
       app.looper.openHome()
       const le = app.loopEngine
+      const lib = le.createLibraryTrack({ name: 'LVL' })
+      le.assignLibraryToLane(1, lib.id)
       const ctx = app.engine.ctx
       const sr = ctx.sampleRate
       const samples = Math.floor(app.transport.loopSec(4) * sr)

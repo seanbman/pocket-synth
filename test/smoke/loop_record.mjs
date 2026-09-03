@@ -109,6 +109,10 @@ try {
     }
 
     le.ensureGraph()
+    const a1 = le.createLibraryTrack({ name: 'T1' })
+    const a2 = le.createLibraryTrack({ name: 'T2' })
+    le.assignLibraryToLane(1, a1.id)
+    le.assignLibraryToLane(2, a2.id)
     le.tracks[0].buffer = mkTone(220)
     le.tracks[0].lengthBars = bars
     le.tracks[1].buffer = null

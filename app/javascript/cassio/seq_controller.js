@@ -37,8 +37,9 @@ export class SeqController {
       const seq = this.#trackSeq()
       const length = seq.length || 16
       const emptyLane = () => Array.from({ length }, () => defaultStep())
+      const padIdx = Math.min(SEQ_LANES - 1, Math.max(0, (this.#track()?.padSlot || 1) - 1))
       const lanes = Array.from({ length: SEQ_LANES }, (_, i) =>
-        i === (this.app.seqTrackId - 1) ? seq.steps : emptyLane()
+        i === padIdx ? seq.steps : emptyLane()
       )
       return { length, swing: seq.swing ?? 0, gate: seq.gate ?? 0.5, lanes }
     }
@@ -48,7 +49,10 @@ export class SeqController {
   #cursor() {
     const a = this.app
     const p = this.pattern
-    if (this.#trackMode()) a.seqLane = this.app.seqTrackId - 1
+    if (this.#trackMode()) {
+      const t = this.#track()
+      a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (t?.padSlot || a.seqTrackId || 1) - 1))
+    }
     a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, a.seqLane || 0))
     a.seqCursor = Math.min(p.length - 1, Math.max(0, a.seqCursor || 0))
     a.seqPage = Math.floor(a.seqCursor / PAGE)
@@ -65,10 +69,15 @@ export class SeqController {
     const a = this.app
     a.seqTrackId = trackId || null
     if (trackId) {
+      const t = a.loopEngine.tracks.find((x) => x.id === trackId)
+      if (!t?.assigned) {
+        a.toast("EMPTY LANE")
+        return
+      }
       a.loopEngine.select(trackId)
       this.#trackSeq()
-      a.seqLane = trackId - 1
-      a.toast(`TRK ${trackId} STEP SEQ`)
+      a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (t.padSlot || 1) - 1))
+      a.toast(`${t.name || `L${trackId}`} STEP SEQ`)
     } else {
       a.seqLane = a.seqLane || 0
       a.toast(`PATTERN ${this.seq.current} · 6 LANES`)
@@ -76,7 +85,6 @@ export class SeqController {
     a.seqCursor = a.seqCursor || 0
     a.seqHeader = false
     a.seqShiftMode = false
-    if (a.transport.playing) a.loopEngine.stopPlayback()
     a.screen = "sequencer"
     a.render()
   }
@@ -105,8 +113,16 @@ export class SeqController {
 
   #changed({ rerender = true } = {}) {
     const a = this.app
-    if (this.#trackMode()) a.persistLoop?.()
-    else a.persistPublic?.()
+    if (this.#trackMode()) {
+      a.loopEngine.markDirty(a.seqTrackId)
+      const seq = this.#trackSeq()
+      const t = this.#track()
+      if (t && seq) {
+        const bars = Math.max(1, Math.ceil((seq.length || 16) / 16))
+        if ((t.lengthBars || 0) < bars) a.loopEngine.setTrackLengthBars(t.id, bars)
+      }
+      a.persistLoop?.()
+    } else a.persistPublic?.()
     if (rerender) a.render()
   }
 
