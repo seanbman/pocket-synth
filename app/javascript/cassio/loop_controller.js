@@ -497,6 +497,10 @@ export class LoopController {
     a.loopEngine.setTrackLengthBars(t.id, next)
     a.toast(`LANE ${t.id} ${next} BARS · SONG ${a.loopEngine.timelineBars()}B`)
     a.persistLoop?.()
+    // Re-arm arrangement so pattern + PCM clip gates match the new length live.
+    if (a.transport.playing && a.playContext === "loop") {
+      a.applyPlayContextPublic?.(a.transport._origin)
+    }
     a.render()
   }
 

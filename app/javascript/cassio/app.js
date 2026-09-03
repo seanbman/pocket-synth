@@ -89,7 +89,7 @@ export class CassioApp {
     this.stepSeq = new StepSequencer(
       this.transport,
       (lane, opts) => this.#triggerPad(lane, { ...opts, fromSeq: true }),
-      { trackProvider: () => this.loopEngine.tracks }
+      { trackProvider: () => this.loopEngine.tracks, masterSecProvider: () => this.loopEngine.timelineSec() }
     )
     this.stepSeq.onStep = (i, lanes) => this.#onSeqStep(i, lanes)
     this.seqCtl = new SeqController(this)

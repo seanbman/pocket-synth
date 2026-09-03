@@ -98,6 +98,27 @@ try {
     const bakedHits = !!lane2?.pattern?.lanes?.some((lane) => lane.some((s) => s?.on))
     const bakedDirty = !!lane2?.dirty
 
+    // Clip window: shorten/lengthen updates lengthBars + audible window (not tiled past clip)
+    le.lengthBars = 4
+    le.setTrackLengthBars(2, 2)
+    const origin = app.engine.now()
+    le._playOrigin = origin
+    const barSec = app.transport.barSec()
+    const inClip = !!le.clipLocalSec(lane2, origin + 0.1 * barSec, origin)
+    const pastClip = le.clipLocalSec(lane2, origin + 2.5 * barSec, origin)
+    le.setTrackLengthBars(2, 4)
+    const afterLenIn = !!le.clipLocalSec(lane2, origin + 2.5 * barSec, origin)
+    le.setTrackLengthBars(2, 2)
+    app.looper.openHome()
+    app.render()
+    const htmlShort = app.vscreen?.innerHTML || ''
+    const clipShort = htmlShort.includes('data-track-id="2"')
+    // clip width ~ half of 4-bar timeline (allow slack)
+    const clipEl = app.vscreen.querySelector('.loop-clip[data-track-id="2"]')
+    const clipW = clipEl ? parseFloat(clipEl.style.width) : 0
+    const timelineW = 4 * 52
+    const clipLooksShort = clipW > 0 && clipW < timelineW * 0.6
+
     // Arrangement play schedules baked 6-lane pattern
     app.transportStopPublic()
     app.looper.openHome()
@@ -107,6 +128,14 @@ try {
     const stepSeqOnLoop = app.stepSeq.running
     const arrMode = app.stepSeq._mode
     const bakedArmed = app.stepSeq._trackNext.has('pat:2')
+    // While playing a 2-bar clip on 4-bar song, song-phase past clip must be silent window
+    const playingPast = le.clipLocalSec(lane2, app.engine.now())
+    // Force phase into bar 3 by checking relative to play origin
+    const pastWhilePlaying = le.clipLocalSec(
+      lane2,
+      (le._playOrigin || origin) + 2.5 * barSec,
+      le._playOrigin || origin
+    )
     app.transportStopPublic()
 
     app.seqCtl.open()
@@ -130,10 +159,16 @@ try {
       toggled,
       bakedHits,
       bakedDirty,
+      inClip,
+      pastClipNull: pastClip == null,
+      afterLenIn,
+      clipLooksShort,
+      clipShort,
       loopPlayContext,
       stepSeqOnLoop,
       arrMode,
       bakedArmed,
+      pastWhilePlayingNull: pastWhilePlaying == null,
       seqPlayContext,
       stepSeqOnSeq
     }
@@ -161,12 +196,20 @@ try {
     else fail("step toggle failed")
     if (out.bakedHits && out.bakedDirty) pass("DROP PATTERN bakes working copy onto lane")
     else fail(`baked hits=${out.bakedHits} dirty=${out.bakedDirty}`)
+    if (out.inClip && out.pastClipNull) pass("2-bar clip: audible in window, silent past clip")
+    else fail(`clip window in=${out.inClip} pastNull=${out.pastClipNull}`)
+    if (out.afterLenIn) pass("lengthen to 4 bars extends audible window")
+    else fail("lengthen did not open window at bar 3")
+    if (out.clipLooksShort) pass("shortened length shrinks pink clip")
+    else fail(`clip width not short (clipShort=${out.clipShort})`)
     if (out.loopPlayContext === "loop") pass("loop play uses loop context")
     else fail(`loop playContext ${out.loopPlayContext}`)
     if (out.stepSeqOnLoop && out.arrMode === "arrangement") pass("arrangement play runs lane step seq")
     else fail(`arrangement seq running=${out.stepSeqOnLoop} mode=${out.arrMode}`)
     if (out.bakedArmed) pass("arrangement schedules baked 6-lane pattern")
     else fail("baked pattern not armed on arrangement play")
+    if (out.pastWhilePlayingNull) pass("playing: bar 3 still outside 2-bar clip window")
+    else fail("playing past-clip window not silent")
     if (out.seqPlayContext === "seq") pass("sequencer play uses seq context")
     else fail(`seq playContext ${out.seqPlayContext}`)
     if (out.stepSeqOnSeq) pass("step seq runs on sequencer play")

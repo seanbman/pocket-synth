@@ -605,6 +605,8 @@ export class LoopEngine {
       if (this.transport.playing) {
         this.#startTrack(t, this.engine.ctx.currentTime)
       }
+    } else if (this.transport.playing) {
+      this.#applyTrackGain(t)
     }
     return bars
   }
@@ -613,7 +615,7 @@ export class LoopEngine {
     const bars = snapLengthBars(n)
     this.lengthBars = bars
     for (const t of this.tracks) {
-      if (t.assigned && !t.buffer) t.lengthBars = bars
+      // Only empty (unassigned) lanes follow song default — assigned clips keep their own length.
       if (!t.assigned) t.lengthBars = bars
     }
     return bars
@@ -661,18 +663,32 @@ export class LoopEngine {
     return this.transport.loopSec(t.lengthBars || this.lengthBars)
   }
 
-  #trackBufferPhase(t, atTime) {
+  /**
+   * Local time within the lane's pink-clip window on the song timeline.
+   * null when playhead is outside [offset, offset+length) for this cycle —
+   * shortening/lengthening lengthBars changes both the clip and this window.
+   */
+  clipLocalSec(t, atTime = this.engine?.ctx?.currentTime, playOrigin = this._playOrigin) {
+    if (!t?.assigned) return null
     const masterLoop = this.masterLoopSec()
     const trackLoop = this.trackLoopSec(t)
-    const offset = masterLoop > 0
-      ? (((t.offsetSec ?? 0) % masterLoop) + masterLoop) % masterLoop
-      : 0
-    const elapsed = Math.max(0, atTime - this._playOrigin)
-    const masterPhase = masterLoop > 0 ? elapsed % masterLoop : 0
-    const phase = trackLoop > 0
-      ? ((masterPhase - offset) % trackLoop + trackLoop) % trackLoop
-      : 0
-    return Math.min(Math.max(0, phase), Math.max(0, t.buffer.duration - 0.001))
+    if (!(masterLoop > 0) || !(trackLoop > 0)) return null
+    const origin = playOrigin ?? this._playOrigin ?? 0
+    const offset = (((Number(t.offsetSec) || 0) % masterLoop) + masterLoop) % masterLoop
+    const elapsed = Math.max(0, (atTime ?? origin) - origin)
+    const masterPhase = elapsed % masterLoop
+    const local = (masterPhase - offset + masterLoop) % masterLoop
+    if (local >= trackLoop - 1e-4) return null
+    return { local, trackLoop, masterLoop, offset }
+  }
+
+  #trackBufferPhase(t, atTime) {
+    const clip = this.clipLocalSec(t, atTime)
+    if (!clip || !t.buffer) return 0
+    const bufDur = Math.min(t.buffer.duration, clip.trackLoop)
+    if (!(bufDur > 0)) return 0
+    const phase = clip.local % bufDur
+    return Math.min(Math.max(0, phase), Math.max(0, bufDur - 0.001))
   }
 
   #stopTrack(trackId) {
@@ -714,6 +730,48 @@ export class LoopEngine {
     this.#applyTrackGain(t)
   }
 
+  /** Automate lane gain so PCM is silent outside the pink clip on the song timeline. */
+  #armClipGainAutomation(t, baseAudible) {
+    const chain = this._chains.get(t.id)
+    if (!chain || !this.engine?.ctx) return
+    const g = chain.input.gain
+    const ctx = this.engine.ctx
+    const now = ctx.currentTime
+    g.cancelScheduledValues(now)
+
+    if (!baseAudible) {
+      g.setValueAtTime(0, now)
+      return
+    }
+    if (!this.transport?.playing || this._playOrigin == null) {
+      g.setValueAtTime(1, now)
+      return
+    }
+
+    const master = this.masterLoopSec()
+    const len = this.trackLoopSec(t)
+    const origin = this._playOrigin
+    const offset = master > 0
+      ? (((Number(t.offsetSec) || 0) % master) + master) % master
+      : 0
+    if (!(master > 0) || !(len > 0)) {
+      g.setValueAtTime(0, now)
+      return
+    }
+
+    g.setValueAtTime(this.clipLocalSec(t, now) ? 1 : 0, now)
+    const horizon = now + 16
+    let k = Math.floor((now - origin - offset) / master) - 1
+    for (let n = 0; n < 64; n++, k++) {
+      const onAt = origin + offset + k * master
+      const offAt = onAt + len
+      if (offAt < now) continue
+      if (onAt > horizon) break
+      if (onAt >= now) g.setValueAtTime(1, onAt)
+      if (offAt <= horizon) g.setValueAtTime(0, Math.max(offAt, now))
+    }
+  }
+
   setTrackOffset(trackId, offsetSec) {
     const t = this.tracks.find((x) => x.id === (trackId || this.selected))
     if (!t?.assigned) return 0
@@ -743,7 +801,8 @@ export class LoopEngine {
     const chain = this._chains.get(t.id)
     if (!chain || !this.engine?.ctx) return
     if (!t.assigned) {
-      chain.input.gain.setTargetAtTime(0, this.engine.ctx.currentTime, 0.02)
+      chain.input.gain.cancelScheduledValues(this.engine.ctx.currentTime)
+      chain.input.gain.setValueAtTime(0, this.engine.ctx.currentTime)
       chain.setActive(0)
       return
     }
@@ -755,7 +814,7 @@ export class LoopEngine {
       chain.input.gain.cancelScheduledValues(this.engine.ctx.currentTime)
       chain.input.gain.setValueAtTime(0, this.engine.ctx.currentTime)
     } else {
-      chain.input.gain.setTargetAtTime(audible ? 1 : 0, this.engine.ctx.currentTime, 0.02)
+      this.#armClipGainAutomation(t, audible)
     }
     chain.apply({ ...t.fx, level, pan })
     chain.setActive(audible && this.transport?.playing && t.buffer ? 1 : 0)

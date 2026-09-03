@@ -2,13 +2,15 @@ import { sanitizeSeq, sanitizePattern, SEQ_LANES, patternHasHits } from "cassio/
 
 /**
  * Six-lane step sequencer (Screens 24–25) driven by the Transport clock.
- * Arrangement PLAY schedules each lane's baked pattern (working copy of A–D).
+ * Arrangement PLAY schedules each lane's baked pattern only inside that lane's
+ * pink-clip window (lengthBars × offset) on the song timeline.
  */
 export class StepSequencer {
-  constructor(transport, trigger, { trackProvider = null } = {}) {
+  constructor(transport, trigger, { trackProvider = null, masterSecProvider = null } = {}) {
     this.transport = transport
     this.trigger = trigger
     this.trackProvider = trackProvider
+    this.masterSecProvider = masterSecProvider
     this.seq = sanitizeSeq(null)
     this.enabled = true
     this.running = false
@@ -36,6 +38,30 @@ export class StepSequencer {
 
   stepSec() {
     return this.transport.beatSec() / 4
+  }
+
+  #masterSec() {
+    const n = Number(this.masterSecProvider?.())
+    if (n > 0) return n
+    return this.transport.loopSec(4)
+  }
+
+  #trackLoopSec(track) {
+    const bars = track.lengthBars || 4
+    return this.transport.loopSec(bars)
+  }
+
+  /** Local sec inside pink clip for this lane at absolute time `when`; null if outside. */
+  #clipLocalAt(track, when) {
+    const masterLoop = this.#masterSec()
+    const trackLoop = this.#trackLoopSec(track)
+    if (!(masterLoop > 0) || !(trackLoop > 0)) return null
+    const offset = (((Number(track.offsetSec) || 0) % masterLoop) + masterLoop) % masterLoop
+    const elapsed = Math.max(0, when - this._origin)
+    const masterPhase = elapsed % masterLoop
+    const local = (masterPhase - offset + masterLoop) % masterLoop
+    if (local >= trackLoop - 1e-4) return null
+    return { local, trackLoop, offset, masterLoop }
   }
 
   #stepTimeFrom(origin, absIndex, step, swing = 0) {
@@ -99,30 +125,67 @@ export class StepSequencer {
     const len = seq.length || steps.length || 16
     let next = this._trackNext.get(track.id) ?? 0
     const padId = Math.min(6, Math.max(1, track.padSlot || ((track.id - 1) % 6) + 1))
-    const origin = this._origin + (Number(track.offsetSec) || 0)
+    const gateClip = this._mode === "arrangement"
 
-    while (origin + next * s < now + lookAhead) {
-      const abs = next
-      const i = abs % len
-      const step = steps[i]
-      if (step?.on) {
-        const prev = steps[(i - 1 + len) % len]
-        if (!(prev?.on && prev.tie && i !== 0)) {
-          const when = this.#stepTimeFrom(origin, abs, step, seq.swing ?? 0)
-          let gateSteps = 1
-          let k = i
-          while (steps[k]?.tie && gateSteps < len) {
-            k = (k + 1) % len
-            if (!steps[k]?.on) break
-            gateSteps++
+    if (!gateClip) {
+      const origin = this._origin + (Number(track.offsetSec) || 0)
+      while (origin + next * s < now + lookAhead) {
+        const abs = next
+        const i = abs % len
+        const step = steps[i]
+        if (step?.on) {
+          const prev = steps[(i - 1 + len) % len]
+          if (!(prev?.on && prev.tie && i !== 0)) {
+            const when = this.#stepTimeFrom(origin, abs, step, seq.swing ?? 0)
+            let gateSteps = 1
+            let k = i
+            while (steps[k]?.tie && gateSteps < len) {
+              k = (k + 1) % len
+              if (!steps[k]?.on) break
+              gateSteps++
+            }
+            const g = step.gate ?? seq.gate ?? 0.5
+            const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
+            const velocity = step.accent ? 1 : step.vel
+            this.#at(when, () => {
+              if (!this.running) return
+              this.trigger?.(padId, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+            })
           }
-          const g = step.gate ?? seq.gate ?? 0.5
-          const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
-          const velocity = step.accent ? 1 : step.vel
-          this.#at(when, () => {
-            if (!this.running) return
-            this.trigger?.(padId, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
-          })
+        }
+        next++
+      }
+      this._trackNext.set(track.id, next)
+      return true
+    }
+
+    while (this._origin + next * s < now + lookAhead) {
+      const when = this._origin + next * s
+      const clip = this.#clipLocalAt(track, when)
+      if (clip) {
+        const i = Math.floor(clip.local / s + 1e-9) % len
+        const step = steps[i]
+        if (step?.on) {
+          const prev = steps[(i - 1 + len) % len]
+          if (!(prev?.on && prev.tie && i !== 0)) {
+            const hitWhen = this.#stepTimeFrom(this._origin, next, step, seq.swing ?? 0)
+            if (this.#clipLocalAt(track, hitWhen)) {
+              let gateSteps = 1
+              let k = i
+              while (steps[k]?.tie && gateSteps < len) {
+                k = (k + 1) % len
+                if (!steps[k]?.on) break
+                gateSteps++
+              }
+              const g = step.gate ?? seq.gate ?? 0.5
+              const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
+              const velocity = step.accent ? 1 : step.vel
+              this.#at(hitWhen, () => {
+                if (!this.running) return
+                this.trigger?.(padId, { when: hitWhen, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+              })
+            }
+          }
         }
       }
       next++
@@ -141,31 +204,34 @@ export class StepSequencer {
     const s = this.stepSec()
     const key = `pat:${track.id}`
     let next = this._trackNext.get(key) ?? 0
-    const origin = this._origin + (Number(track.offsetSec) || 0)
 
-    while (origin + next * s < now + lookAhead) {
-      const abs = next
-      const i = abs % p.length
-      for (let lane = 0; lane < SEQ_LANES; lane++) {
-        const step = p.lanes[lane][i]
-        if (!step?.on) continue
-        const prev = p.lanes[lane][(i - 1 + p.length) % p.length]
-        if (prev?.on && prev.tie && i !== 0) continue
-        const when = this.#stepTimeFrom(origin, abs, step, p.swing)
-        let gateSteps = 1
-        let k = i
-        while (p.lanes[lane][k]?.tie && gateSteps < p.length) {
-          k = (k + 1) % p.length
-          if (!p.lanes[lane][k]?.on) break
-          gateSteps++
+    while (this._origin + next * s < now + lookAhead) {
+      const when = this._origin + next * s
+      const clip = this.#clipLocalAt(track, when)
+      if (clip) {
+        const i = Math.floor(clip.local / s + 1e-9) % p.length
+        for (let lane = 0; lane < SEQ_LANES; lane++) {
+          const step = p.lanes[lane][i]
+          if (!step?.on) continue
+          const prev = p.lanes[lane][(i - 1 + p.length) % p.length]
+          if (prev?.on && prev.tie && i !== 0) continue
+          const hitWhen = this.#stepTimeFrom(this._origin, next, step, p.swing)
+          if (!this.#clipLocalAt(track, hitWhen)) continue
+          let gateSteps = 1
+          let k = i
+          while (p.lanes[lane][k]?.tie && gateSteps < p.length) {
+            k = (k + 1) % p.length
+            if (!p.lanes[lane][k]?.on) break
+            gateSteps++
+          }
+          const g = step.gate ?? p.gate
+          const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
+          const velocity = step.accent ? 1 : step.vel
+          this.#at(hitWhen, () => {
+            if (!this.running) return
+            this.trigger?.(lane + 1, { when: hitWhen, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+          })
         }
-        const g = step.gate ?? p.gate
-        const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
-        const velocity = step.accent ? 1 : step.vel
-        this.#at(when, () => {
-          if (!this.running) return
-          this.trigger?.(lane + 1, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
-        })
       }
       next++
     }

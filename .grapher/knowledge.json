@@ -4494,7 +4494,7 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-03T07:34:02+00:00"
+      "updated_at": "2026-09-03T08:54:59+00:00"
     },
     "checkpoint-current-ui-controls": {
       "id": "checkpoint-current-ui-controls",
@@ -4743,6 +4743,53 @@
       "meta": {},
       "created_at": "2026-09-03T07:33:21+00:00",
       "updated_at": "2026-09-03T07:33:24+00:00",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "video-length-persist-2026-09-03": {
+      "id": "video-length-persist-2026-09-03",
+      "type": "video",
+      "title": "Screen recording: lane length vs timeline audio (2026-09-03)",
+      "content": "Phone screen recording (~9.0s) of CASSIO LOOP track view at BPM 91, LOOP ▶ PLAY (PLAY lit). Song header shows 4B/4 · Q OFF · MON ALL; playhead advances through bars 1→4 (counter ~30:1 → 33:1). Lane 1 labeled TRACK… has a pink clip spanning bars 1–2 only; lanes 4–7 EMPTY (lanes 2–3 not on screen). Soft keys: A +LANE, B MUTE, C SOLO, D UNDO (dirty=false). Hints show OK→TRK MENU, HOLD B PATTERN.\n\nAudio (extracted): 14 regular peaks at 0.66s intervals = quarter notes at 91 BPM, continuous for the whole take — including while the playhead is in bars 3–4 where the pink clip is absent. No menu LENGTH interaction is visible in this clip; the discrepancy is audible content past the drawn clip on a 4-bar song with a ~2-bar lane clip.\n\nImplies mismatch among song lengthBars (4), lane lengthBars/clip width (~2), and arrangement playback (PCM phase-wrap and/or baked pattern scheduling that keep sounding across the full song).",
+      "path": "/home/sean/Downloads/ScreenRecording_09-03-2026 02-20-23_1.mp4",
+      "tags": [
+        "cassio",
+        "loop",
+        "bug",
+        "length",
+        "audio"
+      ],
+      "meta": {},
+      "created_at": "2026-09-03T08:31:02+00:00",
+      "updated_at": "2026-09-03T08:31:05+00:00",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "unverified",
+      "evidence": [],
+      "source_refs": [],
+      "owners": [],
+      "stage": null
+    },
+    "finding-lane-clip-window-audio": {
+      "id": "finding-lane-clip-window-audio",
+      "type": "finding",
+      "title": "Lane lengthBars is pink clip and audible window",
+      "content": "Contract (Sep 2026): shortening or lengthening a lane’s lengthBars updates both the pink timeline clip and arrangement audio.\n\nPCM: clipLocalSec() maps playhead into [offset, offset+trackLoop) on the song timeline; outside that window lane gain is automated to 0 (no tiling of a short loop across a longer song). setTrackLengthBars still resizes the buffer and restarts the source while playing.\n\nBaked / legacy pattern: arrangement StepSequencer schedules hits only when the hit time falls inside that same clip window; within the window the pattern loops to fill (lengthen = more repeats, shorten = cut off). Live LENGTH nudges call applyPlayContext so gates re-arm immediately.\n\nSONG LENGTH (OPTIONS) no longer overwrites assigned pattern-only lane lengths via applyDefaultLengthToEmpty — only empty lanes follow the song default.\n\nVerified: bin/smoke-sequencer clip-window cases; video-length-persist-2026-09-03 was the repro symptom.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "loop",
+        "length",
+        "audio"
+      ],
+      "meta": {},
+      "created_at": "2026-09-03T08:54:57+00:00",
+      "updated_at": "2026-09-03T08:54:58+00:00",
       "status": "current",
       "workflow_state": "not_applicable",
       "verification": "unverified",
@@ -7258,6 +7305,51 @@
       "rel": "derived_from",
       "created_at": "2026-09-03T07:34:01+00:00",
       "note": "Lane UX cleanup is current loop engine truth"
+    },
+    {
+      "from": "video-length-persist-2026-09-03",
+      "to": "finding-lane-ux-cleanup",
+      "rel": "related",
+      "created_at": "2026-09-03T08:31:04+00:00",
+      "note": "Observed after pattern-on-lane UX"
+    },
+    {
+      "from": "video-length-persist-2026-09-03",
+      "to": "per-track-loop-bar-counts-55a375f4",
+      "rel": "related",
+      "created_at": "2026-09-03T08:31:04+00:00",
+      "note": "Per-track lengthBars vs song timeline"
+    },
+    {
+      "from": "video-length-persist-2026-09-03",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T08:31:05+00:00"
+    },
+    {
+      "from": "finding-lane-clip-window-audio",
+      "to": "video-length-persist-2026-09-03",
+      "rel": "verified_by",
+      "created_at": "2026-09-03T08:54:59+00:00",
+      "note": "Recording showed audio past 2-bar clip"
+    },
+    {
+      "from": "finding-lane-clip-window-audio",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-03T08:54:59+00:00"
+    },
+    {
+      "from": "finding-lane-clip-window-audio",
+      "to": "per-track-loop-bar-counts-55a375f4",
+      "rel": "related",
+      "created_at": "2026-09-03T08:54:59+00:00"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-lane-clip-window-audio",
+      "rel": "derived_from",
+      "created_at": "2026-09-03T08:54:59+00:00"
     }
   ]
 }
