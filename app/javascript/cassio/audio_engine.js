@@ -50,15 +50,12 @@ export class AudioEngine {
     this.dry.gain.value = 1
     this.dry.connect(this.master)
 
-    // Per-track record buses (live performance → loop track N).
-    this.recTaps = Array.from({ length: 6 }, () => {
-      const tap = this.ctx.createGain()
-      tap.gain.value = 1
-      return tap
-    })
+    // Per-lane record buses are allocated lazily. Arrangement lanes are variable,
+    // so lane identity must never be clamped back onto physical pads 1–6.
+    this.recTaps = []
 
     // Legacy alias — do not connect dry here (avoids mixed recording).
-    this.recTap = this.recTaps[0]
+    this.recTap = this.recTapForTrack(1)
 
     this.wetGain = this.ctx.createGain()
     this.wetGain.gain.value = this.space
@@ -149,11 +146,19 @@ export class AudioEngine {
   }
 
   recTapForTrack(trackId) {
-    const i = Math.min(6, Math.max(1, trackId | 0)) - 1
-    return this.recTaps?.[i] || this.recTap
+    if (!this.ctx) return this.recTap || null
+    const id = Math.max(1, Number(trackId) | 0)
+    const i = id - 1
+    if (!this.recTaps) this.recTaps = []
+    if (!this.recTaps[i]) {
+      const tap = this.ctx.createGain()
+      tap.gain.value = 1
+      this.recTaps[i] = tap
+    }
+    return this.recTaps[i]
   }
 
-  /** Route live performance audio into a track's record bus (1–6). */
+  /** Route live performance audio into an arrangement lane's record bus. */
   tapRec(node, trackId) {
     if (!node || !trackId) return
     try { node.connect(this.recTapForTrack(trackId)) } catch (_) { /* ignore */ }
