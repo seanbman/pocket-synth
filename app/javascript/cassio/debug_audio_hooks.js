@@ -113,35 +113,11 @@ function installSourceWatch(app) {
   }, 40)
 }
 
-function isLocalDebugHost() {
-  const host = location.hostname
-  return host === "localhost" || host === "127.0.0.1" || host === "::1" ||
-    host.startsWith("192.168.") || host.startsWith("10.") ||
-    /^172\.(1[6-9]|2\d|3[01])\./.test(host)
-}
-
 function installGlitchMarker(app) {
-  if (!isLocalDebugHost() || document.querySelector("[data-cassio-glitch-marker]")) return
+  const button = document.querySelector("[data-cassio-glitch-marker]")
+  if (!button || button.dataset.cassioGlitchBound === "true") return false
 
-  const button = document.createElement("button")
-  button.type = "button"
-  button.dataset.cassioGlitchMarker = "true"
-  button.textContent = "MARK GLITCH"
-  button.setAttribute("aria-label", "Mark audible audio glitch in diagnostic timeline")
-  Object.assign(button.style, {
-    position: "fixed",
-    right: "6px",
-    bottom: "calc(env(safe-area-inset-bottom, 0px) + 6px)",
-    zIndex: "2147483647",
-    padding: "7px 9px",
-    border: "1px solid currentColor",
-    borderRadius: "3px",
-    font: "700 10px/1 monospace",
-    letterSpacing: "0.04em",
-    opacity: "0.78",
-    touchAction: "manipulation"
-  })
-
+  button.dataset.cassioGlitchBound = "true"
   button.addEventListener("click", () => {
     transitionUntil = Math.max(transitionUntil, perfNow() + 2500)
     traceAudio(app, "user.glitch_marker", {
@@ -154,7 +130,7 @@ function installGlitchMarker(app) {
     setTimeout(() => { button.textContent = "MARK GLITCH" }, 900)
   })
 
-  document.body.appendChild(button)
+  return true
 }
 
 function voiceArgs(args) {
@@ -183,7 +159,7 @@ export function installDeepAudioTrace(app) {
 
   installTransitionWindow(app)
   installSourceWatch(app)
-  installGlitchMarker(app)
+  const glitchMarker = installGlitchMarker(app)
 
   // Operations that can directly recreate or retime arrangement PCM.
   wrap(app.loopEngine, "setTrackLengthBars", app, "loop.setTrackLengthBars", (args) => ({ trackId: args[0], bars: args[1] }))
@@ -206,6 +182,6 @@ export function installDeepAudioTrace(app) {
   traceAudio(app, "deep-hooks.install", {
     sourceWatchMs: 40,
     transitionVoiceTraceMs: 2500,
-    glitchMarker: isLocalDebugHost()
+    glitchMarker
   })
 }
