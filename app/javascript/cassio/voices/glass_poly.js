@@ -1,3 +1,5 @@
+import { audioHostFor } from "cassio/audio/audio_host"
+
 const NOTE_OFFSETS = {
   C: 0, "C#": 1, Db: 1, D: 2, "D#": 3, Eb: 3, E: 4, F: 5,
   "F#": 6, Gb: 6, G: 7, "G#": 8, Ab: 8, A: 9, "A#": 10, Bb: 10, B: 11
@@ -20,6 +22,7 @@ export function noteNameToMidi(name) {
 export class GlassPolyVoice {
   constructor(engine) {
     this.engine = engine
+    this.audio = audioHostFor(engine)
     this.brightness = 0.68
     this.resonance = 0.34
     this.pitchBend = 0
@@ -72,7 +75,7 @@ export class GlassPolyVoice {
   setBrightness(v) {
     this.brightness = Math.min(1, Math.max(0.05, v))
     const cutoff = this.#cutoffHz()
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.filter.frequency.setTargetAtTime(cutoff, t, 0.03)
     }
@@ -81,7 +84,7 @@ export class GlassPolyVoice {
   setResonance(v) {
     this.resonance = Math.min(1, Math.max(0, v))
     const q = this.#q()
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.filter.Q.setTargetAtTime(q, t, 0.03)
     }
@@ -98,7 +101,7 @@ export class GlassPolyVoice {
   setDrive(v) {
     this.drive = Math.min(1, Math.max(0, v))
     const g = 0.28 + this.drive * 0.55
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       if (vox.drive) vox.drive.gain.setTargetAtTime(g, t, 0.03)
     }
@@ -111,7 +114,7 @@ export class GlassPolyVoice {
   setMotion(v) {
     this.motion = Math.min(1, Math.max(0, v))
     const depth = this.motion * 900
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const [key, lfo] of this._lfos) {
       if (!this.voices.has(key)) {
         this._lfos.delete(key)
@@ -123,7 +126,7 @@ export class GlassPolyVoice {
 
   setPan(v) {
     this.pan = Math.min(1, Math.max(-1, Number(v) || 0))
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.panner?.pan.setTargetAtTime(this.pan, t, 0.02)
     }
@@ -132,7 +135,7 @@ export class GlassPolyVoice {
   setBassDb(v) {
     const n = Number(v)
     this.bassDb = Math.min(12, Math.max(-12, Number.isFinite(n) ? n : 0))
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.bassEq?.gain.setTargetAtTime(this.bassDb, t, 0.04)
     }
@@ -141,7 +144,7 @@ export class GlassPolyVoice {
   setTrebleDb(v) {
     const n = Number(v)
     this.trebleDb = Math.min(12, Math.max(-12, Number.isFinite(n) ? n : 0))
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.trebleEq?.gain.setTargetAtTime(this.trebleDb, t, 0.04)
     }
@@ -150,7 +153,7 @@ export class GlassPolyVoice {
   setReverb(v) {
     const n = Number(v)
     this.reverb = Math.min(1, Math.max(0, Number.isFinite(n) ? n : 0))
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.revSend?.gain.setTargetAtTime(this.reverb, t, 0.05)
     }
@@ -159,7 +162,7 @@ export class GlassPolyVoice {
   setDelay(v) {
     const n = Number(v)
     this.delay = Math.min(1, Math.max(0, Number.isFinite(n) ? n : 0))
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.delaySend?.gain.setTargetAtTime(this.delay * 0.55, t, 0.05)
     }
@@ -168,7 +171,7 @@ export class GlassPolyVoice {
   setPitchBend(semitones) {
     this.pitchBend = Math.min(2, Math.max(-2, semitones))
     const cents = this.pitchBend * 100
-    const t = this.engine.now()
+    const t = this.audio.now()
     for (const vox of this.voices.values()) {
       vox.osc1.detune.setTargetAtTime(cents + this.detuneCents, t, 0.01)
       vox.osc2.detune.setTargetAtTime(cents - this.detuneCents, t, 0.01)
@@ -177,11 +180,11 @@ export class GlassPolyVoice {
 
   /** `when` (audio time) lets the step sequencer schedule notes sample-accurately. */
   noteOn(midi, velocity = 0.85, { when = null, recTrack = null } = {}) {
-    if (!this.engine.ready) return
+    if (!this.audio.ready) return
     const key = String(midi)
     if (this.voices.has(key)) this.noteOff(midi, true)
 
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const t = Math.max(ctx.currentTime, Number(when) || 0)
     const osc1 = ctx.createOscillator()
     const osc2 = ctx.createOscillator()
@@ -221,15 +224,6 @@ export class GlassPolyVoice {
     trebleEq.frequency.value = 6000
     trebleEq.gain.value = this.trebleDb
 
-    const panner = ctx.createStereoPanner()
-    panner.pan.value = this.pan
-
-    const revSend = ctx.createGain()
-    revSend.gain.value = this.reverb
-
-    const delaySend = ctx.createGain()
-    delaySend.gain.value = this.delay * 0.55
-
     osc1.connect(mix)
     osc2.connect(mix)
     mix.connect(drive)
@@ -237,21 +231,13 @@ export class GlassPolyVoice {
     filter.connect(env)
     env.connect(bassEq)
     bassEq.connect(trebleEq)
-    trebleEq.connect(panner)
-    panner.connect(this.engine.dry)
 
-    // Record the shaped dry signal, not the whole device mix. Reverb/delay tails
-    // stay sends and are not recursively baked into a loop track.
-    if (recTrack) this.engine.tapRec(panner, recTrack)
-
-    if (this.engine.convolver) {
-      panner.connect(revSend)
-      revSend.connect(this.engine.convolver)
-    }
-    if (this.engine.delay) {
-      panner.connect(delaySend)
-      delaySend.connect(this.engine.delay)
-    }
+    const routed = this.audio.route(trebleEq, {
+      pan: this.pan,
+      reverb: this.reverb,
+      delay: this.delay,
+      recTrack
+    })
 
     if (this.motion > 0.02) {
       const lfo = ctx.createOscillator()
@@ -268,7 +254,10 @@ export class GlassPolyVoice {
     osc2.start(t)
     this.voices.set(key, {
       osc1, osc2, env, filter, mix, drive,
-      bassEq, trebleEq, panner, revSend, delaySend
+      bassEq, trebleEq,
+      panner: routed.panner,
+      revSend: routed.revSend,
+      delaySend: routed.delaySend
     })
   }
 
@@ -277,7 +266,7 @@ export class GlassPolyVoice {
     const vox = this.voices.get(key)
     if (!vox) return
     this.voices.delete(key)
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const now = ctx.currentTime
     const t = Math.max(now, Number(when) || 0)
     const rel = immediate ? 0.02 : this.release
