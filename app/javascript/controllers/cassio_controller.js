@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
+import { installTrackPatternRuntime } from "cassio/track_pattern_runtime"
 import {
   audioSnapshot,
   flushDebug,
@@ -16,6 +17,7 @@ export default class extends Controller {
 
     try {
       this.app = new CassioApp(this.element)
+      installTrackPatternRuntime(this.app)
       installAudioTrace(this.app)
       installDeepAudioTrace(this.app)
 
