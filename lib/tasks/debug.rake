@@ -8,33 +8,44 @@ module CassioDebugReport
   REPO = "seanbman/pocket-synth"
   MAX_TIMELINE = 240
 
-  def sessions_dir
-    Rails.root.join("tmp", "debug_sessions")
+  def log_path
+    Rails.root.join("tmp", "debug_sessions", "events.jsonl")
   end
 
   def reports_dir
     Rails.root.join("tmp", "debug_reports")
   end
 
-  def resolve_session(session)
-    files = Dir[sessions_dir.join("*.jsonl")].sort_by { |path| File.mtime(path) }
-    raise "No debug sessions found in #{sessions_dir}" if files.empty?
+  def load_events
+    raise "No debug event journal found at #{log_path}" unless File.exist?(log_path)
 
-    return files.last if session.blank? || session == "latest"
-
-    exact = sessions_dir.join("#{session}.jsonl").to_s
-    return exact if File.exist?(exact)
-
-    match = files.reverse.find { |path| File.basename(path, ".jsonl").start_with?(session.to_s) }
-    match || raise("Debug session #{session.inspect} not found")
-  end
-
-  def load_events(path)
-    File.readlines(path, chomp: true).filter_map do |line|
+    File.readlines(log_path, chomp: true).filter_map do |line|
       JSON.parse(line)
     rescue JSON::ParserError
       nil
-    end.sort_by { |e| [e["timestamp"].to_i, e["seq"].to_i] }
+    end.sort_by { |event| [ event["timestamp"].to_i, event["seq"].to_i ] }
+  end
+
+  def resolve_session(events, requested)
+    session_ids = events.filter_map { |event| event["sessionId"].presence }.uniq
+    raise "No session IDs found in #{log_path}" if session_ids.empty?
+
+    if requested.blank? || requested == "latest"
+      latest = events.reverse.find { |event| event["sessionId"].present? }
+      return latest["sessionId"]
+    end
+
+    exact = session_ids.find { |session_id| session_id == requested }
+    return exact if exact
+
+    matches = session_ids.select { |session_id| session_id.start_with?(requested.to_s) }
+    return matches.first if matches.one?
+
+    raise "Debug session #{requested.inspect} not found or ambiguous"
+  end
+
+  def safe_report_id(session_id)
+    session_id.to_s.gsub(/[^a-zA-Z0-9._-]/, "_").first(96).presence || "unknown"
   end
 
   def git_value(*args)
@@ -91,25 +102,27 @@ module CassioDebugReport
     ]
   end
 
-  def markdown(path, events)
-    session_id = File.basename(path, ".jsonl")
+  def markdown(session_id, events)
     t0 = events.first&.dig("timestamp").to_i
-    runs = events.map { |e| e["runId"] }.compact.uniq
-    errors = events.select { |e| e["severity"] == "error" || e["channel"] == "error" || e["event"].to_s.end_with?(".throw") }
-    interrupted = events.select { |e| e["event"] == "previous_run_interrupted" }
-    audio = events.select { |e| e["channel"] == "audio" }
-    timeline = events.select do |e|
-      e["channel"] == "audio" || e["channel"] == "error" || e["channel"] == "lifecycle" ||
-        e["event"].to_s.include?("construct") || e["event"].to_s.include?("persist")
+    runs = events.map { |event| event["runId"] }.compact.uniq
+    errors = events.select do |event|
+      event["severity"] == "error" || event["channel"] == "error" || event["event"].to_s.end_with?(".throw")
+    end
+    interrupted = events.select { |event| event["event"] == "previous_run_interrupted" }
+    audio = events.select { |event| event["channel"] == "audio" }
+    timeline = events.select do |event|
+      event["channel"] == "audio" || event["channel"] == "error" || event["channel"] == "lifecycle" ||
+        event["event"].to_s.include?("construct") || event["event"].to_s.include?("persist")
     end.last(MAX_TIMELINE)
 
     peak_events = audio.filter_map do |event|
       output = state_for(event)["output"]
       next unless output.is_a?(Hash)
-      [output["maxDelta"].to_f, output["clipped"].to_i, event]
-    end.sort_by { |delta, clipped, _| [-clipped, -delta] }.first(20)
 
-    lines = []
+      [ output["maxDelta"].to_f, output["clipped"].to_i, event ]
+    end.sort_by { |delta, clipped, _event| [ -clipped, -delta ] }.first(20)
+
+    lines = [ ]
     lines << "# CASSIO diagnostic session #{session_id}"
     lines << ""
     lines << "Generated from persisted browser telemetry. This report is evidence only; it does not infer a root cause."
@@ -120,19 +133,20 @@ module CassioDebugReport
     lines << "- Branch: `#{git_value("branch", "--show-current")}`"
     lines << "- Commit: `#{git_value("rev-parse", "HEAD")}`"
     lines << "- Session: `#{session_id}`"
-    lines << "- Runs: #{runs.map { |r| "`#{r}`" }.join(", ")}"
+    lines << "- Runs: #{runs.map { |run_id| "`#{run_id}`" }.join(", ")}"
     lines << "- Events: #{events.length}"
     lines << "- Audio events: #{audio.length}"
     lines << "- Error events: #{errors.length}"
     lines << "- Interrupted previous runs observed: #{interrupted.length}"
-    lines << "- Raw local log: `#{path}`"
+    lines << "- Raw local event journal: `#{log_path}`"
     lines << ""
 
     unless errors.empty?
       lines << "## Errors"
       lines << ""
       errors.last(20).each do |event|
-        lines << "- `#{event["event"]}` seq=#{event["seq"]} run=`#{event["runId"]}`: `#{JSON.generate(event["data"] || {}).slice(0, 1200)}`"
+        data = JSON.generate(event["data"] || {}).slice(0, 1200)
+        lines << "- `#{event["event"]}` seq=#{event["seq"]} run=`#{event["runId"]}`: `#{data}`"
       end
       lines << ""
     end
@@ -156,7 +170,8 @@ module CassioDebugReport
       lines << "maxDelta\tclipped\tseq\tevent\tscreen\tpcmSources"
       peak_events.each do |delta, clipped, event|
         state = state_for(event)
-        lines << [delta, clipped, event["seq"], event["event"], state["screen"] || "-", source_ids(state)].join("\t")
+        row = [ delta, clipped, event["seq"], event["event"], state["screen"] || "-", source_ids(state) ]
+        lines << row.join("\t")
       end
       lines << "```"
     end
@@ -169,26 +184,27 @@ module CassioDebugReport
     lines.join("\n")
   end
 
-  def write(session = nil)
-    path = resolve_session(session)
-    events = load_events(path)
-    raise "No parseable events in #{path}" if events.empty?
+  def write(requested = nil)
+    all_events = load_events
+    session_id = resolve_session(all_events, requested)
+    events = all_events.select { |event| event["sessionId"] == session_id }
+    raise "No events found for session #{session_id}" if events.empty?
 
     FileUtils.mkdir_p(reports_dir)
-    out = reports_dir.join("#{File.basename(path, ".jsonl")}.md")
-    File.write(out, markdown(path, events))
+    out = reports_dir.join("#{safe_report_id(session_id)}.md")
+    File.write(out, markdown(session_id, events))
     out
   end
 end
 
 namespace :debug do
   desc "Generate a Markdown diagnostic report. Usage: bin/rails 'debug:report[latest]'"
-  task :report, [:session] => :environment do |_task, args|
+  task :report, [ :session ] => :environment do |_task, args|
     puts CassioDebugReport.write(args[:session] || "latest")
   end
 
   desc "Generate latest diagnostic report and open a GitHub issue. Usage: bin/rails 'debug:github[latest]'"
-  task :github, [:session] => :environment do |_task, args|
+  task :github, [ :session ] => :environment do |_task, args|
     report = CassioDebugReport.write(args[:session] || "latest")
     session_id = File.basename(report, ".md")
     title = "CASSIO audio diagnostic #{session_id}"
