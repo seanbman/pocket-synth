@@ -122,7 +122,7 @@ module CassioDebugReport
       [ output["maxDelta"].to_f, output["clipped"].to_i, event ]
     end.sort_by { |delta, clipped, _event| [ -clipped, -delta ] }.first(20)
 
-    lines = [ ]
+    lines = []
     lines << "# CASSIO diagnostic session #{session_id}"
     lines << ""
     lines << "Generated from persisted browser telemetry. This report is evidence only; it does not infer a root cause."
