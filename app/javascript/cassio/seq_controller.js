@@ -1,6 +1,6 @@
 import {
   SEQ_PATTERNS, SEQ_LENGTHS, SEQ_LANES, defaultStep, sanitizeStep,
-  defaultTrackSeq, sanitizeTrackSeq
+  defaultPattern, sanitizePattern, patternHasHits, trackSeqHasHits, trackSeqToPattern
 } from "cassio/store"
 
 export const SEQ_SCREENS = new Set(["sequencer", "step-edit"])
@@ -24,35 +24,40 @@ export class SeqController {
     return this.app.loopEngine.tracks.find((t) => t.id === id)
   }
 
-  #trackSeq() {
+  /**
+   * A track owns a complete six-lane pattern. Older saves used track.seq as a
+   * one-sound sequence; migrate that data once into the matching pad lane, then
+   * disable the legacy sequence so clearing the new pattern cannot resurrect it.
+   */
+  #trackPattern() {
     const track = this.#track()
-    if (!track) return defaultTrackSeq()
-    if (!track.seq) track.seq = defaultTrackSeq()
-    track.seq = sanitizeTrackSeq(track.seq)
-    return track.seq
+    if (!track) return defaultPattern()
+
+    let pattern = track.pattern ? sanitizePattern(track.pattern) : null
+    const legacyActive = track.seq?.enabled !== false && trackSeqHasHits(track.seq)
+    if ((!pattern || !patternHasHits(pattern)) && legacyActive) {
+      pattern = trackSeqToPattern(track.seq, track.padSlot)
+    }
+    if (!pattern) {
+      const length = SEQ_LENGTHS.includes(track.seq?.length) ? track.seq.length : 16
+      pattern = defaultPattern(length)
+      pattern.swing = track.seq?.swing ?? 0
+      pattern.gate = track.seq?.gate ?? 0.5
+    }
+
+    track.pattern = pattern
+    if (track.seq) track.seq.enabled = false
+    return track.pattern
   }
 
   get pattern() {
-    if (this.#trackMode()) {
-      const seq = this.#trackSeq()
-      const length = seq.length || 16
-      const emptyLane = () => Array.from({ length }, () => defaultStep())
-      const padIdx = Math.min(SEQ_LANES - 1, Math.max(0, (this.#track()?.padSlot || 1) - 1))
-      const lanes = Array.from({ length: SEQ_LANES }, (_, i) =>
-        i === padIdx ? seq.steps : emptyLane()
-      )
-      return { length, swing: seq.swing ?? 0, gate: seq.gate ?? 0.5, lanes }
-    }
+    if (this.#trackMode()) return this.#trackPattern()
     return this.app.stepSeq.pattern
   }
 
   #cursor() {
     const a = this.app
     const p = this.pattern
-    if (this.#trackMode()) {
-      const t = this.#track()
-      a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (t?.padSlot || a.seqTrackId || 1) - 1))
-    }
     a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, a.seqLane || 0))
     a.seqCursor = Math.min(p.length - 1, Math.max(0, a.seqCursor || 0))
     a.seqPage = Math.floor(a.seqCursor / PAGE)
@@ -61,14 +66,13 @@ export class SeqController {
 
   #step() {
     const { lane, step } = this.#cursor()
-    if (this.#trackMode()) return this.#trackSeq().steps[step]
     return this.pattern.lanes[lane][step]
   }
 
   open(trackId = null) {
     const a = this.app
     // PATTERN SEQ entered from a track's menu edits that track's independent
-    // sequence. Loop Options still opens the shared/global A-D pattern bank.
+    // six-lane pattern. Loop Options still opens the shared/global A-D bank.
     const resolvedTrackId = trackId ?? (a.screen === "loop-menu" ? a.loopEngine.selected : null)
     a.seqTrackId = resolvedTrackId
     if (resolvedTrackId != null) {
@@ -79,9 +83,9 @@ export class SeqController {
         return
       }
       a.loopEngine.select(resolvedTrackId)
-      this.#trackSeq()
-      a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (t.padSlot || 1) - 1))
-      a.toast(`${t.name || `L${resolvedTrackId}`} STEP SEQ`)
+      this.#trackPattern()
+      a.seqLane = 0
+      a.toast(`${t.name || `L${resolvedTrackId}`} PATTERN · 6 LANES`)
     } else {
       a.seqLane = a.seqLane || 0
       a.toast(`PATTERN ${this.seq.current} · 6 LANES`)
@@ -104,11 +108,6 @@ export class SeqController {
 
   selectLane(n) {
     const a = this.app
-    if (this.#trackMode()) {
-      a.toast(`TRK ${a.seqTrackId} · ${a.padSoundName(a.seqTrackId)}`)
-      a.render()
-      return
-    }
     a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (n | 0) - 1))
     a.seqHeader = false
     a.toast(`LANE ${a.seqLane + 1} · ${a.padSoundName(a.seqLane + 1)}`)
@@ -119,10 +118,10 @@ export class SeqController {
     const a = this.app
     if (this.#trackMode()) {
       a.loopEngine.markDirty(a.seqTrackId)
-      const seq = this.#trackSeq()
+      const p = this.#trackPattern()
       const t = this.#track()
-      if (t && seq) {
-        const bars = Math.max(1, Math.ceil((seq.length || 16) / 16))
+      if (t && p) {
+        const bars = Math.max(1, Math.ceil((p.length || 16) / 16))
         if ((t.lengthBars || 0) < bars) a.loopEngine.setTrackLengthBars(t.id, bars)
       }
       a.persistLoop?.()
@@ -198,7 +197,7 @@ export class SeqController {
         const d = dir === "right" ? 1 : -1
         if (c.header) {
           if (this.#trackMode()) {
-            a.toast(`TRK ${a.seqTrackId} STEP SEQ`)
+            a.toast(`TRK ${a.seqTrackId} PATTERN`)
             return true
           }
           this.#switchPattern(d)
@@ -254,21 +253,16 @@ export class SeqController {
   nudgeKnob(which, delta) {
     const a = this.app
     const p = this.pattern
-    const seq = this.#trackMode() ? this.#trackSeq() : null
     if (a.screen === "sequencer") {
       if (which === "m1") {
-        const swing = Math.min(1, Math.max(0, (seq?.swing ?? p.swing) + delta))
-        if (seq) seq.swing = swing
-        else p.swing = swing
-        a.toast(`SWING ${Math.round(swing * 100)}%`)
+        p.swing = Math.min(1, Math.max(0, p.swing + delta))
+        a.toast(`SWING ${Math.round(p.swing * 100)}%`)
         this.#changed()
         return true
       }
       if (which === "m2") {
-        const gate = Math.min(1, Math.max(0.05, (seq?.gate ?? p.gate) + delta))
-        if (seq) seq.gate = gate
-        else p.gate = gate
-        a.toast(`GATE ${Math.round(gate * 100)}%`)
+        p.gate = Math.min(1, Math.max(0.05, p.gate + delta))
+        a.toast(`GATE ${Math.round(p.gate * 100)}%`)
         this.#changed()
         return true
       }
@@ -334,28 +328,16 @@ export class SeqController {
     const p = this.pattern
     const i = SEQ_LENGTHS.indexOf(p.length)
     const next = SEQ_LENGTHS[(i + 1) % SEQ_LENGTHS.length]
-    if (this.#trackMode()) {
-      const seq = this.#trackSeq()
-      if (!seq) return
-      if (next > seq.steps.length) {
-        const src = seq.steps.slice()
-        while (seq.steps.length < next) seq.steps.push(sanitizeStep({ ...src[seq.steps.length % src.length] }))
+    for (let l = 0; l < SEQ_LANES; l++) {
+      const lane = p.lanes[l]
+      if (next > lane.length) {
+        const src = lane.slice()
+        while (lane.length < next) lane.push(sanitizeStep({ ...src[lane.length % src.length] }))
       } else {
-        seq.steps.length = next
+        lane.length = next
       }
-      seq.length = next
-    } else {
-      for (let l = 0; l < SEQ_LANES; l++) {
-        const lane = p.lanes[l]
-        if (next > lane.length) {
-          const src = lane.slice()
-          while (lane.length < next) lane.push(sanitizeStep({ ...src[lane.length % src.length] }))
-        } else {
-          lane.length = next
-        }
-      }
-      p.length = next
     }
+    p.length = next
     a.seqCursor = Math.min(a.seqCursor || 0, next - 1)
     a.toast(`${next} STEPS`)
     this.#changed()
@@ -363,16 +345,6 @@ export class SeqController {
 
   #rotateLane(lane, dir) {
     const a = this.app
-    if (this.#trackMode()) {
-      const seq = this.#trackSeq()
-      if (!seq || lane !== a.seqTrackId - 1) return
-      const arr = seq.steps
-      if (dir > 0) arr.unshift(arr.pop())
-      else arr.push(arr.shift())
-      a.toast(`TRK ${a.seqTrackId} ${dir > 0 ? "→" : "←"} 1 STEP`)
-      this.#changed()
-      return
-    }
     const p = this.pattern
     const arr = p.lanes[lane]
     if (dir > 0) arr.unshift(arr.pop())
@@ -393,10 +365,11 @@ export class SeqController {
   #askClearLane() {
     const a = this.app
     const lane = this.#cursor().lane
+    const owner = this.#trackMode() ? `TRK ${a.seqTrackId}` : `PATTERN ${this.seq.current}`
     a.confirmTitle = "CLEAR LANE?"
     a.confirmLines = [
       { text: `LANE ${lane + 1} · ${a.padSoundName(lane + 1)}`, tone: "green" },
-      { text: `PATTERN ${this.seq.current} · ALL STEPS OFF`, tone: "muted" },
+      { text: `${owner} · ALL STEPS OFF`, tone: "muted" },
       { text: "A CANCEL · D CLEAR", tone: "muted" }
     ]
     a.confirmAction = "clear-seq-lane"
@@ -410,14 +383,9 @@ export class SeqController {
     const a = this.app
     const p = this.pattern
     const lane = this.#cursor().lane
-    if (this.#trackMode()) {
-      const seq = this.#trackSeq()
-      if (seq) seq.steps = Array.from({ length: p.length }, defaultStep)
-      a.toast(`TRK ${a.seqTrackId} CLEARED`)
-    } else {
-      p.lanes[lane] = Array.from({ length: p.length }, defaultStep)
-      a.toast(`LANE ${lane + 1} CLEARED`)
-    }
+    p.lanes[lane] = Array.from({ length: p.length }, defaultStep)
+    if (this.#trackMode()) a.toast(`TRK ${a.seqTrackId} · LANE ${lane + 1} CLEARED`)
+    else a.toast(`LANE ${lane + 1} CLEARED`)
     a.screen = "sequencer"
     this.#changed()
   }
@@ -430,7 +398,7 @@ export class SeqController {
     const tick = () => {
       this._raf = null
       if (a.screen !== "sequencer") return
-      const playLen = this.#trackMode() ? this.#trackSeq()?.length : null
+      const playLen = this.#trackMode() ? this.#trackPattern()?.length : null
       const step = a.transport.playing ? a.stepSeq.playheadStep(playLen) : -1
       if (step >= 0 && a.transport.playing) {
         const playPage = Math.floor(step / PAGE)
@@ -468,7 +436,7 @@ export class SeqController {
     const c = this.#cursor()
     const p = this.pattern
     const trackMode = this.#trackMode()
-    const playLen = trackMode ? this.#trackSeq()?.length : null
+    const playLen = trackMode ? this.#trackPattern()?.length : null
     return {
       seq: {
         current: trackMode ? `TRK ${a.seqTrackId}` : this.seq.current,
@@ -478,7 +446,7 @@ export class SeqController {
         lanes: p.lanes
       },
       seqTrackId: trackMode ? a.seqTrackId : null,
-      seqTrackName: trackMode ? a.padSoundName(a.seqTrackId) : null,
+      seqTrackName: trackMode ? this.#track()?.name : null,
       seqLane: c.lane,
       seqCursor: c.step,
       seqPage: c.page,
