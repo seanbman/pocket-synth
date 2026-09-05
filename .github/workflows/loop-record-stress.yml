@@ -1,0 +1,56 @@
+name: LOOP record stress
+
+on:
+  push:
+    branches:
+      - fix/loop-record-user-test-freeze
+  pull_request:
+    paths:
+      - 'app/javascript/cassio/**'
+      - 'test/smoke/loop_record_stress.mjs'
+      - '.github/workflows/loop-record-stress.yml'
+
+jobs:
+  stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prepare database
+        run: bin/rails db:prepare
+
+      - name: Start CASSIO
+        shell: bash
+        run: |
+          set -euo pipefail
+          bin/rails server -b 127.0.0.1 -p 3000 > /tmp/cassio-rails.log 2>&1 &
+          echo $! > /tmp/cassio-rails.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/cassio-rails.log
+          exit 1
+
+      - name: Run real REC stress reproduction
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+        run: node test/smoke/loop_record_stress.mjs
+
+      - name: Rails log on failure
+        if: failure()
+        run: cat /tmp/cassio-rails.log || true
