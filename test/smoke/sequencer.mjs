@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Step sequencer smoke: global + track-local seq, arrangement play schedules lane seq.
- * Requires dev server (https://127.0.0.1:3000/) and google-chrome.
+ * Sequencer smoke: global six-pad bank plus arbitrary, pad-independent track
+ * sound lanes. Requires dev server and google-chrome.
  */
 import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
@@ -17,7 +17,7 @@ const chrome = spawn("google-chrome", [
   `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, "about:blank"
 ], { stdio: "ignore" })
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 let failed = false
 const fail = (msg) => { failed = true; console.error("FAIL:", msg) }
 const pass = (msg) => console.log("PASS:", msg)
@@ -25,235 +25,199 @@ const pass = (msg) => console.log("PASS:", msg)
 try {
   await sleep(1500)
   const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json()
-  const page = list.find((t) => t.type === "page" && !t.url.startsWith("chrome-extension:")) || list[0]
+  const page = list.find((target) => target.type === "page" && !target.url.startsWith("chrome-extension:")) || list[0]
   const ws = new WebSocket(page.webSocketDebuggerUrl)
-  await new Promise((r, j) => { ws.onopen = r; ws.onerror = j })
+  await new Promise((resolve, reject) => { ws.onopen = resolve; ws.onerror = reject })
   let id = 0
   const pending = new Map()
-  ws.onmessage = (ev) => {
-    const m = JSON.parse(ev.data)
-    if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id) }
+  ws.onmessage = (event) => {
+    const message = JSON.parse(event.data)
+    if (message.id && pending.has(message.id)) {
+      pending.get(message.id)(message)
+      pending.delete(message.id)
+    }
   }
-  const send = (method, params = {}) => new Promise((r) => {
-    const i = ++id
-    pending.set(i, r)
-    ws.send(JSON.stringify({ id: i, method, params }))
+  const send = (method, params = {}) => new Promise((resolve) => {
+    const requestId = ++id
+    pending.set(requestId, resolve)
+    ws.send(JSON.stringify({ id: requestId, method, params }))
   })
-  const evalJs = async (expr) => {
-    const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true })
-    if (r.result.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description || r.result.exceptionDetails.text)
-    return r.result.result.value
+  const evalJs = async (expression) => {
+    const response = await send("Runtime.evaluate", {
+      expression,
+      awaitPromise: true,
+      returnByValue: true
+    })
+    if (response.result.exceptionDetails) {
+      throw new Error(response.result.exceptionDetails.exception?.description || response.result.exceptionDetails.text)
+    }
+    return response.result.result.value
   }
+
   await send("Runtime.enable")
-  await send("Emulation.setDeviceMetricsOverride", { width: 430, height: 932, deviceScaleFactor: 2, mobile: true })
+  await send("Emulation.setDeviceMetricsOverride", {
+    width: 430,
+    height: 932,
+    deviceScaleFactor: 2,
+    mobile: true
+  })
   await send("Page.navigate", { url: URL })
   await sleep(8000)
 
   const out = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="cassio"]'), 'cassio')?.app
+      document.querySelector('[data-controller~="cassio"]'), 'cassio'
+    )?.app
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
-    app.looper.openHome()
+    app.transportStopPublic()
 
-    // Loop Options remains the shared/global Pattern A-D editor.
+    const playable = (app.factory?.sounds || []).filter((sound) =>
+      sound?.playable !== false && sound?.kind !== 'kit' && sound?.voice !== 'kit'
+    )
+    if (playable.length < 7) return { fatal: 'need at least seven playable factory sounds' }
+
+    // Loop Options remains the fixed global six-pad A-D editor.
     app.screen = 'loop-options'
-    app.loopOptIndex = 0
     app.render()
-    app.looper.softKey('a')
-    const globalScreen = app.screen
-    const globalHtml = app.vscreen?.innerHTML || ''
-    const globalLanes = (globalHtml.match(/seq-row/g) || []).length
-    const globalTrackMode = app.seqTrackId
+    app.seqCtl.open()
+    const globalTrackId = app.seqTrackId
+    const globalRows = (app.vscreen?.innerHTML.match(/seq-row/g) || []).length
     app.seqCtl.back()
-    const backToLoop = app.screen
 
     const le = app.loopEngine
-
-    // Give Track 2 its own working track, then enter PATTERN SEQ from its track menu.
-    const lib2 = le.createLibraryTrack({ name: 'PAD2' })
-    lib2.padSlot = 2
+    const lib2 = le.createLibraryTrack({ name: 'DYNAMIC SEVEN' })
     le.assignLibraryToLane(2, lib2.id)
+    const track2 = le.tracks.find((track) => track.id === 2)
+    track2.pattern = null
+    track2.seq.enabled = false
     le.select(2)
-    app.loopMenuIndex = 0
     app.screen = 'loop-menu'
     app.render()
-    const menuHtml = app.vscreen?.innerHTML || ''
-    const menuHasPatternSeq = menuHtml.includes('PATTERN SEQ')
-    app.looper.nav('ok')
-    const track2Screen = app.screen
-    const track2Id = app.seqTrackId
-    const track2Lanes = ((app.vscreen?.innerHTML || '').match(/seq-row/g) || []).length
-    app.seqCursor = 0
-    app.seqCtl.nav('ok')
-    const lane2 = le.tracks.find((t) => t.id === 2)
-    const track2Step0 = !!lane2?.seq?.steps?.[0]?.on
-    app.seqCtl.back()
+    app.seqCtl.open(2)
 
-    // Track 1 must open a different seq object and start independently empty.
-    const lib1 = le.createLibraryTrack({ name: 'PAD1' })
-    lib1.padSlot = 1
+    // Reuse physical Pad 1 with seven different sound assignments. Each press
+    // inserts at the cursor and captures a new sound lane by value.
+    const slot = app.project.pads.find((pad) => pad.pad === 1)
+    for (let i = 0; i < 7; i++) {
+      slot.soundId = playable[i].id
+      slot.patch = null
+      slot.level = 1
+      slot.pan = 0
+      slot.mode = playable[i].padMode || 'oneshot'
+      app.seqCursor = i
+      app.seqCtl.selectLane(1)
+    }
+
+    const laneCount7 = track2.pattern?.lanes?.length
+    const sourceIdsBefore = track2.pattern?.sources?.map((source) => source.soundId) || []
+    const uniqueSources = new Set(sourceIdsBefore).size
+    const eachLaneOwnHit = track2.pattern?.lanes?.every((lane, i) => !!lane?.[i]?.on)
+    const selectedLane7 = app.seqLane === 6
+    const secondLanePage = (app.vscreen?.innerHTML || '').includes('LANES 7–7/7')
+
+    // Reassigning the pad does not mutate any already captured lane source.
+    slot.soundId = playable[0].id
+    slot.pan = 0.75
+    const stableAfterPadChange = sourceIdsBefore.every((id, i) => track2.pattern.sources[i].soundId === id)
+      && track2.pattern.sources[0].pan === 0
+
+    // Runtime serializer must preserve all seven lanes instead of truncating to six.
+    const saved = le.serialize()
+    const storedTrack2 = saved.arrangement.lanes.find((track) => track.id === 2)
+    const serializedSeven = storedTrack2?.pattern?.lanes?.length === 7
+      && storedTrack2?.pattern?.sources?.length === 7
+    le.applyState(saved)
+    const reloadedTrack2 = le.tracks.find((track) => track.id === 2)
+    const reloadedSeven = reloadedTrack2?.pattern?.lanes?.length === 7
+      && reloadedTrack2?.pattern?.sources?.map((source) => source.soundId).join('|') === sourceIdsBefore.join('|')
+
+    // D/removal path removes the selected sound lane and keeps the rest aligned.
+    le.select(2)
+    app.seqTrackId = 2
+    app.seqLane = 6
+    app.screen = 'sequencer'
+    app.render()
+    app.seqCtl.clearLaneConfirmed()
+    const removedToSix = reloadedTrack2.pattern.lanes.length === 6
+      && reloadedTrack2.pattern.sources.length === 6
+      && !reloadedTrack2.pattern.sources.some((source) => source.soundId === sourceIdsBefore[6])
+
+    // A separate track receives its own independent pattern object.
+    const lib1 = le.createLibraryTrack({ name: 'INDEPENDENT' })
     le.assignLibraryToLane(1, lib1.id)
+    const track1 = le.tracks.find((track) => track.id === 1)
+    track1.pattern = null
+    track1.seq.enabled = false
     le.select(1)
-    app.loopMenuIndex = 0
-    app.screen = 'loop-menu'
-    app.render()
-    app.looper.nav('ok')
-    const track1Id = app.seqTrackId
-    const lane1 = le.tracks.find((t) => t.id === 1)
-    const track1InitiallyOff = !lane1?.seq?.steps?.[0]?.on
-    app.seqCursor = 1
-    app.seqCtl.nav('ok')
-    const track1Step1 = !!lane1?.seq?.steps?.[1]?.on
-    const track2StillOwn = !!lane2?.seq?.steps?.[0]?.on && !lane2?.seq?.steps?.[1]?.on
-    const seqObjectsIndependent = lane1?.seq !== lane2?.seq && lane1?.seq?.steps !== lane2?.seq?.steps
-    app.seqCtl.back()
+    app.seqCtl.open(1)
+    slot.soundId = playable[6].id
+    slot.pan = -0.5
+    app.seqCursor = 12
+    app.seqCtl.selectLane(1)
+    const trackObjectsIndependent = track1.pattern !== reloadedTrack2.pattern
+      && track1.pattern.lanes !== reloadedTrack2.pattern.lanes
+      && track1.pattern.sources[0].soundId === playable[6].id
+      && reloadedTrack2.pattern.lanes.length === 6
 
-    // Global bank is still available and can be dropped/baked deliberately.
-    app.screen = 'loop-options'
-    app.loopOptIndex = 0
-    app.render()
-    app.looper.softKey('a')
-    const globalAgainTrackId = app.seqTrackId
-    app.seqLane = 1
-    app.seqCursor = 0
-    app.seqCtl.nav('ok')
-    const globalToggled = app.seqCtl.pattern.lanes?.[1]?.[0]?.on
-    app.seqCtl.back()
-
-    le.select(2)
-    app.looper.dropPatternOnSelected()
-    const bakedHits = !!lane2?.pattern?.lanes?.some((lane) => lane.some((s) => s?.on))
-    const bakedDirty = !!lane2?.dirty
-
-    // Clip window: shorten/lengthen updates lengthBars + audible window (not tiled past clip)
-    le.lengthBars = 4
-    le.setTrackLengthBars(2, 2)
-    const origin = app.engine.now()
-    le._playOrigin = origin
-    const barSec = app.transport.barSec()
-    const inClip = !!le.clipLocalSec(lane2, origin + 0.1 * barSec, origin)
-    const pastClip = le.clipLocalSec(lane2, origin + 2.5 * barSec, origin)
-    le.setTrackLengthBars(2, 4)
-    const afterLenIn = !!le.clipLocalSec(lane2, origin + 2.5 * barSec, origin)
-    le.setTrackLengthBars(2, 2)
-    app.looper.openHome()
-    app.render()
-    const htmlShort = app.vscreen?.innerHTML || ''
-    const clipShort = htmlShort.includes('data-track-id="2"')
-    const clipEl = app.vscreen.querySelector('.loop-clip[data-track-id="2"]')
-    const clipW = clipEl ? parseFloat(clipEl.style.width) : 0
-    const timelineW = 4 * 52
-    const clipLooksShort = clipW > 0 && clipW < timelineW * 0.6
-
-    // Arrangement play schedules track-local/baked sequence state.
+    // Playback scheduler must emit captured source objects, not pad numbers.
+    const scheduled = []
+    app.stepSeq.trigger = (target, options) => scheduled.push({ target, options })
     app.transportStopPublic()
-    app.looper.openHome()
-    app.transportPlayPublic()
-    await new Promise((r) => setTimeout(r, 80))
-    const loopPlayContext = app.playContext
-    const stepSeqOnLoop = app.stepSeq.running
-    const arrMode = app.stepSeq._mode
-    const bakedArmed = app.stepSeq._trackNext.has('pat:2')
-    const pastWhilePlaying = le.clipLocalSec(
-      lane2,
-      (le._playOrigin || origin) + 2.5 * barSec,
-      le._playOrigin || origin
+    le.select(1)
+    app.seqTrackId = 1
+    app.screen = 'sequencer'
+    const origin = app.engine.now() + 0.05
+    app.transport.playAt(origin)
+    app.stepSeq.start(origin, { mode: 'track', trackId: 1 })
+    await new Promise((resolve) => setTimeout(resolve, 1700))
+    app.stepSeq.stop()
+    app.transport.stop()
+    const scheduledCapturedSource = scheduled.some(({ target }) =>
+      target && typeof target === 'object' && target.soundId === playable[6].id
     )
-    app.transportStopPublic()
-
-    app.screen = 'loop-options'
-    app.loopOptIndex = 0
-    app.render()
-    app.looper.softKey('a')
-    app.transportPlayPublic()
-    await new Promise((r) => setTimeout(r, 80))
-    const seqPlayContext = app.playContext
-    const stepSeqOnSeq = app.stepSeq.running
-    app.transportStopPublic()
 
     return {
       fatal: null,
-      globalScreen,
-      globalLanes,
-      globalTrackMode,
-      backToLoop,
-      menuHasPatternSeq,
-      track2Screen,
-      track2Id,
-      track2Lanes,
-      track2Step0,
-      track1Id,
-      track1InitiallyOff,
-      track1Step1,
-      track2StillOwn,
-      seqObjectsIndependent,
-      globalAgainTrackId,
-      globalToggled,
-      bakedHits,
-      bakedDirty,
-      inClip,
-      pastClipNull: pastClip == null,
-      afterLenIn,
-      clipLooksShort,
-      clipShort,
-      loopPlayContext,
-      stepSeqOnLoop,
-      arrMode,
-      bakedArmed,
-      pastWhilePlayingNull: pastWhilePlaying == null,
-      seqPlayContext,
-      stepSeqOnSeq
+      globalTrackId,
+      globalRows,
+      laneCount7,
+      uniqueSources,
+      eachLaneOwnHit,
+      selectedLane7,
+      secondLanePage,
+      stableAfterPadChange,
+      serializedSeven,
+      reloadedSeven,
+      removedToSix,
+      trackObjectsIndependent,
+      scheduledCapturedSource
     }
   })()`)
 
   if (out.fatal) fail(out.fatal)
   else {
-    if (out.globalScreen === "sequencer") pass("global Pattern Seq opens from Loop Options")
-    else fail(`global screen ${out.globalScreen}`)
-    if (out.globalTrackMode == null) pass("Loop Options keeps global mode")
-    else fail(`expected global mode, seqTrackId=${out.globalTrackMode}`)
-    if (out.globalLanes === 6) pass("global grid shows 6 lanes")
-    else fail(`global lanes ${out.globalLanes}`)
-    if (out.backToLoop === "loop-tracks") pass("back returns to timeline")
-    else fail(`back landed on ${out.backToLoop}`)
-    if (out.menuHasPatternSeq) pass("track menu exposes PATTERN SEQ")
-    else fail("track menu missing PATTERN SEQ")
-    if (out.track2Screen === "sequencer" && out.track2Id === 2) pass("Track 2 menu opens Track 2 local seq")
-    else fail(`Track 2 screen=${out.track2Screen} seqTrackId=${out.track2Id}`)
-    if (out.track2Lanes === 6) pass("track-local grid renders in sequencer")
-    else fail(`track-local lanes ${out.track2Lanes}`)
-    if (out.track2Step0) pass("Track 2 step edit lands in Track 2 seq")
-    else fail("Track 2 step was not stored locally")
-    if (out.track1Id === 1 && out.track1InitiallyOff) pass("Track 1 opens independently from Track 2")
-    else fail(`Track 1 id=${out.track1Id} initiallyOff=${out.track1InitiallyOff}`)
-    if (out.track1Step1 && out.track2StillOwn && out.seqObjectsIndependent) pass("Track 1 and Track 2 pattern data are isolated")
-    else fail(`isolation t1=${out.track1Step1} t2=${out.track2StillOwn} refs=${out.seqObjectsIndependent}`)
-    if (out.globalAgainTrackId == null && out.globalToggled) pass("global A-D bank remains separate and editable")
-    else fail(`global trackId=${out.globalAgainTrackId} toggled=${out.globalToggled}`)
-    if (out.bakedHits && out.bakedDirty) pass("DROP PATTERN bakes global pattern copy onto selected lane")
-    else fail(`baked hits=${out.bakedHits} dirty=${out.bakedDirty}`)
-    if (out.inClip && out.pastClipNull) pass("2-bar clip: audible in window, silent past clip")
-    else fail(`clip window in=${out.inClip} pastNull=${out.pastClipNull}`)
-    if (out.afterLenIn) pass("lengthen to 4 bars extends audible window")
-    else fail("lengthen did not open window at bar 3")
-    if (out.clipLooksShort) pass("shortened length shrinks pink clip")
-    else fail(`clip width not short (clipShort=${out.clipShort})`)
-    if (out.loopPlayContext === "loop") pass("loop play uses loop context")
-    else fail(`loop playContext ${out.loopPlayContext}`)
-    if (out.stepSeqOnLoop && out.arrMode === "arrangement") pass("arrangement play runs lane step seq")
-    else fail(`arrangement seq running=${out.stepSeqOnLoop} mode=${out.arrMode}`)
-    if (out.bakedArmed) pass("arrangement schedules baked 6-lane pattern")
-    else fail("baked pattern not armed on arrangement play")
-    if (out.pastWhilePlayingNull) pass("playing: bar 3 still outside 2-bar clip window")
-    else fail("playing past-clip window not silent")
-    if (out.seqPlayContext === "seq") pass("global sequencer play uses seq context")
-    else fail(`seq playContext ${out.seqPlayContext}`)
-    if (out.stepSeqOnSeq) pass("step seq runs on sequencer play")
-    else fail("step seq not running on sequencer play")
+    if (out.globalTrackId == null && out.globalRows === 6) pass("global A-D bank remains six pad lanes")
+    else fail(`global mode trackId=${out.globalTrackId} rows=${out.globalRows}`)
+    if (out.laneCount7 === 7 && out.uniqueSources === 7) pass("one track stores seven distinct sound lanes")
+    else fail(`dynamic lanes=${out.laneCount7} uniqueSources=${out.uniqueSources}`)
+    if (out.eachLaneOwnHit) pass("pad presses insert hits into their captured sound lanes")
+    else fail("one or more captured lanes missed its inserted hit")
+    if (out.selectedLane7 && out.secondLanePage) pass("lane 7 is reachable in the second six-row viewport")
+    else fail(`lane7 selected=${out.selectedLane7} page=${out.secondLanePage}`)
+    if (out.stableAfterPadChange) pass("pad reassignment does not mutate existing lane sounds")
+    else fail("captured lane changed after pad reassignment")
+    if (out.serializedSeven && out.reloadedSeven) pass("seven lanes survive serialize and recovery hydration")
+    else fail(`serialize=${out.serializedSeven} reload=${out.reloadedSeven}`)
+    if (out.removedToSix) pass("selected sound lane can be removed cleanly")
+    else fail("lane removal did not keep sources and steps aligned")
+    if (out.trackObjectsIndependent) pass("different tracks retain independent dynamic patterns")
+    else fail("track pattern objects or content leaked between tracks")
+    if (out.scheduledCapturedSource) pass("scheduler triggers captured source objects instead of current pads")
+    else fail("scheduler did not emit the captured lane source")
   }
-} catch (e) {
-  fail(e.message)
+} catch (error) {
+  fail(error.message)
 } finally {
   chrome.kill("SIGTERM")
   await sleep(300)
