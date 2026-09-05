@@ -1,3 +1,4 @@
+import { audioHostFor } from "cassio/audio/audio_host"
 import { midiToFreq, noteNameToMidi } from "cassio/voices/glass_poly"
 import { DEFAULT_SAMPLE_GAIN } from "cassio/patch"
 import { FxChain } from "cassio/audio/fx_chain"
@@ -14,6 +15,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 export class SampleVoice {
   constructor(engine) {
     this.engine = engine
+    this.audio = audioHostFor(engine)
     this.buffer = null
     this._reversed = null
     this.rootMidi = 60
@@ -34,7 +36,6 @@ export class SampleVoice {
     return this.active.size
   }
 
-  // Legacy accessors used by UI/controllers
   get gain() { return this.p.gain }
   set gain(v) { this.p.gain = clamp(Number(v) || DEFAULT_SAMPLE_GAIN, 0.15, 2.5); this.fx.apply({ gain: this.p.gain }) }
   get trimStart() { return this.p.trimStart }
@@ -48,7 +49,6 @@ export class SampleVoice {
     this._reversed = null
   }
 
-  /** Apply a full or partial flat patch (legacy keys + fx keys). */
   applyPatch(patch) {
     if (!patch) return
     if (patch.root) this.rootMidi = noteNameToMidi(patch.root)
@@ -62,13 +62,11 @@ export class SampleVoice {
   }
 
   setPan(v) { this.applyPatch({ pan: v }) }
-
-  /** Sample level (independent of master). */
   setGain(v) { this.applyPatch({ gain: v }) }
 
   #reversedBuffer() {
     if (this._reversed && this._reversed.length === this.buffer.length) return this._reversed
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const b = this.buffer
     const out = ctx.createBuffer(b.numberOfChannels, b.length, b.sampleRate)
     for (let c = 0; c < b.numberOfChannels; c++) {
@@ -97,7 +95,6 @@ export class SampleVoice {
     return end - start
   }
 
-  /** Real (wall-clock) playback time of the trimmed region at this midi's rate. */
   playSeconds(midi = this.rootMidi) {
     const rate = clamp(this.#rateFor(midi), 0.05, 8)
     return this.#trimSeconds() / rate
@@ -106,17 +103,17 @@ export class SampleVoice {
   setPitchBend(semitones) {
     this.pitchBend = clamp(semitones, -2, 2)
     const bent = Math.pow(2, this.pitchBend / 12)
+    const ctx = this.audio.context()
     for (const vox of this.active.values()) {
       try {
-        vox.src.playbackRate.setTargetAtTime(clamp(vox.baseRate * bent, 0.05, 8), this.engine.ctx.currentTime, 0.02)
+        vox.src.playbackRate.setTargetAtTime(clamp(vox.baseRate * bent, 0.05, 8), ctx.currentTime, 0.02)
       } catch (_) { /* ignore */ }
     }
   }
 
-  /** Performance FX: ramp all active voices to a stop like a tape machine. */
   tapeStop(seconds = 0.8) {
-    if (!this.engine.ready) return
-    const t = this.engine.ctx.currentTime
+    if (!this.audio.ready) return
+    const t = this.audio.context().currentTime
     for (const [id, vox] of [...this.active.entries()]) {
       try {
         vox.src.playbackRate.cancelScheduledValues(t)
@@ -137,12 +134,11 @@ export class SampleVoice {
 
   /** `when` (audio time) lets the step sequencer schedule hits sample-accurately. */
   noteOn(midi = 60, velocity = 0.9, { loop = false, when = null, recTrack = null } = {}) {
-    if (!this.engine.ready || !this.buffer) return
+    if (!this.audio.ready || !this.buffer) return
     this.fx.ensure()
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const p = this.p
 
-    // Voice management
     if (p.voices === "mono") this.noteOff(null)
     else if (!p.retrigger && [...this.active.values()].some((v) => v.midi === midi)) return
     if (p.choke > 0) this.chokeGroup(p.choke)
@@ -151,7 +147,6 @@ export class SampleVoice {
     const dur = buf.duration
     let start = p.trimStart * dur
     let end = Math.max(start + 0.01, p.trimEnd * dur)
-    // Per-trigger randomization
     if (p.randStart > 0) start = start + Math.random() * p.randStart * (end - start) * 0.95
     const randSemis = p.randPitch > 0 ? (Math.random() * 2 - 1) * p.randPitch : 0
     const detune = p.detune > 0 ? (Math.random() * 2 - 1) * p.detune / 100 : 0
@@ -172,11 +167,9 @@ export class SampleVoice {
     }
     const detachMod = this.fx.attachRateMod(src.playbackRate, rate)
 
-    // Region in the (possibly reversed) buffer
     const rStart = reverse ? dur - end : start
     const rEnd = reverse ? dur - start : end
 
-    // Loop region: explicit loop points, stutter slice, or HOLD over trim
     let looping = false, lStart = rStart, lEnd = rEnd, pingpong = false
     if (p.stutter) {
       const slice = syncSeconds(p.stutterRate, this.bpm) * rate
@@ -188,7 +181,6 @@ export class SampleVoice {
       lEnd = reverse ? dur - ls : le
       pingpong = p.loopMode === "pingpong"
       if (p.loopMode === "rev" && !reverse) {
-        // reverse-direction loop on a forward one-shot: play from reversed buffer
         src.buffer = this.#reversedBuffer()
         lStart = dur - le; lEnd = dur - ls
       }
@@ -199,13 +191,12 @@ export class SampleVoice {
     const env = ctx.createGain()
     const fade = ctx.createGain()
     const vel = clamp(velocity, 0, 2.2)
-    // ADSR
     const a = Math.max(0, p.ampAttack), d = Math.max(0, p.ampDecay), s = clamp(p.ampSustain, 0, 1)
     env.gain.setValueAtTime(a > 0.002 ? 0.0001 : vel, t)
     if (a > 0.002) env.gain.linearRampToValueAtTime(vel, t + a)
     if (d > 0.002 && s < 0.999) env.gain.setTargetAtTime(Math.max(0.0001, vel * s), t + a, d / 3)
     else if (s < 0.999) env.gain.setValueAtTime(Math.max(0.0001, vel * s), t + a + 0.001)
-    // Fades (in buffer-region time, scaled by rate)
+
     const playLen = len / rate
     fade.gain.setValueAtTime(p.fadeIn > 0.002 ? 0.0001 : 1, t)
     if (p.fadeIn > 0.002) fade.gain.linearRampToValueAtTime(1, t + Math.min(p.fadeIn, playLen))
@@ -218,7 +209,7 @@ export class SampleVoice {
     src.connect(env)
     env.connect(fade)
     fade.connect(this.fx.input)
-    if (recTrack) this.engine.tapRec(fade, recTrack)
+    this.audio.tapRecord(fade, recTrack)
 
     const id = `s${++this._seq}`
     const vox = { src, env, fade, midi, baseRate, detachMod, stopped: false, group: p.choke }
@@ -240,7 +231,6 @@ export class SampleVoice {
         src.onended = done
         src.start(t, Math.min(Math.max(rStart, lStart), lEnd - 0.001))
       } else {
-        // `duration` is in buffer seconds (not scaled by playbackRate).
         src.onended = done
         src.start(t, rStart, rEnd - rStart)
       }
@@ -249,9 +239,8 @@ export class SampleVoice {
     }
   }
 
-  /** Ping-pong loop: chain alternating forward/reversed segments with optional crossfade. */
   #pingpong(vox, lStart, lEnd, rStart, t0) {
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const fwd = this.buffer, rev = this.#reversedBuffer()
     const dur = fwd.duration
     const xf = Math.max(0, this.p.loopXfade)
@@ -285,11 +274,9 @@ export class SampleVoice {
       dir = -dir
       first = false
       when = next
-      // Schedule the following segment slightly ahead of time
       const lead = Math.max(0.02, (next - ctx.currentTime) - 0.15)
       vox.timer = setTimeout(schedule, lead * 1000)
     }
-    // Replace the pre-made source: never started, just drop it
     try { vox.src.disconnect() } catch (_) { /* ignore */ }
     schedule()
   }
@@ -309,11 +296,11 @@ export class SampleVoice {
         if (immediate) {
           this.#stopVox(vox)
         } else {
-          const now = this.engine.ctx.currentTime
+          const ctx = this.audio.context()
+          const now = ctx.currentTime
           const t = Math.max(now, Number(when) || 0)
           const rel = Math.max(0.01, this.p.ampRelease || 0.04)
           if (t > now + 0.001) {
-            // Scheduled release (sequencer gate): leave the in-flight envelope alone
             vox.env.gain.setTargetAtTime(0.0001, t, Math.max(0.005, rel / 4))
           } else {
             vox.env.gain.cancelScheduledValues(t)
@@ -328,12 +315,11 @@ export class SampleVoice {
     this.#released()
   }
 
-  /** Stop voices in a choke group (called by app when another sound in that group fires). */
   chokeGroup(group) {
     for (const [id, vox] of [...this.active.entries()]) {
       if (vox.group !== group) continue
       try {
-        const t = this.engine.ctx.currentTime
+        const t = this.audio.context().currentTime
         vox.env.gain.cancelScheduledValues(t)
         vox.env.gain.setTargetAtTime(0.0001, t, 0.008)
         this.#stopVox(vox, t + 0.04)
