@@ -99,7 +99,10 @@ export class CassioApp {
     this.userSounds = []
     this.favorites = []
     this.screen = "splash"
-    this.menuIndex = 0
+    // SOUND is the primary creation area. Open the main menu with it selected
+    // so sampling, synth editing, and kit creation never become buried behind
+    // performance/arrangement navigation.
+    this.menuIndex = 2
     this.heldKeys = new Map()
     this.heldPads = new Map()
     this.pointerKeys = new Map()
@@ -2144,7 +2147,10 @@ export class CassioApp {
       this.render()
       this.#persist()
     }
-    if (key === "d") this.#openLibrary()
+    // Route through the SOUND hub instead of skipping straight to Library.
+    // Library's D key is Favorites now, so bypassing the hub made Sampler and
+    // New Kit effectively disappear from the main performance workflow.
+    if (key === "d") this.sampler.openHub()
   }
 
   #clearLibPick() {

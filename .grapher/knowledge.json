@@ -54,7 +54,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-cassio-project": {
       "id": "concept-cassio-project",
@@ -77,7 +79,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-consult-grapher-before-changes": {
       "id": "finding-consult-grapher-before-changes",
@@ -99,7 +103,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p01-cover-8c5dcf373e": {
       "id": "image-p01-cover-8c5dcf373e",
@@ -127,7 +133,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p03-industrial-design-4808395220": {
       "id": "image-p03-industrial-design-4808395220",
@@ -155,7 +163,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p06-screen-01-boot-1378e9148d": {
       "id": "image-p06-screen-01-boot-1378e9148d",
@@ -183,7 +193,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p07-screen-02-play-home-9e5c1836cf": {
       "id": "image-p07-screen-02-play-home-9e5c1836cf",
@@ -211,7 +223,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p08-screen-03-main-menu-7b67056705": {
       "id": "image-p08-screen-03-main-menu-7b67056705",
@@ -239,7 +253,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p09-screen-04-sound-library-v1-bf14090f1c": {
       "id": "image-p09-screen-04-sound-library-v1-bf14090f1c",
@@ -267,7 +283,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p09-screen-04-sound-library-v2-4d9534db6b": {
       "id": "image-p09-screen-04-sound-library-v2-4d9534db6b",
@@ -295,7 +313,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p10-screen-05-sound-detail-d2a7535ac9": {
       "id": "image-p10-screen-05-sound-detail-d2a7535ac9",
@@ -323,7 +343,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p11-screen-06-sound-edit-shape-5d4e3a8f16": {
       "id": "image-p11-screen-06-sound-edit-shape-5d4e3a8f16",
@@ -351,7 +373,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p12-screen-07-sound-edit-envelop-8a5879be5b": {
       "id": "image-p12-screen-07-sound-edit-envelop-8a5879be5b",
@@ -379,7 +403,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p13-screen-08-sound-edit-eq-5125a35d96": {
       "id": "image-p13-screen-08-sound-edit-eq-5125a35d96",
@@ -407,7 +433,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p14-screen-09-sound-edit-fx-ce9e56a547": {
       "id": "image-p14-screen-09-sound-edit-fx-ce9e56a547",
@@ -435,7 +463,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p15-screen-10-save-sound-a9e6553ed8": {
       "id": "image-p15-screen-10-save-sound-a9e6553ed8",
@@ -463,7 +493,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p16-screen-11-pad-assignment-0c5af9cf2d": {
       "id": "image-p16-screen-11-pad-assignment-0c5af9cf2d",
@@ -491,7 +523,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p17-screen-12-sampler-home-313d164399": {
       "id": "image-p17-screen-12-sampler-home-313d164399",
@@ -519,7 +553,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p18-screen-13-mic-record-74fad02713": {
       "id": "image-p18-screen-13-mic-record-74fad02713",
@@ -547,7 +583,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p19-screen-14-import-file-5e06069587": {
       "id": "image-p19-screen-14-import-file-5e06069587",
@@ -575,7 +613,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p20-screen-15-sample-edit-trim-da078db4b7": {
       "id": "image-p20-screen-15-sample-edit-trim-da078db4b7",
@@ -603,7 +643,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p21-screen-16-sample-tools-849e054cc7": {
       "id": "image-p21-screen-16-sample-tools-849e054cc7",
@@ -631,7 +673,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa": {
       "id": "image-p22-screen-17-sample-edit-tune-1cdbdcf5fa",
@@ -659,7 +703,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p23-screen-18-sample-edit-playba-ae3eefc0a4": {
       "id": "image-p23-screen-18-sample-edit-playba-ae3eefc0a4",
@@ -687,7 +733,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p23-screen-18-sample-edit-playba-d702dd7b1c": {
       "id": "image-p23-screen-18-sample-edit-playba-d702dd7b1c",
@@ -715,7 +763,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p24-screen-19-sample-edit-eq-b7080f1234": {
       "id": "image-p24-screen-19-sample-edit-eq-b7080f1234",
@@ -743,7 +793,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p25-screen-20-save-sample-ba14c613a3": {
       "id": "image-p25-screen-20-save-sample-ba14c613a3",
@@ -771,7 +823,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p26-screen-21-loop-track-view-v1-faf57e7578": {
       "id": "image-p26-screen-21-loop-track-view-v1-faf57e7578",
@@ -799,7 +853,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p26-screen-21-loop-track-view-v2-a79e18f68d": {
       "id": "image-p26-screen-21-loop-track-view-v2-a79e18f68d",
@@ -827,7 +883,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p27-screen-22-loop-track-menu-db856743c2": {
       "id": "image-p27-screen-22-loop-track-menu-db856743c2",
@@ -855,7 +913,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p28-screen-23-loop-options-fa60a40139": {
       "id": "image-p28-screen-23-loop-options-fa60a40139",
@@ -883,7 +943,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p29-screen-24-step-sequencer-a047895360": {
       "id": "image-p29-screen-24-step-sequencer-a047895360",
@@ -911,7 +973,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p30-screen-25-step-edit-6b7131d63a": {
       "id": "image-p30-screen-25-step-edit-6b7131d63a",
@@ -939,7 +1003,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p31-screen-26-mixer-5af70d21a7": {
       "id": "image-p31-screen-26-mixer-5af70d21a7",
@@ -967,7 +1033,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p32-screen-27-projects-79156bd48a": {
       "id": "image-p32-screen-27-projects-79156bd48a",
@@ -995,7 +1063,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p33-screen-28-save-project-6af5d2cf6f": {
       "id": "image-p33-screen-28-save-project-6af5d2cf6f",
@@ -1023,7 +1093,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p34-screen-29-text-entry-2fd5c8e60c": {
       "id": "image-p34-screen-29-text-entry-2fd5c8e60c",
@@ -1051,7 +1123,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p35-screen-30-settings-home-33d632f163": {
       "id": "image-p35-screen-30-settings-home-33d632f163",
@@ -1079,7 +1153,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p36-screen-31-settings-master-au-3583e174e1": {
       "id": "image-p36-screen-31-settings-master-au-3583e174e1",
@@ -1107,7 +1183,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p37-screen-32-settings-metronome-4fef9b8e8c": {
       "id": "image-p37-screen-32-settings-metronome-4fef9b8e8c",
@@ -1135,7 +1213,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p38-screen-33-settings-display-e0529c2f4a": {
       "id": "image-p38-screen-33-settings-display-e0529c2f4a",
@@ -1163,7 +1243,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p39-screen-34-settings-storage-cdd01431e5": {
       "id": "image-p39-screen-34-settings-storage-cdd01431e5",
@@ -1191,7 +1273,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p40-screen-35-settings-permissio-19f191d5b1": {
       "id": "image-p40-screen-35-settings-permissio-19f191d5b1",
@@ -1219,7 +1303,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p41-screen-36-about-v1-ff3d0f1de1": {
       "id": "image-p41-screen-36-about-v1-ff3d0f1de1",
@@ -1247,7 +1333,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p41-screen-36-about-v2-8fe1804b60": {
       "id": "image-p41-screen-36-about-v2-8fe1804b60",
@@ -1275,7 +1363,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p41-screen-36-about-v3-520449e7a4": {
       "id": "image-p41-screen-36-about-v3-520449e7a4",
@@ -1303,7 +1393,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p42-screen-37-mic-blocked-926c5e4be0": {
       "id": "image-p42-screen-37-mic-blocked-926c5e4be0",
@@ -1331,7 +1423,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "image-p43-screen-38-destructive-confir-24f60c8554": {
       "id": "image-p43-screen-38-destructive-confir-24f60c8554",
@@ -1359,7 +1453,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-manual-assets-ingested": {
       "id": "finding-manual-assets-ingested",
@@ -1382,7 +1478,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-v1-scope": {
       "id": "concept-v1-scope",
@@ -1405,7 +1503,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-hardware-front-panel": {
       "id": "concept-hardware-front-panel",
@@ -1428,7 +1528,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-global-behavior": {
       "id": "concept-global-behavior",
@@ -1451,7 +1553,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-navigation-map": {
       "id": "concept-navigation-map",
@@ -1474,7 +1578,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-factory-library": {
       "id": "concept-factory-library",
@@ -1497,7 +1603,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-glass-poly": {
       "id": "concept-glass-poly",
@@ -1521,7 +1629,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-library-rules": {
       "id": "concept-library-rules",
@@ -1544,7 +1654,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-sound-engine": {
       "id": "concept-sound-engine",
@@ -1567,7 +1679,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-recording-behavior": {
       "id": "concept-recording-behavior",
@@ -1590,7 +1704,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-persistence": {
       "id": "concept-persistence",
@@ -1613,7 +1729,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-v1-boundaries": {
       "id": "concept-v1-boundaries",
@@ -1635,7 +1753,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-01": {
       "id": "concept-screen-01",
@@ -1658,7 +1778,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-02": {
       "id": "concept-screen-02",
@@ -1681,7 +1803,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-03": {
       "id": "concept-screen-03",
@@ -1704,7 +1828,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-04": {
       "id": "concept-screen-04",
@@ -1730,7 +1856,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-05": {
       "id": "concept-screen-05",
@@ -1753,7 +1881,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-06": {
       "id": "concept-screen-06",
@@ -1776,7 +1906,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-07": {
       "id": "concept-screen-07",
@@ -1799,7 +1931,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-08": {
       "id": "concept-screen-08",
@@ -1822,7 +1956,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-09": {
       "id": "concept-screen-09",
@@ -1845,7 +1981,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-10": {
       "id": "concept-screen-10",
@@ -1868,7 +2006,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-11": {
       "id": "concept-screen-11",
@@ -1891,7 +2031,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-12": {
       "id": "concept-screen-12",
@@ -1917,7 +2059,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-13": {
       "id": "concept-screen-13",
@@ -1940,7 +2084,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-14": {
       "id": "concept-screen-14",
@@ -1963,7 +2109,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-15": {
       "id": "concept-screen-15",
@@ -1986,7 +2134,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-16": {
       "id": "concept-screen-16",
@@ -2009,7 +2159,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-17": {
       "id": "concept-screen-17",
@@ -2032,7 +2184,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-18": {
       "id": "concept-screen-18",
@@ -2058,7 +2212,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-19": {
       "id": "concept-screen-19",
@@ -2081,7 +2237,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-20": {
       "id": "concept-screen-20",
@@ -2104,7 +2262,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-21": {
       "id": "concept-screen-21",
@@ -2130,7 +2290,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-22": {
       "id": "concept-screen-22",
@@ -2156,7 +2318,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-23": {
       "id": "concept-screen-23",
@@ -2182,7 +2346,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-24": {
       "id": "concept-screen-24",
@@ -2208,7 +2374,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "designing"
+      "stage": "designing",
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-25": {
       "id": "concept-screen-25",
@@ -2231,7 +2399,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-26": {
       "id": "concept-screen-26",
@@ -2254,7 +2424,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-27": {
       "id": "concept-screen-27",
@@ -2277,7 +2449,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-28": {
       "id": "concept-screen-28",
@@ -2300,7 +2474,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-29": {
       "id": "concept-screen-29",
@@ -2323,7 +2499,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-30": {
       "id": "concept-screen-30",
@@ -2346,7 +2524,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-31": {
       "id": "concept-screen-31",
@@ -2369,7 +2549,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-32": {
       "id": "concept-screen-32",
@@ -2392,7 +2574,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-33": {
       "id": "concept-screen-33",
@@ -2415,7 +2599,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-34": {
       "id": "concept-screen-34",
@@ -2438,7 +2624,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-35": {
       "id": "concept-screen-35",
@@ -2461,7 +2649,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-36": {
       "id": "concept-screen-36",
@@ -2484,7 +2674,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-37": {
       "id": "concept-screen-37",
@@ -2507,7 +2699,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-screen-38": {
       "id": "concept-screen-38",
@@ -2530,7 +2724,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-play": {
       "id": "concept-area-play",
@@ -2553,7 +2749,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-loop": {
       "id": "concept-area-loop",
@@ -2576,7 +2774,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-sound": {
       "id": "concept-area-sound",
@@ -2599,7 +2799,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-mix": {
       "id": "concept-area-mix",
@@ -2622,7 +2824,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-project": {
       "id": "concept-area-project",
@@ -2645,7 +2849,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-settings": {
       "id": "concept-area-settings",
@@ -2668,7 +2874,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-play-sound": {
       "id": "concept-workflow-play-sound",
@@ -2690,7 +2898,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-record-mic": {
       "id": "concept-workflow-record-mic",
@@ -2712,7 +2922,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-import": {
       "id": "concept-workflow-import",
@@ -2734,7 +2946,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-make-loop": {
       "id": "concept-workflow-make-loop",
@@ -2756,7 +2970,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-step-program": {
       "id": "concept-workflow-step-program",
@@ -2778,7 +2994,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-workflow-save-project": {
       "id": "concept-workflow-save-project",
@@ -2800,7 +3018,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "instruction-pdf-graphed": {
       "id": "instruction-pdf-graphed",
@@ -2823,7 +3043,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-pdf-graph-complete": {
       "id": "finding-pdf-graph-complete",
@@ -2845,7 +3067,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-rails-milestone-a": {
       "id": "finding-rails-milestone-a",
@@ -2868,7 +3092,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-keyboard-vscreen-pwa": {
       "id": "finding-ui-keyboard-vscreen-pwa",
@@ -2892,7 +3118,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-fullbleed-layout": {
       "id": "finding-ui-fullbleed-layout",
@@ -2915,7 +3143,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-knobs-viz-autoboot": {
       "id": "finding-ui-knobs-viz-autoboot",
@@ -2939,7 +3169,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-octave-remap-held-midi": {
       "id": "finding-octave-remap-held-midi",
@@ -2962,7 +3194,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-boot-knobs-brand-0926": {
       "id": "finding-ui-boot-knobs-brand-0926",
@@ -2985,7 +3219,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-layout-menu-wave-topknob": {
       "id": "finding-ui-layout-menu-wave-topknob",
@@ -3009,7 +3245,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-brand-keys-balance": {
       "id": "finding-ui-brand-keys-balance",
@@ -3031,7 +3269,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-keyboard-height-50pct": {
       "id": "finding-ui-keyboard-height-50pct",
@@ -3052,7 +3292,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-no-text-select": {
       "id": "finding-ui-no-text-select",
@@ -3073,7 +3315,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-overhead-knob-realestate": {
       "id": "finding-ui-overhead-knob-realestate",
@@ -3095,7 +3339,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-pitch-wheel-nav-align": {
       "id": "finding-ui-pitch-wheel-nav-align",
@@ -3118,7 +3364,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-equal-spacing-se-scale": {
       "id": "finding-ui-equal-spacing-se-scale",
@@ -3140,7 +3388,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-hold-toggle-sticky-pitch": {
       "id": "finding-hold-toggle-sticky-pitch",
@@ -3162,7 +3412,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-midrow-axis-tighten": {
       "id": "finding-ui-midrow-axis-tighten",
@@ -3184,7 +3436,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-pad-row-gap-pack": {
       "id": "finding-ui-pad-row-gap-pack",
@@ -3206,7 +3460,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-mid-panel-flush": {
       "id": "finding-ui-mid-panel-flush",
@@ -3228,7 +3484,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-rails-milestone-b": {
       "id": "finding-rails-milestone-b",
@@ -3251,7 +3509,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-pads-unsquish-flush": {
       "id": "finding-ui-pads-unsquish-flush",
@@ -3273,7 +3533,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-fix-nan-naming-manage-root": {
       "id": "finding-fix-nan-naming-manage-root",
@@ -3297,7 +3559,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-play-live-root-orient": {
       "id": "finding-ui-play-live-root-orient",
@@ -3320,7 +3584,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-landscape-pad-squash-v2": {
       "id": "finding-ui-landscape-pad-squash-v2",
@@ -3343,7 +3609,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-lcd-nav-text-bump": {
       "id": "finding-ui-lcd-nav-text-bump",
@@ -3366,7 +3634,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-keyboard-shorter-midgap": {
       "id": "finding-ui-keyboard-shorter-midgap",
@@ -3388,7 +3658,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-roadmap-bplus-then-c": {
       "id": "finding-roadmap-bplus-then-c",
@@ -3411,7 +3683,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-rails-milestone-bplus": {
       "id": "finding-rails-milestone-bplus",
@@ -3436,7 +3710,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-kits-tab-edit-save": {
       "id": "finding-ui-kits-tab-edit-save",
@@ -3459,7 +3735,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-kit-save-drum-bend": {
       "id": "finding-ui-kit-save-drum-bend",
@@ -3482,7 +3760,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-fix-kit-pad-save-dup": {
       "id": "finding-fix-kit-pad-save-dup",
@@ -3505,7 +3785,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-fix-tape-pad-silent": {
       "id": "finding-fix-tape-pad-silent",
@@ -3527,7 +3809,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-drum-params-audible": {
       "id": "finding-drum-params-audible",
@@ -3549,7 +3833,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-knob-pitch-scale-up": {
       "id": "finding-ui-knob-pitch-scale-up",
@@ -3571,7 +3857,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-type-readable-bump": {
       "id": "finding-ui-type-readable-bump",
@@ -3593,7 +3881,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-fix-kit-ok-pick-trap": {
       "id": "finding-fix-kit-ok-pick-trap",
@@ -3615,7 +3905,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-kit-library-pad-audition": {
       "id": "finding-ui-kit-library-pad-audition",
@@ -3637,7 +3929,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-pad-kit-vol-user-pads-factory": {
       "id": "finding-pad-kit-vol-user-pads-factory",
@@ -3662,7 +3956,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-library-list-scrollbar": {
       "id": "finding-ui-library-list-scrollbar",
@@ -3685,7 +3981,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-ui-preload-splash-audio-unlock": {
       "id": "finding-ui-preload-splash-audio-unlock",
@@ -3710,7 +4008,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-rails-milestone-c": {
       "id": "finding-rails-milestone-c",
@@ -3737,7 +4037,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-dev-https-lan-mic": {
       "id": "finding-dev-https-lan-mic",
@@ -3762,7 +4064,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sampler-play-assign-viz": {
       "id": "finding-sampler-play-assign-viz",
@@ -3787,7 +4091,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sampler-ux-simplify": {
       "id": "finding-sampler-ux-simplify",
@@ -3812,7 +4118,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-pad-sample-speed-ok-edit": {
       "id": "finding-pad-sample-speed-ok-edit",
@@ -3835,7 +4143,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-pitch-mic-vol": {
       "id": "finding-sample-pitch-mic-vol",
@@ -3858,7 +4168,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-edit-pages-fx": {
       "id": "finding-sample-edit-pages-fx",
@@ -3885,7 +4197,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "developing"
+      "stage": "developing",
+      "scope": {},
+      "provenance": {}
     },
     "finding-hold-sample-loop": {
       "id": "finding-hold-sample-loop",
@@ -3908,7 +4222,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-edit-discoverability": {
       "id": "finding-sample-edit-discoverability",
@@ -3930,7 +4246,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-save-rename": {
       "id": "finding-sample-save-rename",
@@ -3952,7 +4270,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-new-kit-create": {
       "id": "finding-new-kit-create",
@@ -3974,7 +4294,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-loop-d1": {
       "id": "finding-loop-d1",
@@ -3997,7 +4319,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-tap-tempo-feel": {
       "id": "finding-tap-tempo-feel",
@@ -4019,7 +4343,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-drum-fx-delay-not-drive": {
       "id": "finding-drum-fx-delay-not-drive",
@@ -4041,7 +4367,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-loop-full-length-on-stop": {
       "id": "finding-loop-full-length-on-stop",
@@ -4062,7 +4390,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-loop-track-vol-vs-master": {
       "id": "finding-loop-track-vol-vs-master",
@@ -4083,7 +4413,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "per-track-loop-bar-counts-55a375f4": {
       "id": "per-track-loop-bar-counts-55a375f4",
@@ -4105,7 +4437,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-level-vs-master": {
       "id": "finding-sample-level-vs-master",
@@ -4127,7 +4461,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-keys-quiet-fix": {
       "id": "finding-sample-keys-quiet-fix",
@@ -4149,7 +4485,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-grapher-only-no-graphify": {
       "id": "finding-grapher-only-no-graphify",
@@ -4171,7 +4509,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-sample-full-length-crop-saveas": {
       "id": "finding-sample-full-length-crop-saveas",
@@ -4200,7 +4540,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "developing"
+      "stage": "developing",
+      "scope": {},
+      "provenance": {}
     },
     "finding-fx-library-sample-track": {
       "id": "finding-fx-library-sample-track",
@@ -4229,7 +4571,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": "developing"
+      "stage": "developing",
+      "scope": {},
+      "provenance": {}
     },
     "finding-crash-persist-storm": {
       "id": "finding-crash-persist-storm",
@@ -4269,7 +4613,9 @@
       ],
       "source_refs": [],
       "owners": [],
-      "stage": "maintaining"
+      "stage": "maintaining",
+      "scope": {},
+      "provenance": {}
     },
     "finding-loop-d2-step-sequencer": {
       "id": "finding-loop-d2-step-sequencer",
@@ -4305,7 +4651,9 @@
       ],
       "source_refs": [],
       "owners": [],
-      "stage": "developing"
+      "stage": "developing",
+      "scope": {},
+      "provenance": {}
     },
     "finding-loop-record-overdub-fix": {
       "id": "finding-loop-record-overdub-fix",
@@ -4328,7 +4676,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "screen-26-mixer-mix-area-7122e2de": {
       "id": "screen-26-mixer-mix-area-7122e2de",
@@ -4352,7 +4702,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "screen-23-loop-options-loop-track-controls-7aa7f54d": {
       "id": "screen-23-loop-options-loop-track-controls-7aa7f54d",
@@ -4377,7 +4729,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "loop-track-level-nan-fix-a59c6ef9": {
       "id": "loop-track-level-nan-fix-a59c6ef9",
@@ -4401,7 +4755,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "loop-multi-track-timeline-hold-arrow-offset-scru-538b652b": {
       "id": "loop-multi-track-timeline-hold-arrow-offset-scru-538b652b",
@@ -4425,7 +4781,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-audio-architecture": {
       "id": "checkpoint-current-audio-architecture",
@@ -4448,13 +4806,15 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-02T17:53:16+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-sampler": {
       "id": "checkpoint-current-sampler",
       "type": "checkpoint",
       "title": "Current: sampler",
-      "content": "Current sampler UX and playback: full-length play, trim-aware Save As, gate behavior. See linked findings.",
+      "content": "- Samples play full length; Save As crops to trim: SampleVoice.noteOn passed duration len/rate to src.start; Web Audio duration is in buffer seconds (not scaled by playbackRate), so pitched-up samples were truncated. Now start(t,start,len); added playSeconds(midi)=trimSec/rate. One-shot pad timer uses playSeconds (tune-aware) with no 8s cap; source ends naturally, timer only clears held/LED state. Save As (asNew) crops audio via sliceBuffer to trim, resets trim 0..1, refreshes draft peaks/duration; in-place SAVE keeps full audio + trim points. Keys remain gate for samples (user choice).\n- Sample SAVE screen: rename, save as, trim: Sample Edit B opens SAVE SAMPLE. D SAVE persists trim/tune/eq/fx in place. B RENAME names (and saves if already in library). C SAVE AS creates a new user sample copy.\n- HOLD loops sample pads/keys: With HOLD on, sample pads/keys loop the trimmed region until latched off (second press). Oneshot auto-stop timer disabled while HOLD is active.\n- SOUND area: Top-level SOUND: Sound Library/Detail/Edit; Sampler Home -> Mic Record or Import File -> Sample Edit (trim/tools/tune/playback/EQ) -> Save Sample; Pad Assign.\n- Screen 12: Sampler Home: Screen 12: Sampler Home.\n\nUI (from mockup): SAMPLER home. Options: Record from onboard mic (selected), Import from file system, Open user sample. Note: new recordings/imports enter same sample editor. M1/M2 preview tone/FX, M3 volume. Soft keys A MIC, B FILE, C OPEN, D BACK.\n\nWHAT IT DOES: No audio changes until a source is recorded/imported. Existing project playback may continue behind the sampler unless the user stops it.\nSAVE/STATE: New recordings/imports are staged until the user reaches Save Sample.\nNOTES: Microphone and imported sources enter the same editor, so the manipulation workflow is consistent. 17 CASSIO / V1 COMPLETE OPERATING MANUAL\nGET: THERE           MENU Hold    ->->SOUND MENU    SOUND to-> Sampler. open the Sound Library, then press D = SAMPLER.\n\nNOTE: concept text repaired from corrupted manual extraction; prefer linked image node and finding nodes for implementation truth.",
       "path": null,
       "tags": [
         "checkpoint",
@@ -4471,7 +4831,9 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-05T09:12:17+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-loop-engine": {
       "id": "checkpoint-current-loop-engine",
@@ -4494,7 +4856,9 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-03T09:13:53+00:00"
+      "updated_at": "2026-09-03T09:13:53+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-ui-controls": {
       "id": "checkpoint-current-ui-controls",
@@ -4517,7 +4881,9 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-03T07:33:25+00:00"
+      "updated_at": "2026-09-03T07:33:25+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-persistence": {
       "id": "checkpoint-current-persistence",
@@ -4540,7 +4906,9 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-02T17:53:16+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "checkpoint-current-roadmap": {
       "id": "checkpoint-current-roadmap",
@@ -4563,7 +4931,9 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-02T17:53:16+00:00"
+      "updated_at": "2026-09-02T17:53:16+00:00",
+      "scope": {},
+      "provenance": {}
     },
     "operating-precedence-agile-sdlc-43e05582": {
       "id": "operating-precedence-agile-sdlc-43e05582",
@@ -4588,7 +4958,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "step-sequencer-render-crash-trackmode-tdz-21f01c05": {
       "id": "step-sequencer-render-crash-trackmode-tdz-21f01c05",
@@ -4611,7 +4983,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "cassio-abstraction-sounds-song-1116fd88": {
       "id": "cassio-abstraction-sounds-song-1116fd88",
@@ -4634,7 +5008,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "concept-area-ui": {
       "id": "concept-area-ui",
@@ -4656,7 +5032,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "sequencer-optional-metronome-4e4f5375": {
       "id": "sequencer-optional-metronome-4e4f5375",
@@ -4678,7 +5056,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "mutually-exclusive-loop-vs-seq-play-context-c23181ba": {
       "id": "mutually-exclusive-loop-vs-seq-play-context-c23181ba",
@@ -4701,7 +5081,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "track-library-growing-arrangement-lanes-62804b6f": {
       "id": "track-library-growing-arrangement-lanes-62804b6f",
@@ -4725,7 +5107,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-lane-ux-cleanup": {
       "id": "finding-lane-ux-cleanup",
@@ -4749,7 +5133,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "video-length-persist-2026-09-03": {
       "id": "video-length-persist-2026-09-03",
@@ -4773,7 +5159,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-lane-clip-window-audio": {
       "id": "finding-lane-clip-window-audio",
@@ -4796,7 +5184,9 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
     },
     "finding-live-synth-hard-tracks": {
       "id": "finding-live-synth-hard-tracks",
@@ -4820,7 +5210,49 @@
       "evidence": [],
       "source_refs": [],
       "owners": [],
-      "stage": null
+      "stage": null,
+      "scope": {},
+      "provenance": {}
+    },
+    "finding-restore-sound-authoring-entry": {
+      "id": "finding-restore-sound-authoring-entry",
+      "type": "finding",
+      "title": "Restore SOUND authoring entry from PLAY",
+      "content": "Regression diagnosis and repair (Sep 2026): PLAY soft key D bypassed the SOUND hub and opened Library directly. After Library D was reassigned from SAMPLER to FAVORITES, the familiar entry to microphone recording, file import, sample editing, and blank-kit creation effectively disappeared. PLAY D now opens SOUND hub, whose A/B/C actions expose Library (synth/drum editing), Sampler (mic/import/edit/save), and New Kit. Main menu now initially selects SOUND. Existing authoring engines and persistence were intact; this repair restores reachability without altering them.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "navigation",
+        "sampler",
+        "kits",
+        "synths",
+        "regression"
+      ],
+      "meta": {},
+      "created_at": "2026-09-05T09:12:07+00:00",
+      "updated_at": "2026-09-05T09:12:35+00:00",
+      "stage": "maintaining",
+      "status": "current",
+      "workflow_state": "completed",
+      "verification": "verified",
+      "evidence": [
+        {
+          "type": "test",
+          "ref": "test/unit/sound_authoring_navigation.mjs",
+          "summary": "All sound-authoring entrances are asserted and pass."
+        }
+      ],
+      "source_refs": [],
+      "owners": [],
+      "scope": {},
+      "provenance": {
+        "actor_id": "codex",
+        "actor_kind": "agent",
+        "actor_role": "implementer",
+        "source": "code_change",
+        "integrity": "declared",
+        "recorded_at": "2026-09-05T09:12:35+00:00"
+      }
     }
   },
   "edges": [
@@ -7399,6 +7831,27 @@
       "to": "finding-live-synth-hard-tracks",
       "rel": "derived_from",
       "created_at": "2026-09-03T09:13:53+00:00"
+    },
+    {
+      "from": "finding-restore-sound-authoring-entry",
+      "to": "concept-area-sound",
+      "rel": "implements",
+      "created_at": "2026-09-05T09:12:07+00:00",
+      "note": "Restores the canonical SOUND hub entry"
+    },
+    {
+      "from": "finding-restore-sound-authoring-entry",
+      "to": "checkpoint-current-sampler",
+      "rel": "verified_by",
+      "created_at": "2026-09-05T09:12:07+00:00",
+      "note": "Navigation test verifies sampler remains reachable"
+    },
+    {
+      "from": "finding-restore-sound-authoring-entry",
+      "to": "finding-new-kit-create",
+      "rel": "related",
+      "created_at": "2026-09-05T09:12:17+00:00",
+      "note": "SOUND C exposes blank-kit creation again"
     }
   ]
 }

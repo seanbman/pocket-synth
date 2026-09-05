@@ -48,7 +48,7 @@ export function renderPlay(state) {
         <div><span class="sk">A</span> <span class="green">OCT -</span></div>
         <div><span class="sk">B</span> <span class="green">OCT +</span></div>
         <div><span class="sk">C</span> <span class="green">HOLD</span></div>
-        <div><span class="sk">D</span> <span class="green">LIBRARY</span></div>
+        <div><span class="sk">D</span> <span class="green">SOUND</span></div>
       </div>
     </div>
   `
