@@ -10,8 +10,9 @@ function hasInputOnlyTake(app) {
  * - PLAY then REC keeps backing playback audible for performance monitoring.
  * - Sequencer-generated notes never enter a record bus; only physical live
  *   keyboard/pad performances are captured.
- * - Completed takes are already persisted by CassioApp. This runtime makes the
- *   save confirmation explicit and stops the record-only clock after the take.
+ * - Completed takes are persisted by CassioApp. Fresh unnamed lanes hand off to
+ *   the track naming runtime immediately after the take instead of silently
+ *   accepting a generated/default track name.
  */
 export function installRecordingRuntime(app) {
   if (!app || app._recordingRuntimeInstalled) return
@@ -55,9 +56,14 @@ export function installRecordingRuntime(app) {
     const ok = originalBeginRecord(trackId, {
       ...options,
       onDone: (track) => {
+        const needsName = !!track?._needsNameAfterTake
+        const originalToast = needsName ? app.toast : null
+        if (needsName && originalToast) app.toast = () => {}
+
         try {
           originalDone?.(track)
         } finally {
+          if (needsName && originalToast) app.toast = originalToast
           if (inputOnly) {
             // The original completion callback may request backing playback
             // because the count-in transport is technically still running.
@@ -70,6 +76,10 @@ export function installRecordingRuntime(app) {
           app._recordInputOnly = false
           app.render?.()
           queueMicrotask(() => {
+            if (needsName && app.renameTrack) {
+              app.renameTrack(track?.id || trackId, { afterTake: true })
+              return
+            }
             const name = String(track?.name || `TRK ${track?.id || trackId}`).slice(0, 18)
             app.toast?.(`TRACK SAVED · ${name}`)
           })
