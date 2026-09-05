@@ -118,3 +118,12 @@
     </div>
   </div>
 </div>
+
+<% if Rails.env.development? || Rails.env.test? %>
+  <button
+    type="button"
+    data-cassio-glitch-marker="true"
+    aria-label="Mark audible audio glitch in diagnostic timeline"
+    style="position:fixed;right:8px;bottom:calc(env(safe-area-inset-bottom, 0px) + 8px);z-index:2147483647;padding:8px 10px;border:2px solid currentColor;border-radius:3px;background:#fff;color:#000;font:700 11px/1 monospace;letter-spacing:.04em;touch-action:manipulation;box-shadow:0 2px 8px rgba(0,0,0,.35);"
+  >MARK GLITCH</button>
+<% end %>
