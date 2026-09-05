@@ -1,3 +1,6 @@
+require "fileutils"
+require "json"
+
 class DebugLogsController < ApplicationController
   skip_forgery_protection
 
@@ -12,7 +15,8 @@ class DebugLogsController < ApplicationController
     end
 
     body = request.request_parameters
-    events = Array(body["events"].presence || body["debug_log"].presence || body)
+    raw_events = body["events"].presence || body["debug_log"].presence || body
+    events = (raw_events.is_a?(Array) ? raw_events : [raw_events])
       .first(MAX_EVENTS)
       .select { |event| event.is_a?(Hash) }
 
