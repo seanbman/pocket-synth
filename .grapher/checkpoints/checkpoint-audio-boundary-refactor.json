@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-audio-boundary-refactor",
+  "refreshed_at": "2026-09-05T05:35:00+00:00",
+  "title": "Current: modular voice and audio-host boundaries",
+  "node_ids": [
+    "concept-sound-engine",
+    "concept-recording-behavior",
+    "finding-live-synth-hard-tracks",
+    "checkpoint-current-audio-graph"
+  ],
+  "graph_version": 2,
+  "notes": "Refactor branch introduces a common playable-voice contract and registry, centralizes device output/FX-send/record-tap routing behind AudioHost, and migrates GlassPolyVoice, DrumVoice, and SampleVoice to that boundary without changing sequencer timing semantics. CassioApp exposes the registry at its composition edge; deeper app.js decomposition remains a separate technical-debt pass."
+}
