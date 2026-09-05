@@ -44,8 +44,8 @@ jobs:
       - name: Check JavaScript syntax
         run: find app/javascript test -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
 
-      - name: Test recording policy
-        run: node test/unit/recording_runtime.mjs
+      - name: Run JavaScript unit tests
+        run: find test/unit -maxdepth 1 -type f -name '*.mjs' -print0 | sort -z | xargs -0 -n1 node
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
