@@ -110,12 +110,16 @@ try {
   let ready = false
   while (Date.now() < readyDeadline) {
     try {
-      ready = await evalJs(`!!window.Stimulus?.getControllerForElementAndIdentifier(document.querySelector('[data-controller~="cassio"]'), 'cassio')?.app?.engine?.ready`, 2000)
+      ready = await evalJs(`(() => {
+        const app = window.Stimulus?.getControllerForElementAndIdentifier(
+          document.querySelector('[data-controller~="cassio"]'), 'cassio')?.app
+        return !!app?.engine?.ready && !app?.booting && app?.screen === 'play'
+      })()`, 2000)
       if (ready) break
     } catch (_) { /* page still booting */ }
     await sleep(250)
   }
-  if (!ready) throw new Error("CASSIO did not become audio-ready")
+  if (!ready) throw new Error("CASSIO did not finish booting to PLAY")
 
   const out = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
