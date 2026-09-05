@@ -298,7 +298,7 @@ export class StepSequencer {
       }
     } else if (this._mode === "track" && this._trackId != null) {
       const track = tracks.find((t) => t.id === this._trackId)
-      if (track) this.#armTrackPattern(track)
+      if (track && !this.#armBakedPattern(track)) this.#armTrackPattern(track)
     } else {
       this.#armGlobalPattern()
     }
