@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
+import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
 import {
   audioSnapshot,
   flushDebug,
@@ -16,6 +17,7 @@ export default class extends Controller {
     try {
       this.app = new CassioApp(this.element)
       installAudioTrace(this.app)
+      installDeepAudioTrace(this.app)
 
       window.addEventListener("pagehide", () => {
         trace("app", "persist.pagehide.before", { audio: audioSnapshot(this.app) })
