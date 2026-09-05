@@ -40,9 +40,31 @@ jobs:
           Path('/tmp/grapher-user-testing.sh').write_text(source[start:end] + '\n')
           PY
 
+      - name: Seed isolated Grapher workspace from published shared state
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/cassio-grapher"
+          rm -rf "$work"
+          mkdir -p "$work/shared"
+          cp .grapher/shared/knowledge.json "$work/shared/knowledge.json"
+          cp .grapher/shared/manifest.json "$work/shared/manifest.json"
+          cp -R .grapher/shared/history "$work/shared/history"
+          cp .grapher/config.json "$work/config.json"
+          echo "GRAPHER_GRAPH=$work/knowledge.json" >> "$GITHUB_ENV"
+          echo "GRAPHER_WORK=$work" >> "$GITHUB_ENV"
+
       - name: Run Grapher mutations, validation, audit, and publish
         shell: bash
         run: bash -euxo pipefail /tmp/grapher-user-testing.sh
+
+      - name: Copy Grapher-published transport state into repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GRAPHER_WORK/shared/knowledge.json" .grapher/shared/knowledge.json
+          cp "$GRAPHER_WORK/shared/manifest.json" .grapher/shared/manifest.json
+          cp -R "$GRAPHER_WORK/shared/history/." .grapher/shared/history/
 
       - name: Commit published Grapher transport state
         shell: bash
