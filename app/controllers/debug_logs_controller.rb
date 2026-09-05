@@ -9,25 +9,20 @@ class DebugLogsController < ApplicationController
 
   def create
     return head :not_found unless Rails.env.development? || Rails.env.test?
-
-    if request.content_length.to_i > MAX_BYTES
-      return head :payload_too_large
-    end
+    return head :payload_too_large if request.content_length.to_i > MAX_BYTES
 
     body = request.request_parameters
     raw_events = body["events"].presence || body["debug_log"].presence || body
-    events = (raw_events.is_a?(Array) ? raw_events : [raw_events])
+    events = (raw_events.is_a?(Array) ? raw_events : [ raw_events ])
       .first(MAX_EVENTS)
       .select { |event| event.is_a?(Hash) }
 
     return head :bad_request if events.empty?
 
-    session_id = safe_id(body["sessionId"] || events.first["sessionId"] || "unknown")
-    dir = Rails.root.join("tmp", "debug_sessions")
-    FileUtils.mkdir_p(dir)
-    path = dir.join("#{session_id}.jsonl")
+    directory = Rails.root.join("tmp", "debug_sessions")
+    FileUtils.mkdir_p(directory)
 
-    File.open(path, "a") do |file|
+    File.open(directory.join("events.jsonl"), "a") do |file|
       file.flock(File::LOCK_EX)
       events.each do |event|
         record = event.deep_dup
@@ -46,11 +41,5 @@ class DebugLogsController < ApplicationController
   rescue StandardError => error
     Rails.logger.error("debug ingest failed: #{error.class}: #{error.message}")
     head :internal_server_error
-  end
-
-  private
-
-  def safe_id(value)
-    value.to_s.gsub(/[^a-zA-Z0-9._-]/, "_").first(96).presence || "unknown"
   end
 end
