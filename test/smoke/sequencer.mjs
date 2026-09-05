@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Step sequencer smoke: global + track seq, arrangement play schedules lane seq.
+ * Step sequencer smoke: global + track-local seq, arrangement play schedules lane seq.
  * Requires dev server (https://127.0.0.1:3000/) and google-chrome.
  */
 import { spawn } from "node:child_process"
@@ -56,6 +56,7 @@ try {
     await app.ensureAudioRunningPublic()
     app.looper.openHome()
 
+    // Loop Options remains the shared/global Pattern A-D editor.
     app.screen = 'loop-options'
     app.loopOptIndex = 0
     app.render()
@@ -64,37 +65,64 @@ try {
     const globalHtml = app.vscreen?.innerHTML || ''
     const globalLanes = (globalHtml.match(/seq-row/g) || []).length
     const globalTrackMode = app.seqTrackId
-
     app.seqCtl.back()
     const backToLoop = app.screen
 
-    // Assigned menu: DROP PATTERN, not Track Step Seq; Hold B = global Pattern Seq
     const le = app.loopEngine
-    const lib = le.createLibraryTrack({ name: 'PAD2' })
-    lib.padSlot = 2
-    le.assignLibraryToLane(2, lib.id)
-    app.looper.openHome()
+
+    // Give Track 2 its own working track, then enter PATTERN SEQ from its track menu.
+    const lib2 = le.createLibraryTrack({ name: 'PAD2' })
+    lib2.padSlot = 2
+    le.assignLibraryToLane(2, lib2.id)
     le.select(2)
-    app.loopMenuIndex = 1
+    app.loopMenuIndex = 0
     app.screen = 'loop-menu'
     app.render()
     const menuHtml = app.vscreen?.innerHTML || ''
-    const menuHasDrop = menuHtml.includes('DROP PATTERN')
-    const menuNoTrackSeq = !menuHtml.includes('TRACK STEP SEQ')
-
-    app.seqCtl.open()
-    const patternScreen = app.screen
-    const patternTrackId = app.seqTrackId
-    const patternHtml = app.vscreen?.innerHTML || ''
-    const patternLanes = (patternHtml.match(/seq-row/g) || []).length
-
+    const menuHasPatternSeq = menuHtml.includes('PATTERN SEQ')
+    app.looper.nav('ok')
+    const track2Screen = app.screen
+    const track2Id = app.seqTrackId
+    const track2Lanes = ((app.vscreen?.innerHTML || '').match(/seq-row/g) || []).length
+    app.seqCursor = 0
     app.seqCtl.nav('ok')
-    const toggled = app.seqCtl.pattern.lanes?.[app.seqLane]?.[app.seqCursor]?.on
-
+    const lane2 = le.tracks.find((t) => t.id === 2)
+    const track2Step0 = !!lane2?.seq?.steps?.[0]?.on
     app.seqCtl.back()
+
+    // Track 1 must open a different seq object and start independently empty.
+    const lib1 = le.createLibraryTrack({ name: 'PAD1' })
+    lib1.padSlot = 1
+    le.assignLibraryToLane(1, lib1.id)
+    le.select(1)
+    app.loopMenuIndex = 0
+    app.screen = 'loop-menu'
+    app.render()
+    app.looper.nav('ok')
+    const track1Id = app.seqTrackId
+    const lane1 = le.tracks.find((t) => t.id === 1)
+    const track1InitiallyOff = !lane1?.seq?.steps?.[0]?.on
+    app.seqCursor = 1
+    app.seqCtl.nav('ok')
+    const track1Step1 = !!lane1?.seq?.steps?.[1]?.on
+    const track2StillOwn = !!lane2?.seq?.steps?.[0]?.on && !lane2?.seq?.steps?.[1]?.on
+    const seqObjectsIndependent = lane1?.seq !== lane2?.seq && lane1?.seq?.steps !== lane2?.seq?.steps
+    app.seqCtl.back()
+
+    // Global bank is still available and can be dropped/baked deliberately.
+    app.screen = 'loop-options'
+    app.loopOptIndex = 0
+    app.render()
+    app.looper.softKey('a')
+    const globalAgainTrackId = app.seqTrackId
+    app.seqLane = 1
+    app.seqCursor = 0
+    app.seqCtl.nav('ok')
+    const globalToggled = app.seqCtl.pattern.lanes?.[1]?.[0]?.on
+    app.seqCtl.back()
+
     le.select(2)
     app.looper.dropPatternOnSelected()
-    const lane2 = le.tracks.find((t) => t.id === 2)
     const bakedHits = !!lane2?.pattern?.lanes?.some((lane) => lane.some((s) => s?.on))
     const bakedDirty = !!lane2?.dirty
 
@@ -113,13 +141,12 @@ try {
     app.render()
     const htmlShort = app.vscreen?.innerHTML || ''
     const clipShort = htmlShort.includes('data-track-id="2"')
-    // clip width ~ half of 4-bar timeline (allow slack)
     const clipEl = app.vscreen.querySelector('.loop-clip[data-track-id="2"]')
     const clipW = clipEl ? parseFloat(clipEl.style.width) : 0
     const timelineW = 4 * 52
     const clipLooksShort = clipW > 0 && clipW < timelineW * 0.6
 
-    // Arrangement play schedules baked 6-lane pattern
+    // Arrangement play schedules track-local/baked sequence state.
     app.transportStopPublic()
     app.looper.openHome()
     app.transportPlayPublic()
@@ -128,9 +155,6 @@ try {
     const stepSeqOnLoop = app.stepSeq.running
     const arrMode = app.stepSeq._mode
     const bakedArmed = app.stepSeq._trackNext.has('pat:2')
-    // While playing a 2-bar clip on 4-bar song, song-phase past clip must be silent window
-    const playingPast = le.clipLocalSec(lane2, app.engine.now())
-    // Force phase into bar 3 by checking relative to play origin
     const pastWhilePlaying = le.clipLocalSec(
       lane2,
       (le._playOrigin || origin) + 2.5 * barSec,
@@ -138,7 +162,10 @@ try {
     )
     app.transportStopPublic()
 
-    app.seqCtl.open()
+    app.screen = 'loop-options'
+    app.loopOptIndex = 0
+    app.render()
+    app.looper.softKey('a')
     app.transportPlayPublic()
     await new Promise((r) => setTimeout(r, 80))
     const seqPlayContext = app.playContext
@@ -151,12 +178,18 @@ try {
       globalLanes,
       globalTrackMode,
       backToLoop,
-      menuHasDrop,
-      menuNoTrackSeq,
-      patternScreen,
-      patternTrackId,
-      patternLanes,
-      toggled,
+      menuHasPatternSeq,
+      track2Screen,
+      track2Id,
+      track2Lanes,
+      track2Step0,
+      track1Id,
+      track1InitiallyOff,
+      track1Step1,
+      track2StillOwn,
+      seqObjectsIndependent,
+      globalAgainTrackId,
+      globalToggled,
       bakedHits,
       bakedDirty,
       inClip,
@@ -176,25 +209,29 @@ try {
 
   if (out.fatal) fail(out.fatal)
   else {
-    if (out.globalScreen === "sequencer") pass("global pattern seq opens")
+    if (out.globalScreen === "sequencer") pass("global Pattern Seq opens from Loop Options")
     else fail(`global screen ${out.globalScreen}`)
-    if (out.globalTrackMode == null) pass("global mode (no seqTrackId)")
+    if (out.globalTrackMode == null) pass("Loop Options keeps global mode")
     else fail(`expected global mode, seqTrackId=${out.globalTrackMode}`)
     if (out.globalLanes === 6) pass("global grid shows 6 lanes")
     else fail(`global lanes ${out.globalLanes}`)
     if (out.backToLoop === "loop-tracks") pass("back returns to timeline")
     else fail(`back landed on ${out.backToLoop}`)
-    if (out.menuHasDrop && out.menuNoTrackSeq) pass("menu DROP PATTERN replaces Track Step Seq")
-    else fail(`menu drop=${out.menuHasDrop} noTrackSeq=${out.menuNoTrackSeq}`)
-    if (out.patternScreen === "sequencer") pass("Hold B / open() is Pattern Seq")
-    else fail(`pattern screen ${out.patternScreen}`)
-    if (out.patternTrackId == null) pass("Pattern Seq is global (no seqTrackId)")
-    else fail(`expected global, seqTrackId=${out.patternTrackId}`)
-    if (out.patternLanes === 6) pass("pattern grid shows 6 lanes")
-    else fail(`pattern lanes ${out.patternLanes}`)
-    if (out.toggled) pass("OK toggles step on")
-    else fail("step toggle failed")
-    if (out.bakedHits && out.bakedDirty) pass("DROP PATTERN bakes working copy onto lane")
+    if (out.menuHasPatternSeq) pass("track menu exposes PATTERN SEQ")
+    else fail("track menu missing PATTERN SEQ")
+    if (out.track2Screen === "sequencer" && out.track2Id === 2) pass("Track 2 menu opens Track 2 local seq")
+    else fail(`Track 2 screen=${out.track2Screen} seqTrackId=${out.track2Id}`)
+    if (out.track2Lanes === 6) pass("track-local grid renders in sequencer")
+    else fail(`track-local lanes ${out.track2Lanes}`)
+    if (out.track2Step0) pass("Track 2 step edit lands in Track 2 seq")
+    else fail("Track 2 step was not stored locally")
+    if (out.track1Id === 1 && out.track1InitiallyOff) pass("Track 1 opens independently from Track 2")
+    else fail(`Track 1 id=${out.track1Id} initiallyOff=${out.track1InitiallyOff}`)
+    if (out.track1Step1 && out.track2StillOwn && out.seqObjectsIndependent) pass("Track 1 and Track 2 pattern data are isolated")
+    else fail(`isolation t1=${out.track1Step1} t2=${out.track2StillOwn} refs=${out.seqObjectsIndependent}`)
+    if (out.globalAgainTrackId == null && out.globalToggled) pass("global A-D bank remains separate and editable")
+    else fail(`global trackId=${out.globalAgainTrackId} toggled=${out.globalToggled}`)
+    if (out.bakedHits && out.bakedDirty) pass("DROP PATTERN bakes global pattern copy onto selected lane")
     else fail(`baked hits=${out.bakedHits} dirty=${out.bakedDirty}`)
     if (out.inClip && out.pastClipNull) pass("2-bar clip: audible in window, silent past clip")
     else fail(`clip window in=${out.inClip} pastNull=${out.pastClipNull}`)
@@ -210,7 +247,7 @@ try {
     else fail("baked pattern not armed on arrangement play")
     if (out.pastWhilePlayingNull) pass("playing: bar 3 still outside 2-bar clip window")
     else fail("playing past-clip window not silent")
-    if (out.seqPlayContext === "seq") pass("sequencer play uses seq context")
+    if (out.seqPlayContext === "seq") pass("global sequencer play uses seq context")
     else fail(`seq playContext ${out.seqPlayContext}`)
     if (out.stepSeqOnSeq) pass("step seq runs on sequencer play")
     else fail("step seq not running on sequencer play")
