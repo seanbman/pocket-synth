@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
+import { VoiceRegistry } from "cassio/voices/registry"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
@@ -22,6 +23,12 @@ export default class extends Controller {
 
     try {
       this.app = new CassioApp(this.element)
+      this.app.voices = new VoiceRegistry({
+        synth: this.app.synth,
+        drums: this.app.drums,
+        sample: this.app.sampleVoice,
+        loadSample: (sound) => this.app.sampler.loadBufferForSound(sound)
+      })
       installTrackPatternRuntime(this.app)
       installSequenceVoiceGuardRuntime(this.app)
       installSequencerUxRuntime(this.app)
