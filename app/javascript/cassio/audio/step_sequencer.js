@@ -51,6 +51,12 @@ export class StepSequencer {
     return this.transport.loopSec(bars)
   }
 
+  #firstFutureStep(origin, now = this.transport.now()) {
+    const s = this.stepSec()
+    if (!(s > 0)) return 0
+    return Math.max(0, Math.ceil((now - origin) / s - 1e-9))
+  }
+
   /** Local sec inside pink clip for this lane at absolute time `when`; null if outside. */
   #clipLocalAt(track, when) {
     const masterLoop = this.#masterSec()
@@ -84,7 +90,7 @@ export class StepSequencer {
     this._trackId = trackId
     this.running = true
     this._origin = origin ?? this.transport.now()
-    this._next = 0
+    this._next = this.#firstFutureStep(this._origin)
     this._trackNext.clear()
     this.#arm()
   }
@@ -123,12 +129,16 @@ export class StepSequencer {
     const now = this.transport.now()
     const s = this.stepSec()
     const len = seq.length || steps.length || 16
-    let next = this._trackNext.get(track.id) ?? 0
     const padId = Math.min(6, Math.max(1, track.padSlot || ((track.id - 1) % 6) + 1))
     const gateClip = this._mode === "arrangement"
+    const scheduleOrigin = gateClip
+      ? this._origin
+      : this._origin + (Number(track.offsetSec) || 0)
+    let next = this._trackNext.get(track.id)
+    if (next == null) next = this.#firstFutureStep(scheduleOrigin, now)
 
     if (!gateClip) {
-      const origin = this._origin + (Number(track.offsetSec) || 0)
+      const origin = scheduleOrigin
       while (origin + next * s < now + lookAhead) {
         const abs = next
         const i = abs % len
@@ -203,7 +213,8 @@ export class StepSequencer {
     const now = this.transport.now()
     const s = this.stepSec()
     const key = `pat:${track.id}`
-    let next = this._trackNext.get(key) ?? 0
+    let next = this._trackNext.get(key)
+    if (next == null) next = this.#firstFutureStep(this._origin, now)
 
     while (this._origin + next * s < now + lookAhead) {
       const when = this._origin + next * s
@@ -295,7 +306,9 @@ export class StepSequencer {
   }
 
   #at(when, fn) {
-    const delay = Math.max(0, (when - this.transport.now()) * 1000 - 40)
+    const now = this.transport.now()
+    if (when < now - 0.01) return
+    const delay = Math.max(0, (when - now) * 1000 - 40)
     const id = setTimeout(fn, delay)
     this._scheduled.push(id)
   }
