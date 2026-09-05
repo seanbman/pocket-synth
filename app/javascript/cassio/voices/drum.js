@@ -1,3 +1,4 @@
+import { audioHostFor } from "cassio/audio/audio_host"
 import { midiToFreq } from "cassio/voices/glass_poly"
 
 const TYPES = new Set(["kick", "snare", "hat", "openhat", "clap", "tom"])
@@ -11,6 +12,7 @@ function clamp01(v, fallback = 0) {
 export class DrumVoice {
   constructor(engine) {
     this.engine = engine
+    this.audio = audioHostFor(engine)
     this.drumType = "kick"
     this.tone = 0.5
     this.tuning = 0.5
@@ -33,7 +35,7 @@ export class DrumVoice {
 
   /** Prebuild shared noise buffer once audio context exists. */
   ensureNoiseCache() {
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     if (!ctx || this._noiseBuf) return
     const seconds = 0.45
     const len = Math.floor(ctx.sampleRate * seconds)
@@ -84,39 +86,20 @@ export class DrumVoice {
 
   /** `when` (audio time) lets the step sequencer schedule hits sample-accurately. */
   noteOn(midi = 60, velocity = 0.9, { when = null, recTrack = null } = {}) {
-    if (!this.engine.ready) return
+    if (!this.audio.ready) return
     const id = `d${++this._seq}`
-    const ctx = this.engine.ctx
+    const ctx = this.audio.context()
     const t = Math.max(ctx.currentTime, Number(when) || 0)
     const out = ctx.createGain()
     const driveBoost = 0.85 + this.drive * 1.1
     out.gain.value = Math.min(1.4, velocity * driveBoost)
 
-    // Per-hit room/delay; pan before bus so pad stereo is independent of master
-    let bus = out
-    if (Math.abs(this.pan) > 0.001) {
-      const panner = ctx.createStereoPanner()
-      panner.pan.value = Math.min(1, Math.max(-1, this.pan))
-      out.connect(panner)
-      bus = panner
-    }
-    const dry = this.engine.dry
-    const conv = this.engine.convolver
-    const delayIn = this.engine.delay
-    bus.connect(dry)
-    if (recTrack) this.engine.tapRec(bus, recTrack)
-    if (conv && this.reverb > 0.01) {
-      const send = ctx.createGain()
-      send.gain.value = this.reverb * 0.95
-      bus.connect(send)
-      send.connect(conv)
-    }
-    if (delayIn && this.delay > 0.01) {
-      const dsend = ctx.createGain()
-      dsend.gain.value = this.delay * 0.55
-      bus.connect(dsend)
-      dsend.connect(delayIn)
-    }
+    this.audio.route(out, {
+      pan: this.pan,
+      reverb: this.reverb * 0.95,
+      delay: this.delay,
+      recTrack
+    })
 
     const type = this.drumType
     if (type === "kick") this.#kick(ctx, t, out, midi)
@@ -167,7 +150,6 @@ export class DrumVoice {
     const bend = this.#bendRatio() * this.#tuneRatio()
     const osc = ctx.createOscillator()
     const env = ctx.createGain()
-    // TONE: boom vs tight thump — wide pitch range
     const base = (32 + this.tone * 90) * bend
     const start = Math.max(base * 1.2, midiToFreq(Math.min(midi, 48)) * 0.45 * bend)
     osc.frequency.setValueAtTime(start * (2.2 + this.tone * 1.4), t)
@@ -180,9 +162,7 @@ export class DrumVoice {
     osc.start(t)
     osc.stop(t + dur + 0.03)
 
-    // SNAP: beater click
     this.#click(ctx, t, out, this.snap * 0.9, 1800 + this.tone * 2200)
-    // NOISE: short dirt
     if (this.noise > 0.05) {
       const src = ctx.createBufferSource()
       src.buffer = this.#noiseBuffer(ctx, 0.12)
@@ -205,7 +185,6 @@ export class DrumVoice {
     const osc = ctx.createOscillator()
     const oscEnv = ctx.createGain()
     osc.type = "triangle"
-    // TONE: body pitch
     osc.frequency.value = (140 + this.tone * 320) * bend
     const toneDur = 0.04 + this.decay * 0.22
     const bodyAmt = 0.25 + (1 - this.noise) * 0.45
@@ -242,7 +221,6 @@ export class DrumVoice {
     src.buffer = this.#noiseBuffer(ctx, 0.4)
     const filt = ctx.createBiquadFilter()
     filt.type = "bandpass"
-    // TONE: dark → sizzly
     filt.frequency.value = (2500 + this.tone * 9000) * Math.min(bend, 2)
     filt.Q.value = 0.6 + this.snap * 2.5
     const env = ctx.createGain()
@@ -271,7 +249,6 @@ export class DrumVoice {
     const env = ctx.createGain()
     const dur = 0.05 + this.decay * 0.35
     const peak = 0.45 + this.noise * 0.45
-    // SNAP: tighter multi-burst
     const gap = 0.014 - this.snap * 0.008
     env.gain.setValueAtTime(0, t)
     env.gain.linearRampToValueAtTime(peak, t + 0.001)
