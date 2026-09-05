@@ -1,9 +1,9 @@
-import { sanitizeSeq, sanitizePattern, SEQ_LANES, patternHasHits } from "cassio/store"
+import { sanitizeSeq, SEQ_LANES } from "cassio/store"
+import { sanitizeTrackPattern, trackPatternHasHits } from "cassio/track_pattern"
 
 /**
- * Six-lane step sequencer (Screens 24–25) driven by the Transport clock.
- * Arrangement PLAY schedules each lane's baked pattern only inside that lane's
- * pink-clip window (lengthBars × offset) on the song timeline.
+ * Step sequencer driven by the Transport clock. Global patterns retain six pad
+ * lanes; track-owned patterns may contain any number of captured sound lanes.
  */
 export class StepSequencer {
   constructor(transport, trigger, { trackProvider = null, masterSecProvider = null } = {}) {
@@ -57,7 +57,7 @@ export class StepSequencer {
     return Math.max(0, Math.ceil((now - origin) / s - 1e-9))
   }
 
-  /** Local sec inside pink clip for this lane at absolute time `when`; null if outside. */
+  /** Local sec inside a track clip at absolute time `when`; null outside it. */
   #clipLocalAt(track, when) {
     const masterLoop = this.#masterSec()
     const trackLoop = this.#trackLoopSec(track)
@@ -118,12 +118,13 @@ export class StepSequencer {
     return idx % len
   }
 
+  /** Legacy single-source track.seq playback. */
   #armTrackPattern(track) {
     if (track.assigned === false) return false
     const seq = track.seq
     if (!seq?.enabled || track.mute) return false
     const steps = seq.steps || []
-    if (!steps.some((s) => s?.on)) return false
+    if (!steps.some((step) => step?.on)) return false
 
     const lookAhead = 0.25
     const now = this.transport.now()
@@ -204,44 +205,78 @@ export class StepSequencer {
     return true
   }
 
+  #scheduleTrackPatternLane(pattern, lane, stepIndex, hitWhen) {
+    const steps = pattern.lanes[lane]
+    const step = steps?.[stepIndex]
+    if (!step?.on) return false
+    const prev = steps[(stepIndex - 1 + pattern.length) % pattern.length]
+    if (prev?.on && prev.tie && stepIndex !== 0) return false
+
+    let gateSteps = 1
+    let k = stepIndex
+    while (steps[k]?.tie && gateSteps < pattern.length) {
+      k = (k + 1) % pattern.length
+      if (!steps[k]?.on) break
+      gateSteps++
+    }
+    const g = step.gate ?? pattern.gate
+    const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * this.stepSec())
+    const velocity = step.accent ? 1 : step.vel
+    const source = pattern.sources?.[lane]
+    const target = source?.soundId ? source : lane + 1
+    this.#at(hitWhen, () => {
+      if (!this.running) return
+      this.trigger?.(target, {
+        when: hitWhen,
+        velocity,
+        gateSec,
+        step: stepIndex,
+        lane,
+        laneId: pattern.laneIds?.[lane] || null,
+        accent: !!step.accent,
+        fromSeq: true
+      })
+    })
+    return true
+  }
+
   #armBakedPattern(track) {
     if (track.assigned === false || track.mute) return false
-    const p = track.pattern ? sanitizePattern(track.pattern) : null
-    if (!patternHasHits(p)) return false
+    const pattern = track.pattern ? sanitizeTrackPattern(track.pattern) : null
+    if (!trackPatternHasHits(pattern)) return false
 
     const lookAhead = 0.25
     const now = this.transport.now()
     const s = this.stepSec()
     const key = `pat:${track.id}`
+    const gateClip = this._mode === "arrangement"
     let next = this._trackNext.get(key)
     if (next == null) next = this.#firstFutureStep(this._origin, now)
+
+    if (!gateClip) {
+      while (this._origin + next * s < now + lookAhead) {
+        const abs = next
+        const i = abs % pattern.length
+        for (let lane = 0; lane < pattern.lanes.length; lane++) {
+          const hitWhen = this.#stepTimeFrom(this._origin, abs, pattern.lanes[lane][i], pattern.swing)
+          this.#scheduleTrackPatternLane(pattern, lane, i, hitWhen)
+        }
+        next++
+      }
+      this._trackNext.set(key, next)
+      return true
+    }
 
     while (this._origin + next * s < now + lookAhead) {
       const when = this._origin + next * s
       const clip = this.#clipLocalAt(track, when)
       if (clip) {
-        const i = Math.floor(clip.local / s + 1e-9) % p.length
-        for (let lane = 0; lane < SEQ_LANES; lane++) {
-          const step = p.lanes[lane][i]
-          if (!step?.on) continue
-          const prev = p.lanes[lane][(i - 1 + p.length) % p.length]
-          if (prev?.on && prev.tie && i !== 0) continue
-          const hitWhen = this.#stepTimeFrom(this._origin, next, step, p.swing)
+        const i = Math.floor(clip.local / s + 1e-9) % pattern.length
+        for (let lane = 0; lane < pattern.lanes.length; lane++) {
+          const step = pattern.lanes[lane][i]
+          const hitWhen = this.#stepTimeFrom(this._origin, next, step, pattern.swing)
           if (!this.#clipLocalAt(track, hitWhen)) continue
-          let gateSteps = 1
-          let k = i
-          while (p.lanes[lane][k]?.tie && gateSteps < p.length) {
-            k = (k + 1) % p.length
-            if (!p.lanes[lane][k]?.on) break
-            gateSteps++
-          }
-          const g = step.gate ?? p.gate
-          const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
-          const velocity = step.accent ? 1 : step.vel
-          this.#at(hitWhen, () => {
-            if (!this.running) return
-            this.trigger?.(lane + 1, { when: hitWhen, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
-          })
+          this.#scheduleTrackPatternLane(pattern, lane, i, hitWhen)
         }
       }
       next++
@@ -253,26 +288,26 @@ export class StepSequencer {
   #armGlobalPattern() {
     const lookAhead = 0.25
     const now = this.transport.now()
-    const p = this.pattern
+    const pattern = this.pattern
     const s = this.stepSec()
     while (this._origin + this._next * s < now + lookAhead) {
       const abs = this._next
-      const i = abs % p.length
+      const i = abs % pattern.length
       const hits = []
       for (let lane = 0; lane < SEQ_LANES; lane++) {
-        const step = p.lanes[lane][i]
+        const step = pattern.lanes[lane][i]
         if (!step?.on) continue
-        const prev = p.lanes[lane][(i - 1 + p.length) % p.length]
+        const prev = pattern.lanes[lane][(i - 1 + pattern.length) % pattern.length]
         if (prev?.on && prev.tie && i !== 0) continue
-        const when = this.#stepTime(abs, step, p.swing)
+        const when = this.#stepTime(abs, step, pattern.swing)
         let gateSteps = 1
         let k = i
-        while (p.lanes[lane][k]?.tie && gateSteps < p.length) {
-          k = (k + 1) % p.length
-          if (!p.lanes[lane][k]?.on) break
+        while (pattern.lanes[lane][k]?.tie && gateSteps < pattern.length) {
+          k = (k + 1) % pattern.length
+          if (!pattern.lanes[lane][k]?.on) break
           gateSteps++
         }
-        const g = step.gate ?? p.gate
+        const g = step.gate ?? pattern.gate
         const gateSec = Math.max(0.02, (gateSteps - 1 + Math.max(0.05, g)) * s)
         const velocity = step.accent ? 1 : step.vel
         hits.push(lane)
@@ -282,7 +317,7 @@ export class StepSequencer {
         })
       }
       if (hits.length && this.onStep) {
-        const when = this.#stepTime(abs, null, p.swing)
+        const when = this.#stepTime(abs, null, pattern.swing)
         this.#at(when, () => { if (this.running) this.onStep?.(i, hits) })
       }
       this._next++
@@ -297,7 +332,7 @@ export class StepSequencer {
         if (!this.#armBakedPattern(track)) this.#armTrackPattern(track)
       }
     } else if (this._mode === "track" && this._trackId != null) {
-      const track = tracks.find((t) => t.id === this._trackId)
+      const track = tracks.find((item) => item.id === this._trackId)
       if (track && !this.#armBakedPattern(track)) this.#armTrackPattern(track)
     } else {
       this.#armGlobalPattern()
