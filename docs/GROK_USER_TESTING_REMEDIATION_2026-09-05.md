@@ -23,7 +23,7 @@ The report should **not** be implemented verbatim. In particular, its suggestion
 
 | Finding | Disposition | Priority | Reason |
 | --- | --- | --- | --- |
-| LOOP recording can hang/freeeze the client tab after count-in and live input | **Accept as credible blocker; reproduce before assigning root cause** | P0 | The report describes a repeatable client-side freeze while Rails remains responsive. Existing audio diagnostics have also observed pathological note-trigger bursts around loop/sequencer transitions, so transport/scheduler duplication is a plausible family of causes, but it is not yet proven to be this defect. |
+| LOOP recording can hang/freeze the client tab after count-in and live input | **Accept as credible blocker; reproduce before assigning root cause** | P0 | The report describes a repeatable client-side freeze while Rails remains responsive. Existing audio diagnostics have also observed pathological note-trigger bursts around loop/sequencer transitions, so transport/scheduler duplication is a plausible family of causes, but it is not yet proven to be this defect. |
 | PROJECT is a `COMING SOON` dead end | **Accept as V1 gap** | P1 | PROJECT is part of the canonical V1 six-area model and has defined save/open/new/rename behavior. |
 | SETTINGS is a `COMING SOON` dead end | **Accept as V1 gap** | P1 | SETTINGS is canonical V1 scope, including audio, metronome, display, storage, permissions, and about surfaces. |
 | Main-menu lower rows clip or overlap the soft-key strip | **Accept** | P1 | Supporting screenshots visibly corroborate the viewport/layout defect. |
