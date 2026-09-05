@@ -119,7 +119,7 @@ export function addTrackPatternLane(pattern, source = null) {
   p.laneIds.push(newTrackPatternLaneId())
   p.sources.push(normalizeTrackLaneSource(source))
   p.lanes.push(Array.from({ length: p.length }, defaultStep))
-  return p.lanes.length - 1
+  return { pattern: p, index: p.lanes.length - 1 }
 }
 
 export function removeTrackPatternLane(pattern, index) {
