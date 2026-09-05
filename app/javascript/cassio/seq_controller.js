@@ -67,17 +67,21 @@ export class SeqController {
 
   open(trackId = null) {
     const a = this.app
-    a.seqTrackId = trackId || null
-    if (trackId) {
-      const t = a.loopEngine.tracks.find((x) => x.id === trackId)
+    // PATTERN SEQ entered from a track's menu edits that track's independent
+    // sequence. Loop Options still opens the shared/global A-D pattern bank.
+    const resolvedTrackId = trackId ?? (a.screen === "loop-menu" ? a.loopEngine.selected : null)
+    a.seqTrackId = resolvedTrackId
+    if (resolvedTrackId != null) {
+      const t = a.loopEngine.tracks.find((x) => x.id === resolvedTrackId)
       if (!t?.assigned) {
+        a.seqTrackId = null
         a.toast("EMPTY LANE")
         return
       }
-      a.loopEngine.select(trackId)
+      a.loopEngine.select(resolvedTrackId)
       this.#trackSeq()
       a.seqLane = Math.min(SEQ_LANES - 1, Math.max(0, (t.padSlot || 1) - 1))
-      a.toast(`${t.name || `L${trackId}`} STEP SEQ`)
+      a.toast(`${t.name || `L${resolvedTrackId}`} STEP SEQ`)
     } else {
       a.seqLane = a.seqLane || 0
       a.toast(`PATTERN ${this.seq.current} · 6 LANES`)
