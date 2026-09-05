@@ -1,0 +1,58 @@
+name: Publish Grok user testing to Grapher
+
+on:
+  push:
+    branches:
+      - plan/grok-user-testing-remediation-2026-09-05
+    paths:
+      - docs/GROK_USER_TESTING_GRAPHER_2026-09-05.md
+      - .github/workflows/grapher-publish-grok-user-testing.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out planning branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Grapher from GitHub
+        run: python -m pip install 'git+https://github.com/seanbman/grapher.git@main'
+
+      - name: Extract reviewed Grapher command block
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('docs/GROK_USER_TESTING_GRAPHER_2026-09-05.md').read_text()
+          marker = '```bash\n'
+          start = source.index(marker) + len(marker)
+          end = source.index('\n```', start)
+          Path('/tmp/grapher-user-testing.sh').write_text(source[start:end] + '\n')
+          PY
+
+      - name: Run Grapher mutations, validation, audit, and publish
+        shell: bash
+        run: bash -euxo pipefail /tmp/grapher-user-testing.sh
+
+      - name: Commit published Grapher transport state
+        shell: bash
+        run: |
+          git add .grapher/shared/knowledge.json .grapher/shared/manifest.json .grapher/shared/history
+          if git diff --cached --quiet; then
+            echo 'No Grapher shared-state changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'grapher: publish Grok user-testing remediation knowledge'
+          git push
