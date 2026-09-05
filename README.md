@@ -1,4 +1,9 @@
-# README
+# CASSIO Pocket Synth
+
+Product direction and planned capabilities are tracked in
+[docs/FEATURE_ROADMAP.md](docs/FEATURE_ROADMAP.md).
+
+## Development
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
