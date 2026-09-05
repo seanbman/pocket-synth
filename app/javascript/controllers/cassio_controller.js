@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
+import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
 import { installSequenceVoiceGuardRuntime } from "cassio/sequence_voice_guard_runtime"
 import { installSequencerUxRuntime } from "cassio/sequencer_ux_runtime"
@@ -25,6 +26,7 @@ export default class extends Controller {
       installSequenceVoiceGuardRuntime(this.app)
       installSequencerUxRuntime(this.app)
       installTrackNamingRuntime(this.app)
+      installPlayRecordLaneRuntime(this.app)
       installRecordingRuntime(this.app)
       installAudioTrace(this.app)
       installDeepAudioTrace(this.app)
