@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "checkpoint-current-audio-graph",
+  "refreshed_at": "2026-09-05T02:05:00+00:00",
+  "title": "Current: audio graph isolation",
+  "node_ids": [
+    "concept-sound-engine",
+    "concept-screen-08",
+    "concept-screen-09",
+    "concept-screen-31",
+    "concept-recording-behavior",
+    "finding-live-synth-hard-tracks"
+  ],
+  "graph_version": 2
+}
