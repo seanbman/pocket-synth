@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-current-audio-diagnostics",
+  "refreshed_at": "2026-09-05T02:35:00+00:00",
+  "title": "Current: audio transition diagnostics",
+  "node_ids": [
+    "concept-sound-engine",
+    "concept-screen-24",
+    "concept-recording-behavior",
+    "finding-loop-d2-step-sequencer",
+    "checkpoint-current-loop-engine"
+  ],
+  "graph_version": 2
+}
