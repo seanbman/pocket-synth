@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-node test/smoke/audio_graph.mjs "${CASSIO_URL:-https://127.0.0.1:3000/}"
