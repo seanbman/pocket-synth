@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-current-loop-engine",
-  "refreshed_at": "2026-09-06T02:40:00+00:00",
-  "title": "Current: loop engine through PR12 Stage 3 persistence isolation",
+  "refreshed_at": "2026-09-06T04:30:00+00:00",
+  "title": "Current: loop engine through PR12 Stage 4 completion isolation",
   "node_ids": [
     "finding-loop-d2-step-sequencer",
     "finding-loop-d1",
@@ -13,7 +13,8 @@
     "finding-live-synth-hard-tracks",
     "checkpoint-pr12-stage2-loop-record",
     "checkpoint-pr12-stage3-persistence",
-    "checkpoint-pr12-next-isolation"
+    "checkpoint-pr12-next-isolation",
+    "checkpoint-pr12-stage4-completion"
   ],
   "graph_version": 2
 }
