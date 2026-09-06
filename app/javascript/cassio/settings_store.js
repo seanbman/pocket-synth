@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   metroAccent: true,
   metroSound: "block",
   countInBars: 1,
-  brightness: 0.8,
+  brightness: 1,
   dimLevel: 0.25,
   autoDimMinutes: 2,
   screenSleepMinutes: 10,
