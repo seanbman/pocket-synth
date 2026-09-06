@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-current-project",
-  "refreshed_at": "2026-09-06T05:57:00+00:00",
-  "title": "Current: PROJECT V1 core verified through browser save/open/import/export lifecycle",
+  "refreshed_at": "2026-09-06T06:03:00+00:00",
+  "title": "Current: PROJECT V1 core verified including unnamed-session Save/Discard protection",
   "node_ids": [
     "concept-area-project",
     "concept-screen-27",
