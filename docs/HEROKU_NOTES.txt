@@ -1,1 +1,0 @@
-Heroku production is intentionally single-dyno and browser-persisted for the current prototype. The /tmp SQLite database is ephemeral and must be replaced with Postgres before server-side user data is introduced.
