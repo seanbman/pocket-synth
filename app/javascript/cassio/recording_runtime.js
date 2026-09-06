@@ -245,10 +245,10 @@ export function installRecordingRuntime(app) {
 
           await cacheStoredAudioCooperatively(track)
 
-          // Diagnostic isolation: intentionally skip CassioApp's original
-          // completion callback (saveLaneToLibrary -> #persist -> render).
-          // If the 3-cycle browser gate passes, the remaining freeze is inside
-          // that post-record completion path rather than capture/PCM commit.
+          // Diagnostic stage 2: the browser survived three cycles with the old
+          // CassioApp completion callback removed. Re-introduce only the library
+          // save here; persistence and the old callback remain bypassed.
+          loopEngine.saveLaneToLibrary(track?.id || trackId)
           app.render?.()
         })
       }
