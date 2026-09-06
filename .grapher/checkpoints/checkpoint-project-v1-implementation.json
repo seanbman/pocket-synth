@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-project-v1-implementation",
+  "refreshed_at": "2026-09-06T05:47:00+00:00",
+  "title": "PROJECT V1 implementation: local IndexedDB project library, New/Save/Save As/Rename/Open, duplicate/delete management, recovery-backed restore, and portable .cassio import/export with referenced user sounds",
+  "node_ids": [
+    "concept-area-project",
+    "concept-screen-27",
+    "concept-screen-28",
+    "concept-persistence",
+    "checkpoint-project-v1-plan"
+  ],
+  "graph_version": 2
+}
