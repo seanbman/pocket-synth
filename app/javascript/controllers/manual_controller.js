@@ -7,11 +7,17 @@ export default class extends Controller {
     this.previousFocus = null
     this.trigger = this.element.querySelector("[data-manual-trigger]")
     this.boundOpen = () => this.open()
+    this.boundKeydown = (event) => this.keydown(event)
+    this.boundKeyup = (event) => this.keyup(event)
     this.trigger?.addEventListener("click", this.boundOpen)
+    this.dialogTarget.addEventListener("keydown", this.boundKeydown)
+    this.dialogTarget.addEventListener("keyup", this.boundKeyup)
   }
 
   disconnect() {
     this.trigger?.removeEventListener("click", this.boundOpen)
+    this.dialogTarget.removeEventListener("keydown", this.boundKeydown)
+    this.dialogTarget.removeEventListener("keyup", this.boundKeyup)
   }
 
   open() {
