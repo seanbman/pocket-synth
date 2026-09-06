@@ -128,6 +128,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/responsive_layout.mjs
 
+      - name: Verify searchable full-screen manual
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/manual.mjs
+
       - name: Verify LOOP sequencer discoverability
         env:
           CASSIO_URL: http://127.0.0.1:3000/

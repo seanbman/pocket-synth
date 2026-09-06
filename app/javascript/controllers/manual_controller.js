@@ -1,0 +1,94 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["dialog", "search", "section", "count", "empty"]
+
+  connect() {
+    this.previousFocus = null
+    this.trigger = this.element.querySelector("[data-manual-trigger]")
+    this.boundOpen = () => this.open()
+    this.boundKeydown = (event) => this.keydown(event)
+    this.boundKeyup = (event) => this.keyup(event)
+    this.trigger?.addEventListener("click", this.boundOpen)
+    this.dialogTarget.addEventListener("keydown", this.boundKeydown)
+    this.dialogTarget.addEventListener("keyup", this.boundKeyup)
+  }
+
+  disconnect() {
+    this.trigger?.removeEventListener("click", this.boundOpen)
+    this.dialogTarget.removeEventListener("keydown", this.boundKeydown)
+    this.dialogTarget.removeEventListener("keyup", this.boundKeyup)
+  }
+
+  open() {
+    this.previousFocus = document.activeElement
+    this.dialogTarget.hidden = false
+    document.documentElement.classList.add("manual-open")
+    requestAnimationFrame(() => this.searchTarget.focus())
+  }
+
+  close() {
+    if (this.dialogTarget.hidden) return
+    this.dialogTarget.hidden = true
+    document.documentElement.classList.remove("manual-open")
+    this.previousFocus?.focus?.()
+  }
+
+  backdropClose(event) {
+    if (event.target === this.dialogTarget) this.close()
+  }
+
+  keydown(event) {
+    // Keep manual typing/navigation from reaching CASSIO's global performance keys.
+    event.stopPropagation()
+    if (event.key === "Escape") {
+      event.preventDefault()
+      this.close()
+      return
+    }
+    if (event.key === "/" && document.activeElement !== this.searchTarget) {
+      event.preventDefault()
+      this.searchTarget.focus()
+    }
+  }
+
+  keyup(event) {
+    event.stopPropagation()
+  }
+
+  search() {
+    const query = this.searchTarget.value.trim().toLocaleLowerCase()
+    let visible = 0
+
+    this.sectionTargets.forEach((section) => {
+      const match = !query || section.textContent.toLocaleLowerCase().includes(query)
+      section.hidden = !match
+      if (match) visible += 1
+
+      const id = section.id
+      this.element.querySelectorAll(`[data-manual-link="${CSS.escape(id)}"]`).forEach((link) => {
+        link.hidden = !match
+      })
+    })
+
+    this.countTarget.textContent = query
+      ? `${visible} section${visible === 1 ? "" : "s"}`
+      : `${this.sectionTargets.length} sections`
+    this.emptyTarget.hidden = visible !== 0
+  }
+
+  clearSearch() {
+    this.searchTarget.value = ""
+    this.search()
+    this.searchTarget.focus()
+  }
+
+  jump(event) {
+    event.preventDefault()
+    const id = event.currentTarget.getAttribute("href")?.replace(/^#/, "")
+    const section = id ? document.getElementById(id) : null
+    if (!section || section.hidden) return
+    section.scrollIntoView({ block: "start", behavior: "smooth" })
+    section.focus({ preventScroll: true })
+  }
+}

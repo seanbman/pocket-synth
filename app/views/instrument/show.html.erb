@@ -18,6 +18,7 @@
         </div>
         <div class="brand-sub">POCKET SYNTH / SAMPLER</div>
       </div>
+      <button type="button" class="manual-trigger" data-manual-trigger aria-haspopup="dialog">MANUAL</button>
     </header>
 
     <div class="top-row">
@@ -118,6 +119,8 @@
     </div>
   </div>
 </div>
+
+<%= render "manual" %>
 
 <% if Rails.env.development? || Rails.env.test? %>
   <button

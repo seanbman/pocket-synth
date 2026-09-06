@@ -86,12 +86,13 @@
       }
     </style>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "cassio_manual", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   </head>
-  <body class="cassio-body">
+  <body class="cassio-body" data-controller="manual">
     <div id="cassio-preload" role="status" aria-live="polite" aria-label="CASSIO loading">
       <div class="cassio-preload-title">CASSIO</div>
       <div class="cassio-preload-sub">POCKET SYNTH / SAMPLER</div>
