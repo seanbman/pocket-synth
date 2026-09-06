@@ -1,12 +1,14 @@
 {
   "checkpoint_id": "checkpoint-current-ui-controls",
-  "refreshed_at": "2026-09-06T04:44:06+00:00",
-  "title": "Current: UI controls verified through responsive portrait remediation",
+  "refreshed_at": "2026-09-06T04:50:00+00:00",
+  "title": "Current: UI controls through responsive portrait and LOOP sequencer-discoverability remediation",
   "node_ids": [
     "finding-ui-fullbleed-layout",
     "finding-ui-knobs-viz-autoboot",
     "problem-main-menu-portrait-clipping-20260905",
-    "checkpoint-responsive-layout-followup"
+    "checkpoint-responsive-layout-followup",
+    "problem-sequencer-discoverability-20260905",
+    "checkpoint-loop-sequencer-discoverability"
   ],
   "graph_version": 2
 }
