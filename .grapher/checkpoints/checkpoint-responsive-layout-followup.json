@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-responsive-layout-followup",
+  "refreshed_at": "2026-09-06T04:36:00+00:00",
+  "title": "User-testing follow-up #2: harden phone portrait containment; menu rows, chassis, keyboard, and document overflow now have a multi-viewport browser regression gate",
+  "node_ids": [
+    "problem-main-menu-portrait-clipping-20260905",
+    "task-repair-portrait-menu-loop-discovery-20260905",
+    "finding-ui-fullbleed-layout",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
