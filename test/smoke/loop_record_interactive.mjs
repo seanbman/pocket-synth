@@ -18,8 +18,12 @@ const chromeBin = process.env.CHROME_BIN || "google-chrome"
 const chrome = spawn(chromeBin, [
   "--headless=new", "--no-sandbox", "--disable-gpu", "--ignore-certificate-errors",
   "--autoplay-policy=no-user-gesture-required", "--disable-dev-shm-usage",
+  "--remote-debugging-address=127.0.0.1",
   `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, "about:blank"
-], { stdio: "ignore" })
+], { stdio: ["ignore", "ignore", "pipe"] })
+
+let chromeErr = ""
+chrome.stderr.on("data", (chunk) => { chromeErr += chunk.toString() })
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const deadline = async (promise, ms, label) => Promise.race([
@@ -27,13 +31,31 @@ const deadline = async (promise, ms, label) => Promise.race([
   new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms))
 ])
 
+async function waitForChrome() {
+  const started = Date.now()
+  let lastError = null
+  while (Date.now() - started < 12000) {
+    if (chrome.exitCode != null) {
+      throw new Error(`Chrome exited ${chrome.exitCode}: ${chromeErr.slice(-3000)}`)
+    }
+    try {
+      const response = await fetch(`http://127.0.0.1:${PORT}/json/list`)
+      if (response.ok) return await response.json()
+      lastError = new Error(`Chrome debug endpoint HTTP ${response.status}`)
+    } catch (error) {
+      lastError = error
+    }
+    await sleep(250)
+  }
+  throw new Error(`Chrome debug endpoint unavailable: ${lastError?.message || "unknown"}\n${chromeErr.slice(-3000)}`)
+}
+
 let failed = false
 const pass = (msg) => console.log(`PASS: ${msg}`)
 const fail = (msg) => { failed = true; console.error(`FAIL: ${msg}`) }
 
 try {
-  await sleep(1500)
-  const targets = await deadline(fetch(`http://127.0.0.1:${PORT}/json/list`).then((r) => r.json()), 5000, "Chrome target list")
+  const targets = await waitForChrome()
   const page = targets.find((t) => t.type === "page" && !t.url.startsWith("chrome-extension:")) || targets[0]
   if (!page?.webSocketDebuggerUrl) throw new Error("No Chrome page target")
 
