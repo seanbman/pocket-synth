@@ -91,6 +91,47 @@ jobs:
         if: failure()
         run: cat /tmp/cassio-rails.log || true
 
+  browser_responsive_layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prepare app
+        run: bin/rails db:prepare
+
+      - name: Start Rails
+        run: |
+          bin/rails server -b 127.0.0.1 -p 3000 > /tmp/cassio-rails.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:3000/up >/dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat /tmp/cassio-rails.log
+          exit 1
+
+      - name: Check portrait chassis, keyboard, and menu containment
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/responsive_layout.mjs
+
+      - name: Print Rails log on failure
+        if: failure()
+        run: cat /tmp/cassio-rails.log || true
+
   lint:
     runs-on: ubuntu-latest
 
