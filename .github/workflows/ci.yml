@@ -134,6 +134,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/manual.mjs
 
+      - name: Verify editable fields block global performance mappings
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/editable_keyboard_guard.mjs
+
       - name: Verify LOOP sequencer discoverability
         env:
           CASSIO_URL: http://127.0.0.1:3000/

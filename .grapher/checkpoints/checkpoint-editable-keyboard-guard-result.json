@@ -1,0 +1,12 @@
+{
+  "id": "checkpoint-editable-keyboard-guard-result",
+  "type": "result",
+  "title": "Editable fields isolated from global performance mappings",
+  "status": "verified",
+  "summary": "The repo audit confirmed one real window-level audio/performance keyboard map in app.js and one duplicate visual-feedback map in input_feedback_runtime.js. A delegated editable-field guard now preserves normal typing in input, textarea, select, and contenteditable targets while preventing note, pad, navigation, and transport events from bubbling to the global performance handler.",
+  "verification": {
+    "ci": "#149 success",
+    "heroku_smoke": "#16 success",
+    "targeted_browser": "real KeyZ in PROJECT naming and KeyX in a generic textarea typed normally with no synth held-key leakage"
+  }
+}
