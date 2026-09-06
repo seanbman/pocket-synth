@@ -6,6 +6,7 @@ import { installProjectRuntime } from "cassio/project_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
 import { installSequenceVoiceGuardRuntime } from "cassio/sequence_voice_guard_runtime"
 import { installSequencerUxRuntime } from "cassio/sequencer_ux_runtime"
+import { installSettingsRuntime } from "cassio/settings_runtime"
 import { installTrackNamingRuntime } from "cassio/track_naming_runtime"
 import { installTrackPatternRuntime } from "cassio/track_pattern_runtime"
 import {
@@ -42,6 +43,7 @@ export default class extends Controller {
       installPlayRecordLaneRuntime(this.app)
       installRecordingRuntime(this.app)
       installProjectRuntime(this.app)
+      installSettingsRuntime(this.app)
 
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
