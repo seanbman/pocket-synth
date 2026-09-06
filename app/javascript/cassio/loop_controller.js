@@ -1,4 +1,4 @@
-import { OPTION_ROWS } from "cassio/screens/loop"
+import { OPTION_ROWS, LOOP_BAR_WIDTH_PX } from "cassio/screens/loop"
 import { nudgeFx, stepFx, fmtFx, fxKnob01, fxDefaults } from "cassio/audio/fx_params"
 import { buildSettingsRows, knobParamsAt } from "cassio/screens/settings_list"
 import { QUANTIZE_OPTS, QUANTIZE_LABELS, trackSeqHasHits, patternHasHits } from "cassio/store"
@@ -23,6 +23,44 @@ function menuRowsFor(t) {
 export class LoopController {
   constructor(app) {
     this.app = app
+    this.#startPlaybackUiLoop()
+  }
+
+  /**
+   * Own the legacy transport UI rAF slot so beat ticks never rebuild the LCD DOM.
+   * Only volatile playback chrome is mutated in place; structural/user actions still render normally.
+   */
+  #startPlaybackUiLoop() {
+    const a = this.app
+    const frame = () => {
+      this.#syncPlaybackUi()
+      a._loopUiRaf = requestAnimationFrame(frame)
+    }
+    a._loopUiRaf = requestAnimationFrame(frame)
+  }
+
+  #syncPlaybackUi() {
+    const a = this.app
+    if (a.screen !== "loop-tracks" || !a.vscreen) return
+    const le = a.loopEngine
+    const timelineBars = le.timelineBars()
+    const timelineSec = le.timelineSec()
+    const timelineW = timelineBars * LOOP_BAR_WIDTH_PX
+    const playheadSec = a.transport.playheadSecInLoop(timelineBars)
+    const playheadPx = timelineSec > 0 ? (playheadSec / timelineSec) * timelineW : 0
+
+    a.vscreen.querySelectorAll(".loop-ph").forEach((el) => {
+      el.style.left = `${playheadPx}px`
+    })
+
+    const meta = a.vscreen.querySelector(".loop-tmeta")
+    if (meta) {
+      const parts = meta.textContent.split(" · ")
+      if (parts.length) {
+        parts[parts.length - 1] = a.transport.playheadLabel()
+        meta.textContent = parts.join(" · ")
+      }
+    }
   }
 
   openHome() {
