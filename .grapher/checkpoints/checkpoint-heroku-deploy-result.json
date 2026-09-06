@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-heroku-deploy-result",
+  "refreshed_at": "2026-09-06T22:00:00-06:00",
+  "title": "Heroku deployment implementation: Procfile and app.json added; production Rails runtime moved off Solid Queue/Cache/Cable database dependencies; production SQLite isolated to /tmp for the current browser-persisted prototype; dedicated production asset-precompile and Puma health smoke added. Verification pending CI.",
+  "node_ids": [
+    "checkpoint-heroku-deploy-plan",
+    "checkpoint-current-ui-controls",
+    "checkpoint-current-loop-engine"
+  ],
+  "graph_version": 2
+}
