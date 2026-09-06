@@ -164,6 +164,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/input_feedback.mjs
 
+      - name: Verify post-PR12 startup, track clear/visibility, dim, and dev gating
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/post_pr12_stabilization.mjs
+
       - name: Print Rails log on failure
         if: failure()
         run: cat /tmp/cassio-rails.log || true

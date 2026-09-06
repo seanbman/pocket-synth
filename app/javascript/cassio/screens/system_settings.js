@@ -114,10 +114,10 @@ export function renderSettingsAbout(state) {
     <hr>
     <div>PROJECTS ${state.projectCount}</div>
     <div>USER SOUNDS ${state.userSoundCount}</div>
-    <div>DEBUG ${state.debugEnabled ? "ON" : "OFF"}</div>
+    <div>DEV MODE ${state.debugEnabled ? "ON" : "OFF"}</div>
     <div class="settings-ua muted">${esc(state.userAgent)}</div>
   </div>`
-  return screen("SETTINGS / ABOUT", state.bpm, ["", "", "M3 VOLUME"], body, ["REFRESH", "DEBUG", "DIAG", "BACK"])
+  return screen("SETTINGS / ABOUT", state.bpm, ["", "", "M3 VOLUME"], body, ["REFRESH", "DEV MODE", "DIAG", "BACK"])
 }
 
 export { HOME_ROWS }
