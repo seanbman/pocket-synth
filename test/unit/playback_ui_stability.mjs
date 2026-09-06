@@ -10,8 +10,8 @@ const loopSrc = readFileSync(resolve(here, "../../app/javascript/cassio/loop_con
 
 assert.match(appSrc, /if \(!this\._loopUiRaf\)/, "transport beat refresh must stay guarded")
 assert.match(loopSrc, /a\._loopUiRaf = requestAnimationFrame\(frame\)/, "playback UI loop must own the guarded rAF slot")
-assert.match(loopSrc, /querySelectorAll\("\\\.loop-ph"\)/, "LOOP playhead should update in place")
-assert.match(loopSrc, /querySelector\("\\\.loop-tmeta"\)/, "LOOP transport label should update in place")
+assert.ok(loopSrc.includes('querySelectorAll(".loop-ph")'), "LOOP playhead should update in place")
+assert.ok(loopSrc.includes('querySelector(".loop-tmeta")'), "LOOP transport label should update in place")
 
 const syncStart = loopSrc.indexOf("#syncPlaybackUi()")
 const syncEnd = loopSrc.indexOf("\n  openHome()", syncStart)
