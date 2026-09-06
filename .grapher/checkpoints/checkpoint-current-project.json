@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-current-project",
-  "refreshed_at": "2026-09-06T06:03:00+00:00",
-  "title": "Current: PROJECT V1 core verified including unnamed-session Save/Discard protection",
+  "refreshed_at": "2026-09-06T09:20:00+00:00",
+  "title": "Current: PROJECT V1 verified with save/open protection plus active-song master export to WAV, MP3, and M4A; .cassio remains the editable project bundle",
   "node_ids": [
     "concept-area-project",
     "concept-screen-27",
@@ -9,7 +9,8 @@
     "concept-persistence",
     "checkpoint-project-v1-plan",
     "checkpoint-project-v1-implementation",
-    "checkpoint-project-v1-verified"
+    "checkpoint-project-v1-verified",
+    "checkpoint-project-audio-export"
   ],
   "graph_version": 2
 }
