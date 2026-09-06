@@ -1,0 +1,10 @@
+{
+  "checkpoint_id": "checkpoint-settings-default-brightness",
+  "refreshed_at": "2026-09-06T08:30:00+00:00",
+  "title": "Settings display default corrected to 100% brightness for fresh/default state; persisted user brightness remains authoritative; unit regression asserts the 100% fallback",
+  "node_ids": [
+    "concept-screen-33",
+    "checkpoint-current-settings"
+  ],
+  "graph_version": 2
+}

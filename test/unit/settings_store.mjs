@@ -17,6 +17,7 @@ const storage = {
 
 const defaults = loadSettings(storage)
 assert.deepEqual(defaults, DEFAULT_SETTINGS)
+assert.equal(defaults.brightness, 1)
 
 const saved = saveSettings({
   masterBassDb: 99,
@@ -42,6 +43,7 @@ assert.equal(loadSettings(storage).chassisTheme, "mint")
 const invalid = normalizeSettings({ countInBars: 3, chassisTheme: "mud" })
 assert.equal(invalid.countInBars, DEFAULT_SETTINGS.countInBars)
 assert.equal(invalid.chassisTheme, DEFAULT_SETTINGS.chassisTheme)
+assert.equal(invalid.brightness, 1)
 
 assert(CHASSIS_THEMES.length >= 6)
 assert.equal(chassisTheme("mint").name, "MINT")
