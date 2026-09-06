@@ -13,6 +13,7 @@ function makeApp({ playContext = null } = {}) {
     seqStops: 0,
     transportStops: 0,
     renders: 0,
+    persists: 0,
     librarySaves: [],
     done: 0,
     toasts: []
@@ -43,6 +44,7 @@ function makeApp({ playContext = null } = {}) {
     loopEngine,
     stepSeq,
     transport,
+    persistLoop() { calls.persists++ },
     render() { calls.renders++ },
     toast(message) { calls.toasts.push(message) }
   }
@@ -65,7 +67,7 @@ function makeApp({ playContext = null } = {}) {
 }
 
 // REC from stop is input-only: backing starts requested by CassioApp are suppressed.
-// Diagnostic stage 2 restores only the library save; legacy completion/persistence stay bypassed.
+// Stage 3 restores library save + recovery persistence, but not the legacy callback.
 {
   const { app, calls, finish } = makeApp({ playContext: null })
   assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
@@ -82,6 +84,7 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.loopStops, 0)
   assert.equal(calls.seqStops, 0)
   assert.equal(calls.renders, 0)
+  assert.equal(calls.persists, 0)
   assert.deepEqual(calls.librarySaves, [])
 
   await nextTask()
@@ -90,6 +93,7 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.transportStops, 1)
   assert.equal(calls.loopStops, 1)
   assert.equal(calls.seqStops, 1)
+  assert.equal(calls.persists, 1)
   assert.deepEqual(calls.librarySaves, [2])
   assert.ok(calls.renders >= 1)
   assert.deepEqual(calls.toasts, [])
@@ -109,15 +113,17 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
   assert.equal(calls.renders, 0)
+  assert.equal(calls.persists, 0)
   assert.deepEqual(calls.librarySaves, [])
 
   await nextTask()
   await Promise.resolve()
   assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
+  assert.equal(calls.persists, 1)
   assert.deepEqual(calls.librarySaves, [2])
   assert.ok(calls.renders >= 1)
   assert.deepEqual(calls.toasts, [])
 }
 
-console.log("PASS: recording runtime isolates live input and defers stage-2 completion work")
+console.log("PASS: recording runtime isolates live input and defers stage-3 persistence")
