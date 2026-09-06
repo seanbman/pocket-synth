@@ -13,6 +13,7 @@ function makeApp({ playContext = null } = {}) {
     seqStops: 0,
     transportStops: 0,
     renders: 0,
+    librarySaves: [],
     done: 0,
     toasts: []
   }
@@ -24,7 +25,8 @@ function makeApp({ playContext = null } = {}) {
       return true
     },
     startPlayback() { calls.loopStarts++ },
-    stopPlayback() { calls.loopStops++ }
+    stopPlayback() { calls.loopStops++ },
+    saveLaneToLibrary(trackId) { calls.librarySaves.push(trackId) }
   }
   const stepSeq = {
     trigger(target, options) {
@@ -63,7 +65,7 @@ function makeApp({ playContext = null } = {}) {
 }
 
 // REC from stop is input-only: backing starts requested by CassioApp are suppressed.
-// Nothing except the runtime flag may run synchronously in LoopEngine's done callback.
+// Diagnostic stage 2 restores only the library save; legacy completion/persistence stay bypassed.
 {
   const { app, calls, finish } = makeApp({ playContext: null })
   assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
@@ -80,15 +82,17 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.loopStops, 0)
   assert.equal(calls.seqStops, 0)
   assert.equal(calls.renders, 0)
+  assert.deepEqual(calls.librarySaves, [])
 
   await nextTask()
   await Promise.resolve()
-  assert.equal(calls.done, 1)
+  assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 1)
   assert.equal(calls.loopStops, 1)
   assert.equal(calls.seqStops, 1)
+  assert.deepEqual(calls.librarySaves, [2])
   assert.ok(calls.renders >= 1)
-  assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
+  assert.deepEqual(calls.toasts, [])
 }
 
 // PLAY then REC keeps backing audible, but sequencer notes still remain record-isolated.
@@ -105,13 +109,15 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
   assert.equal(calls.renders, 0)
+  assert.deepEqual(calls.librarySaves, [])
 
   await nextTask()
   await Promise.resolve()
-  assert.equal(calls.done, 1)
+  assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
+  assert.deepEqual(calls.librarySaves, [2])
   assert.ok(calls.renders >= 1)
-  assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
+  assert.deepEqual(calls.toasts, [])
 }
 
-console.log("PASS: recording runtime isolates live input and defers all completion side effects")
+console.log("PASS: recording runtime isolates live input and defers stage-2 completion work")
