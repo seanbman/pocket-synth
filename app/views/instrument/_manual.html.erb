@@ -1,0 +1,330 @@
+<div
+  class="manual-modal"
+  data-manual-target="dialog"
+  data-action="click->manual#backdropClose"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cassio-manual-title"
+  hidden
+>
+  <div class="manual-panel">
+    <header class="manual-head">
+      <div class="manual-title-wrap">
+        <div class="manual-kicker">CASSIO · STUDIO-0926</div>
+        <h1 class="manual-title" id="cassio-manual-title">USER MANUAL</h1>
+      </div>
+      <button type="button" class="manual-close" data-action="manual#close" aria-label="Close manual">×</button>
+    </header>
+
+    <div class="manual-searchbar">
+      <input
+        type="search"
+        class="manual-search"
+        data-manual-target="search"
+        data-action="input->manual#search"
+        placeholder="Search: record, trim, pattern, export…"
+        aria-label="Search CASSIO manual"
+        autocomplete="off"
+      >
+      <button type="button" class="manual-clear" data-action="manual#clearSearch">CLEAR</button>
+      <span class="manual-count" data-manual-target="count">18 sections</span>
+    </div>
+
+    <div class="manual-layout">
+      <aside class="manual-index" aria-label="Manual index">
+        <div class="manual-index-title">LINKED INDEX</div>
+        <nav>
+          <a href="#manual-start" data-manual-link="manual-start" data-action="manual#jump">01 · Start here</a>
+          <a href="#manual-chassis" data-manual-link="manual-chassis" data-action="manual#jump">02 · Chassis controls</a>
+          <a href="#manual-play" data-manual-link="manual-play" data-action="manual#jump">03 · PLAY</a>
+          <a href="#manual-transport" data-manual-link="manual-transport" data-action="manual#jump">04 · Transport & tempo</a>
+          <a href="#manual-loop" data-manual-link="manual-loop" data-action="manual#jump">05 · LOOP</a>
+          <a href="#manual-pattern" data-manual-link="manual-pattern" data-action="manual#jump">06 · Pattern sequencer</a>
+          <a href="#manual-sound" data-manual-link="manual-sound" data-action="manual#jump">07 · SOUND & library</a>
+          <a href="#manual-sampler" data-manual-link="manual-sampler" data-action="manual#jump">08 · Mic & import</a>
+          <a href="#manual-sample-edit" data-manual-link="manual-sample-edit" data-action="manual#jump">09 · Sample editing</a>
+          <a href="#manual-kits" data-manual-link="manual-kits" data-action="manual#jump">10 · Kits & pads</a>
+          <a href="#manual-edit" data-manual-link="manual-edit" data-action="manual#jump">11 · Synth / drum editing</a>
+          <a href="#manual-mix" data-manual-link="manual-mix" data-action="manual#jump">12 · MIX</a>
+          <a href="#manual-project" data-manual-link="manual-project" data-action="manual#jump">13 · PROJECT</a>
+          <a href="#manual-settings" data-manual-link="manual-settings" data-action="manual#jump">14 · SETTINGS</a>
+          <a href="#manual-input" data-manual-link="manual-input" data-action="manual#jump">15 · Touch & computer keys</a>
+          <a href="#manual-storage" data-manual-link="manual-storage" data-action="manual#jump">16 · Storage & files</a>
+          <a href="#manual-workflows" data-manual-link="manual-workflows" data-action="manual#jump">17 · Common workflows</a>
+          <a href="#manual-troubleshooting" data-manual-link="manual-troubleshooting" data-action="manual#jump">18 · Troubleshooting</a>
+        </nav>
+      </aside>
+
+      <main class="manual-content">
+        <div class="manual-empty" data-manual-target="empty" hidden>No manual sections match that search. Try a shorter term such as “record”, “loop”, “sample”, “project”, or “mic”.</div>
+
+        <section class="manual-section" id="manual-start" data-manual-target="section" tabindex="-1">
+          <h2>01 · Start here</h2>
+          <p>CASSIO is a browser-based pocket synth, sampler, looper and pattern workstation. The physical-looking chassis is the main interface: the LCD changes by mode while the knobs, soft keys, navigation cluster, transport, pads and keyboard stay in the same places.</p>
+          <div class="manual-note"><strong>Fastest way around:</strong> hold <span class="manual-key">BACK / MENU</span> from almost any screen to open the six-area menu: PLAY, LOOP, SOUND, MIX, PROJECT and SETTINGS. Transport keeps running while the menu is open.</div>
+          <h3>Core mental model</h3>
+          <ul>
+            <li><strong>PLAY</strong> is for performing the current sound on keys and pads.</li>
+            <li><strong>LOOP</strong> is the song/arrangement workspace: lanes, recorded clips and step patterns.</li>
+            <li><strong>SOUND</strong> is where sounds are chosen, sampled, imported, edited, saved and assigned.</li>
+            <li><strong>MIX</strong> balances lanes and their mix controls.</li>
+            <li><strong>PROJECT</strong> saves, opens, duplicates, exports and imports complete sessions.</li>
+            <li><strong>SETTINGS</strong> contains global audio, metronome, display, storage, permission and diagnostic preferences.</li>
+          </ul>
+          <p>The LCD soft-key labels always tell you what physical buttons <span class="manual-key">A</span>–<span class="manual-key">D</span> do on the current screen. M1 and M2 are contextual; M3 is the master volume control.</p>
+        </section>
+
+        <section class="manual-section" id="manual-chassis" data-manual-target="section" tabindex="-1">
+          <h2>02 · Chassis controls</h2>
+          <div class="manual-grid">
+            <div class="manual-card"><strong>LCD + A/B/C/D</strong><span>The screen shows status, macros, the active workspace and the current soft-key actions. A–D change function by screen.</span></div>
+            <div class="manual-card"><strong>M1 / M2 / M3</strong><span>M1 and M2 follow the active parameter or screen. M3 is master volume throughout the app.</span></div>
+            <div class="manual-card"><strong>BACK / MENU</strong><span>Short presses normally back out of the current sub-screen. Hold it to open the main six-area menu.</span></div>
+            <div class="manual-card"><strong>D-pad + OK</strong><span>Move selection with ▲▼◀▶. OK opens, confirms, toggles or enters the selected item depending on the screen.</span></div>
+            <div class="manual-card"><strong>STOP / PLAY / REC / TAP</strong><span>Global transport controls. TAP sets tempo from repeated taps and also has hold actions on supported screens.</span></div>
+            <div class="manual-card"><strong>Pads 1–6</strong><span>Trigger assigned pad sounds and are also used for kit performance and sequence-related workflows.</span></div>
+            <div class="manual-card"><strong>Mini keyboard</strong><span>Plays the active pitched sound chromatically. The current root/octave and sound determine the pitch range.</span></div>
+            <div class="manual-card"><strong>Pitch wheel</strong><span>Momentary pitch bend for live performance. It returns toward center when released.</span></div>
+          </div>
+          <div class="manual-note">Controls are intentionally context-sensitive. When in doubt, read the LCD macro row and A–D soft-key row before pressing anything.</div>
+        </section>
+
+        <section class="manual-section" id="manual-play" data-manual-target="section" tabindex="-1">
+          <h2>03 · PLAY</h2>
+          <p>PLAY is the default performance screen. It shows the selected sound, root, octave, voice type, hold state, metronome status and live waveform display.</p>
+          <h3>Performance controls</h3>
+          <ul>
+            <li>Play notes from the mini keyboard or mapped computer keys.</li>
+            <li><span class="manual-key">A</span> lowers octave; <span class="manual-key">B</span> raises octave.</li>
+            <li><span class="manual-key">C</span> toggles HOLD so notes can remain sustained without continuously holding the key.</li>
+            <li><span class="manual-key">D</span> jumps to SOUND selection.</li>
+            <li>M1 and M2 follow the current sound’s two exposed performance macros; their labels appear on the LCD.</li>
+            <li>M3 changes master volume.</li>
+          </ul>
+          <h3>Root and metronome focus</h3>
+          <p>On the main PLAY focus, ▲/▼ moves the root by octave. Press OK to focus the metronome controls; from metronome focus ▲/▼ adjusts click level and ◀/▶ toggles the click. Press OK again to return.</p>
+          <p>Holding TAP on PLAY also toggles the metronome.</p>
+        </section>
+
+        <section class="manual-section" id="manual-transport" data-manual-target="section" tabindex="-1">
+          <h2>04 · Transport & tempo</h2>
+          <p>The transport is shared across performance and arrangement views.</p>
+          <ul>
+            <li><strong>PLAY:</strong> starts playback of the active song/loop context.</li>
+            <li><strong>STOP:</strong> stops transport and recording.</li>
+            <li><strong>REC:</strong> arms/starts recording according to the active LOOP context and count-in settings.</li>
+            <li><strong>TAP:</strong> tap repeatedly at the desired pulse to set BPM.</li>
+          </ul>
+          <h3>Count-in and click</h3>
+          <p>Count-in length, click level, accent and metronome sound are configured in SETTINGS → METRONOME and are also exposed from LOOP options. The metronome is monitor-only and is not recorded into your material.</p>
+          <div class="manual-note">If REC appears to wait before recording, check the count-in setting. A one-bar count-in is intentional and begins recording after the count completes.</div>
+        </section>
+
+        <section class="manual-section" id="manual-loop" data-manual-target="section" tabindex="-1">
+          <h2>05 · LOOP</h2>
+          <p>LOOP is the main arrangement view. Each horizontal lane can hold recorded audio and/or a pattern sequence. The ruler shows bars and beats; the vertical playhead shows the current transport position.</p>
+          <h3>Lane navigation</h3>
+          <ul>
+            <li>Tap a lane or use ▲/▼ to select it. The selected lane is kept visible when the list scrolls vertically.</li>
+            <li>◀/▶ moves the selected lane offset in one-second increments.</li>
+            <li><span class="manual-key">A</span> adds a lane. Hold A to remove a lane.</li>
+            <li><span class="manual-key">B</span> toggles mute; hold B opens the pattern sequencer.</li>
+            <li><span class="manual-key">C</span> toggles solo; hold C opens LOOP OPTIONS.</li>
+            <li><span class="manual-key">D</span> saves/undoes where applicable; on an empty lane it opens the track list.</li>
+            <li>OK opens the selected lane menu, or the track picker if the lane is empty.</li>
+          </ul>
+          <h3>Recording into a lane</h3>
+          <p>Recording from the piano/keys creates material in the LOOP lane system. Existing backing material can continue playing during record according to the <strong>PLAY DURING REC</strong> option: ALL, MONITORED or OFF.</p>
+          <h3>Lane menu</h3>
+          <p>The lane menu exposes pattern sequencing, drop-pattern actions, FX/settings, lane length, record mode, monitor, mute, solo, save to library, replacement from track list, mixer, loop options, lane add/delete, clear and unassign.</p>
+          <div class="manual-note"><strong>Clear behavior:</strong> clearing a lane removes its recorded material and pattern/sequence content while retaining its assigned source/library relationship. Use UNASSIGN when you want the lane source itself removed.</div>
+        </section>
+
+        <section class="manual-section" id="manual-pattern" data-manual-target="section" tabindex="-1">
+          <h2>06 · Pattern sequencer</h2>
+          <p>The pattern sequencer is the step-based companion to live LOOP recording. It is designed for repeatable rhythmic or note events that can be dropped into the song-level lane arrangement.</p>
+          <h3>How to reach it</h3>
+          <ul>
+            <li>From LOOP, hold <span class="manual-key">B</span>.</li>
+            <li>Or open a lane menu and choose <strong>PATTERN SEQUENCER…</strong>.</li>
+            <li>Or open LOOP OPTIONS and choose the pattern sequencer entry.</li>
+          </ul>
+          <p>Patterns use letter slots A–D. The currently selected pattern can be edited and then dropped into a lane. A lane can therefore represent recorded audio, sequenced material, or both depending on how it was built.</p>
+          <div class="manual-note">If you hear a repeated event where you expected only recorded audio, inspect the lane’s pattern/sequence content as well as its audio clip. CLEAR removes both; replacing or unassigning has different semantics.</div>
+        </section>
+
+        <section class="manual-section" id="manual-sound" data-manual-target="section" tabindex="-1">
+          <h2>07 · SOUND & library</h2>
+          <p>SOUND is the creation and source area. It contains the factory/user library, sampler and new-kit workflow.</p>
+          <ul>
+            <li><span class="manual-key">A</span> opens LIBRARY for synths, drums, kits and saved user sounds.</li>
+            <li><span class="manual-key">B</span> opens SAMPLER for microphone recording, file import and sample editing.</li>
+            <li><span class="manual-key">C</span> creates a NEW KIT with empty pads ready for assignment.</li>
+            <li><span class="manual-key">D</span> backs out.</li>
+          </ul>
+          <h3>Library use</h3>
+          <p>Browse factory and user content, choose the sound you want, then return to PLAY or assign it to a pad/lane as appropriate. User-created sounds are kept separately from factory content.</p>
+        </section>
+
+        <section class="manual-section" id="manual-sampler" data-manual-target="section" tabindex="-1">
+          <h2>08 · Mic & import</h2>
+          <p>Open SOUND → SAMPLER. The sampler home lists USER / SAMPLES and provides capture/import controls.</p>
+          <h3>Record from the onboard/device microphone</h3>
+          <ol>
+            <li>Press <span class="manual-key">A · MIC</span>.</li>
+            <li>Allow microphone permission when the browser requests it.</li>
+            <li>Use M1 to set input gain. M3 remains master output volume.</li>
+            <li>Use <span class="manual-key">B</span> to toggle monitor if you want to hear the input.</li>
+            <li>Press <span class="manual-key">A · REC</span> to start.</li>
+            <li>Press <span class="manual-key">A · STOP</span> to finish. The recording proceeds directly to sample editing/trimming.</li>
+          </ol>
+          <h3>Import a file</h3>
+          <p>From sampler home press <span class="manual-key">B · IMPORT</span> and choose an audio file from the device. The current UI advertises WAV, MP3, OGG and M4A input. Imported material enters the same editing flow as microphone captures.</p>
+          <p>Use ▲/▼ to select existing user samples, OK to open one in SAMPLE EDIT, and C to delete the selected sample.</p>
+        </section>
+
+        <section class="manual-section" id="manual-sample-edit" data-manual-target="section" tabindex="-1">
+          <h2>09 · Sample editing</h2>
+          <p>SAMPLE EDIT is the non-destructive authoring view for captured/imported material. It includes waveform-aware editing groups for sample boundaries, loop behavior, tuning, EQ, mix and effects.</p>
+          <h3>Navigation</h3>
+          <ul>
+            <li>▲/▼ moves between parameter rows.</li>
+            <li>OK opens/closes parameter groups.</li>
+            <li>◀/▶ changes the selected value.</li>
+            <li>M1/M2 follow the currently highlighted parameters shown in the LCD macro row.</li>
+            <li><span class="manual-key">A · PLAY</span> auditions the edited sample.</li>
+            <li><span class="manual-key">B · SAVE…</span> opens save/rename/save-as controls.</li>
+            <li><span class="manual-key">C · ASSIGN</span> chooses how the sample is used.</li>
+          </ul>
+          <h3>Assigning a sample</h3>
+          <p>Choose <strong>KEYS</strong> to make the sample a pitched keyboard sound using its root note. Choose <strong>PAD</strong> to place it on one of pads 1–6. Pad assignment does not replace the current keyboard sound.</p>
+          <h3>Saving</h3>
+          <p>SAVE writes the current sample state; RENAME changes its name; SAVE AS creates a new copy. Unsaved/dirty state is shown on the LCD.</p>
+        </section>
+
+        <section class="manual-section" id="manual-kits" data-manual-target="section" tabindex="-1">
+          <h2>10 · Kits & pads</h2>
+          <p>A kit is a six-pad collection. Create one from SOUND → NEW KIT, then assign sounds to pads 1–6. Kits are intended for drums, one-shots and mixed sample banks.</p>
+          <ul>
+            <li>Trigger pads directly from the chassis while performing or recording.</li>
+            <li>A newly created kit begins with empty pads so each slot can be deliberately assigned.</li>
+            <li>Samples can be assigned to an individual pad from SAMPLE EDIT → ASSIGN → PAD.</li>
+            <li>Saved kits appear with user-created library content and can be reloaded later.</li>
+          </ul>
+          <p>Pad sounds and keyboard sounds are separate concepts: assigning a sample to a pad does not automatically change the pitched keyboard voice.</p>
+        </section>
+
+        <section class="manual-section" id="manual-edit" data-manual-target="section" tabindex="-1">
+          <h2>11 · Synth / drum editing</h2>
+          <p>Editable sounds expose grouped parameter screens rather than placing every synthesis control on the chassis at once. Synth editing includes shape, envelope, EQ and FX groups; drum editing exposes tone, decay, snap and FX groups.</p>
+          <p>Use the LCD row selection plus OK/arrow navigation to enter groups and change values. M1/M2 become live macro controls for the highlighted parameters; M3 remains volume.</p>
+          <div class="manual-note">The two PLAY macros are sound-specific. Their labels may be TONE/FX or another pair defined by the selected sound, so always follow the macro labels on screen.</div>
+        </section>
+
+        <section class="manual-section" id="manual-mix" data-manual-target="section" tabindex="-1">
+          <h2>12 · MIX</h2>
+          <p>MIX is the lane balancing view. Use it when several recorded/sequenced lanes need level and stereo placement adjustments without changing their source material.</p>
+          <ul>
+            <li>Select a lane with the navigation controls.</li>
+            <li>Adjust level and pan with the active controls shown on the LCD.</li>
+            <li>Mute/solo state from LOOP is reflected in playback behavior.</li>
+            <li>Track-specific FX/settings remain available from the lane menu in LOOP.</li>
+          </ul>
+          <p>Global bass/treble and limiter are not lane mixer controls; those live under SETTINGS → AUDIO and apply after the mixer.</p>
+        </section>
+
+        <section class="manual-section" id="manual-project" data-manual-target="section" tabindex="-1">
+          <h2>13 · PROJECT</h2>
+          <p>PROJECT manages complete CASSIO sessions. The list shows saved local projects and identifies the active one. Recovery autosave operates separately so an interrupted session can be recovered.</p>
+          <h3>Main project screen</h3>
+          <ul>
+            <li>▲/▼ selects a saved project.</li>
+            <li>OK or D opens the selected project.</li>
+            <li><span class="manual-key">A · NEW</span> starts a new project.</li>
+            <li><span class="manual-key">B · SAVE</span> saves the current project.</li>
+            <li><span class="manual-key">C · RENAME</span> renames the selected/active project.</li>
+            <li>◀ imports a CASSIO project file; ▶ opens project management.</li>
+          </ul>
+          <h3>Project management</h3>
+          <p>Manage offers SAVE AS, DUPLICATE, EXPORT .CASSIO and DELETE. When switching away from work with unsaved changes, CASSIO asks whether to cancel, discard, or save before continuing.</p>
+          <p>Project naming uses the device keyboard and accepts up to 18 characters.</p>
+        </section>
+
+        <section class="manual-section" id="manual-settings" data-manual-target="section" tabindex="-1">
+          <h2>14 · SETTINGS</h2>
+          <p>SETTINGS are global preferences and survive independently of individual projects.</p>
+          <h3>AUDIO</h3>
+          <p>Master Bass, Master Treble and Limiter. Master EQ is applied after the mixer.</p>
+          <h3>METRONOME</h3>
+          <p>Metronome on/off, click level, count-in bars, beat-1 accent and click sound. The click is monitor-only.</p>
+          <h3>DISPLAY</h3>
+          <p>Brightness, chassis color, auto-dim delay, dim level and screen sleep. Chassis color is global and survives reload. DIM NOW lets you preview the dim state immediately.</p>
+          <h3>STORAGE</h3>
+          <p>Shows browser-local usage/quota, user-sound count, project count and whether browser storage is persistent. REFRESH updates the estimate, CLEANUP performs supported cleanup, and PERSIST requests persistent browser storage where available.</p>
+          <h3>PERMISSIONS</h3>
+          <p>Shows microphone permission state and provides microphone test/request actions.</p>
+          <h3>ABOUT</h3>
+          <p>Shows build/prototype information, project and user-sound counts, browser details and DEV MODE. Diagnostic controls are intentionally separated from normal performance use.</p>
+        </section>
+
+        <section class="manual-section" id="manual-input" data-manual-target="section" tabindex="-1">
+          <h2>15 · Touch & computer keys</h2>
+          <p>The chassis supports pointer/touch interaction. Physical-looking buttons are meant to be pressed directly; knobs support their implemented pointer gestures and the pitch wheel acts as a slider.</p>
+          <h3>Computer-key piano mapping</h3>
+          <p>The following QWERTY keys play a chromatic keyboard from the current root upward:</p>
+          <p><code>Z</code> <code>S</code> <code>X</code> <code>D</code> <code>C</code> <code>V</code> <code>G</code> <code>B</code> <code>H</code> <code>N</code> <code>J</code> <code>M</code> <code>,</code></p>
+          <p>This gives a 13-note chromatic span. The current octave/root still controls the musical register.</p>
+          <h3>Manual keyboard shortcuts</h3>
+          <p>While this manual is open, press <code>/</code> to jump to search and <code>Esc</code> to close the manual.</p>
+        </section>
+
+        <section class="manual-section" id="manual-storage" data-manual-target="section" tabindex="-1">
+          <h2>16 · Storage & files</h2>
+          <p>CASSIO currently treats projects and user-created sounds as browser-owned data. That means the browser/device storage is the primary working store rather than a server account.</p>
+          <ul>
+            <li><strong>Recovery autosave</strong> protects the current session state.</li>
+            <li><strong>Saved projects</strong> live in local browser storage and can be reopened from PROJECT.</li>
+            <li><strong>User sounds/samples/kits</strong> live in the local user library.</li>
+            <li><strong>EXPORT .CASSIO</strong> creates a portable project file from PROJECT → MANAGE.</li>
+            <li><strong>IMPORT</strong> restores a compatible project file through PROJECT.</li>
+          </ul>
+          <div class="manual-note">Browser storage can be cleared by browser/device cleanup tools. For important work, export a project file rather than relying on a single browser installation as the only copy.</div>
+        </section>
+
+        <section class="manual-section" id="manual-workflows" data-manual-target="section" tabindex="-1">
+          <h2>17 · Common workflows</h2>
+          <h3>Record a microphone sample and play it on keys</h3>
+          <ol><li>SOUND → SAMPLER → MIC.</li><li>Set M1 input gain, then REC and STOP.</li><li>Trim/tune/edit in SAMPLE EDIT.</li><li>SAVE the sample.</li><li>ASSIGN → KEYS.</li><li>Return to PLAY and perform it chromatically.</li></ol>
+          <h3>Import a one-shot and put it on a pad</h3>
+          <ol><li>SOUND → SAMPLER → IMPORT.</li><li>Choose the audio file.</li><li>Edit and SAVE.</li><li>ASSIGN → PAD.</li><li>Choose pad 1–6 and trigger it from the chassis.</li></ol>
+          <h3>Record a piano performance into the arrangement</h3>
+          <ol><li>Choose the desired sound in SOUND and return to LOOP.</li><li>Select/prepare a lane.</li><li>Set count-in and backing-track monitoring if needed.</li><li>Press REC and play the keyboard.</li><li>STOP when finished. The new material remains accessible from the lane/track view.</li></ol>
+          <h3>Build a repeating pattern</h3>
+          <ol><li>Open LOOP.</li><li>Hold B for the pattern sequencer.</li><li>Edit one of pattern slots A–D.</li><li>Return to the desired lane and use DROP PATTERN to place it into the arrangement.</li></ol>
+          <h3>Back up a session</h3>
+          <ol><li>PROJECT → SAVE.</li><li>Open project management.</li><li>Choose EXPORT .CASSIO.</li><li>Keep the exported file somewhere outside browser storage.</li></ol>
+        </section>
+
+        <section class="manual-section" id="manual-troubleshooting" data-manual-target="section" tabindex="-1">
+          <h2>18 · Troubleshooting</h2>
+          <h3>No sound after opening the app</h3>
+          <p>Browsers may keep Web Audio suspended until the first user gesture. Tap/press a key or control once, verify M3/master volume, then try the sound again.</p>
+          <h3>Microphone does not work</h3>
+          <p>Open SETTINGS → PERMISSIONS to inspect/request microphone access. Also check the browser/site permission and the device OS microphone permission.</p>
+          <h3>REC waits before recording</h3>
+          <p>Check SETTINGS → METRONOME or LOOP OPTIONS for COUNT-IN. A configured count-in intentionally delays capture by the selected number of bars.</p>
+          <h3>A lane still has a source after CLEAR</h3>
+          <p>This is expected. CLEAR removes the lane’s audio/pattern material while retaining its assignment. Use the lane’s UNASSIGN action if you also want the source relationship removed.</p>
+          <h3>A pattern keeps repeating</h3>
+          <p>Open the lane menu/pattern sequencer and inspect its pattern content. A lane can contain sequence events even when no recorded waveform is obvious.</p>
+          <h3>Project or samples disappeared after browser cleanup</h3>
+          <p>CASSIO’s current data is browser-local. Restore from an exported .CASSIO file where available and use SETTINGS → STORAGE → PERSIST to request stronger local persistence support from the browser.</p>
+          <h3>The interface looks dim</h3>
+          <p>Check SETTINGS → DISPLAY for AUTO DIM, DIM LEVEL and SCREEN SLEEP. Interacting with the chassis should wake the display; DIM NOW is only a preview/action.</p>
+          <h3>Startup fails completely</h3>
+          <p>CASSIO has an explicit startup-error surface instead of silently remaining white. Reload once; if the error persists, note the displayed error and browser/device information from SETTINGS → ABOUT for debugging.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
