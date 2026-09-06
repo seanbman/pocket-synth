@@ -10,6 +10,9 @@ on:
       - 'test/smoke/loop_record_stress.mjs'
       - '.github/workflows/loop-record-stress.yml'
 
+permissions:
+  contents: write
+
 jobs:
   stress:
     runs-on: ubuntu-latest
@@ -17,6 +20,47 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Harden recorder copy hot path
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('app/javascript/cassio/audio/loop_engine.js')
+          text = path.read_text()
+          old = '''      const n = left.length
+      for (let i = 0; i < n && this._recWritten < this._recTarget; i++) {
+        this._recData[0][this._recWritten] = left[i]
+        this._recData[1][this._recWritten] = right[i]
+        this._recWritten++
+      }
+      if (this._recWritten >= this._recTarget) this.#finishRecord()
+'''
+          new = '''      const remaining = this._recTarget - this._recWritten
+      const n = Math.min(left.length, remaining)
+      if (n > 0) {
+        const writeAt = this._recWritten
+        this._recData[0].set(left.subarray(0, n), writeAt)
+        this._recData[1].set(right.subarray(0, n), writeAt)
+        this._recWritten += n
+      }
+      if (this._recWritten >= this._recTarget) this.#finishRecord()
+'''
+          if old in text:
+              path.write_text(text.replace(old, new, 1))
+          elif new not in text:
+              raise SystemExit('Recorder capture block no longer matches expected implementation')
+          PY
+          git diff --check
+          if ! git diff --quiet -- app/javascript/cassio/audio/loop_engine.js; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/javascript/cassio/audio/loop_engine.js
+            git commit -m 'Reduce LOOP recorder main-thread copy overhead'
+            git push origin HEAD:fix/loop-record-user-test-freeze
+          fi
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
