@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-in-app-manual-result",
+  "refreshed_at": "2026-09-06T02:12:00-06:00",
+  "title": "In-app CASSIO manual implemented and verified: top-right MANUAL chassis button, full-screen responsive modal, 18 linked sections, live search, common-workflow/troubleshooting guidance, keyboard isolation from performance input, and browser regression coverage. CI #145 and Heroku production smoke #12 passed before this verification checkpoint was recorded.",
+  "node_ids": [
+    "checkpoint-in-app-manual-plan",
+    "checkpoint-current-ui-controls",
+    "checkpoint-current-loop-engine"
+  ],
+  "graph_version": 2
+}
