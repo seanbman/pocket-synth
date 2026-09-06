@@ -1,3 +1,9 @@
+.brand-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
 .manual-trigger {
   margin-left: auto;
   align-self: flex-start;
@@ -32,6 +38,12 @@
   background: rgba(0, 0, 0, 0.84);
   color: #efefef;
   font-family: "IBM Plex Mono", ui-monospace, monospace;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.manual-modal,
+.manual-modal * {
+  box-sizing: border-box;
   user-select: text;
   -webkit-user-select: text;
 }
@@ -92,7 +104,6 @@
 .manual-search {
   width: 100%;
   min-width: 0;
-  box-sizing: border-box;
   border: 1px solid #505050;
   background: #050505;
   color: #fff;
@@ -159,8 +170,6 @@
   scroll-behavior: smooth;
   padding: 0 clamp(0.78rem, 3vw, 1.45rem) max(1.5rem, env(safe-area-inset-bottom));
   background: #080808;
-  user-select: text;
-  -webkit-user-select: text;
 }
 .manual-section {
   max-width: 58rem;
