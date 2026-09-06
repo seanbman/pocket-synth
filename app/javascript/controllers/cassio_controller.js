@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
+import { installEditableKeyboardGuardRuntime } from "cassio/editable_keyboard_guard_runtime"
 import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installPostPr12StabilizationRuntime } from "cassio/post_pr12_stabilization_runtime"
@@ -40,6 +41,7 @@ export default class extends Controller {
 
     try {
       this.app = new CassioApp(this.element)
+      installEditableKeyboardGuardRuntime(this.app)
       installTrackPatternRuntime(this.app)
       installSequenceVoiceGuardRuntime(this.app)
       installSequencerUxRuntime(this.app)
