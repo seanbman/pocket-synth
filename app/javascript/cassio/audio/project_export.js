@@ -44,7 +44,7 @@ export async function captureProjectMaster(app) {
   if (!engine || !transport || !loopEngine || !stepSeq) throw new Error("AUDIO ENGINE NOT READY")
   if (loopEngine.recording || transport.recording) throw new Error("STOP RECORDING FIRST")
 
-  if (typeof app.ensureAudioRunningPublic === "function") await app.ensureAudioRunningPublic()
+  if (!engine.ready) await engine.start?.()
   if (!engine.ready || !engine.ctx) throw new Error("AUDIO ENGINE NOT READY")
   if (engine.ctx.state === "suspended") await engine.resume?.()
   if (engine.ctx.state === "suspended") throw new Error("TAP PLAY THEN EXPORT")
@@ -103,7 +103,7 @@ export async function captureProjectMaster(app) {
     const l = input.getChannelData(0)
     const r = input.numberOfChannels > 1 ? input.getChannelData(1) : l
     const frameStart = Number.isFinite(event.playbackTime) ? event.playbackTime : ctx.currentTime
-    let start = Math.max(0, Math.floor((origin - frameStart) * sampleRate))
+    const start = Math.max(0, Math.floor((origin - frameStart) * sampleRate))
     if (start >= l.length) return
 
     for (let i = start; i < l.length && written < target; i++) {
