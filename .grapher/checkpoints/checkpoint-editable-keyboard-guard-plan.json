@@ -1,0 +1,9 @@
+{
+  "id": "checkpoint-editable-keyboard-guard-plan",
+  "type": "plan",
+  "title": "Guard global performance mappings during text entry",
+  "status": "implemented_pending_verification",
+  "scope": "computer keyboard input",
+  "summary": "Audit found one global window-level audio key map in app.js and one duplicate visual-feedback map. Generalize text-entry isolation so input, textarea, select, and contenteditable events stop at document before reaching CASSIO's global window performance handlers; add real-keypress browser coverage for PROJECT naming and generic editable fields.",
+  "source": "post-PR21 keyboard mapping audit"
+}
