@@ -1,0 +1,179 @@
+/*
+ * Phone-portrait containment hardening from the 2026-09-05 user-testing follow-up.
+ * Keep this file as overrides on top of cassio.css so the physical panel design stays intact.
+ */
+
+/* Nothing rendered inside the LCD may paint through its own soft-key row. */
+.lcd-screen {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.menu-screen .menu-body {
+  min-height: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+/* Six canonical areas must fit inside the available LCD body without scrolling under lcd-soft. */
+.menu-screen .menu-list {
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  align-content: stretch;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.menu-screen .menu-item {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  margin: 0;
+  padding-block: clamp(0.04rem, 0.35dvh, 0.12rem);
+  line-height: 1.1;
+}
+
+.menu-screen .menu-hint {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The keyboard is the final chassis row and must never become wider than its shell. */
+.keyboard {
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+/*
+ * The chassis already uses 100dvh. Match vertically-sized controls to that same
+ * dynamic viewport on mobile browsers so browser chrome cannot make children
+ * taller than the shell. cassio.css remains the vh fallback for older engines.
+ */
+@supports (height: 1dvh) {
+  .side-controls,
+  .knobs {
+    gap: clamp(0.2rem, 1.2dvh, 0.35rem);
+  }
+
+  .knob-bay {
+    padding: clamp(0.12rem, 0.6dvh, 0.18rem);
+  }
+
+  .knob {
+    width: clamp(2.35rem, min(11.4vw, 6.85dvh), 3.25rem);
+    height: clamp(2.35rem, min(11.4vw, 6.85dvh), 3.25rem);
+  }
+
+  .pitch-bay {
+    padding: clamp(0.12rem, 0.6dvh, 0.2rem);
+  }
+
+  .pitch-wheel {
+    width: clamp(1.48rem, min(7.6vw, 4.55dvh), 2.05rem);
+    height: clamp(2.85rem, min(15.2dvh, 24vw), 4.75rem);
+  }
+
+  .back-menu {
+    min-height: clamp(1.75rem, 4.5dvh, 2.15rem);
+  }
+
+  .dpad,
+  .dpad-mid {
+    gap: clamp(0.18rem, 0.9dvh, 0.28rem);
+  }
+
+  .dpad .hw-btn {
+    width: clamp(2.35rem, min(13vw, 7.5dvh), 3.55rem);
+    min-height: clamp(2rem, min(13vw, 6.8dvh), 3.1rem);
+    font-size: clamp(0.7rem, min(3vw, 2dvh), 0.92rem);
+  }
+
+  .dpad .ok {
+    width: clamp(2.6rem, min(14vw, 8.2dvh), 3.9rem);
+    min-height: clamp(2.2rem, min(14vw, 7.4dvh), 3.4rem);
+  }
+
+  .transport {
+    gap: clamp(0.15rem, 0.7dvh, 0.25rem);
+  }
+
+  .transport .hw-btn {
+    min-height: clamp(1.65rem, 4.2dvh, 2rem);
+  }
+
+  .keyboard {
+    height: clamp(4.14rem, min(14.2dvh, 25.2vw), 6.075rem);
+    margin-top: clamp(0.46rem, min(1.55dvh, 2.8vw), 0.675rem);
+  }
+}
+
+/* Compact portrait phones: spend pixels on controls and menu rows, not chrome. */
+@media (max-width: 719px) and (max-height: 700px) {
+  .lcd-boot,
+  .lcd-screen {
+    padding: 0.38rem 0.46rem 0.25rem;
+  }
+
+  .lcd-status {
+    padding-bottom: 0.1rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .lcd-macros {
+    margin-bottom: 0.16rem;
+  }
+
+  .lcd-soft {
+    padding-top: 0.12rem;
+  }
+
+  .lcd-soft > div {
+    padding: 0.12rem 0.08rem;
+  }
+
+  .menu-screen .menu-item {
+    font-size: clamp(0.62rem, 2.5vw, 0.72rem);
+  }
+
+  .menu-screen .menu-hint {
+    font-size: var(--fs-xs);
+    line-height: 1.15;
+  }
+
+  .keyboard {
+    height: clamp(3.6rem, min(12.5dvh, 24vw), 5rem);
+    margin-top: clamp(0.24rem, min(0.9dvh, 1.8vw), 0.45rem);
+  }
+}
+
+@media (max-width: 719px) and (max-height: 600px) {
+  .chassis {
+    gap: 0.14rem;
+    padding-top: max(0.3rem, env(safe-area-inset-top));
+    padding-right: max(0.35rem, env(safe-area-inset-right));
+    padding-left: max(0.35rem, env(safe-area-inset-left));
+  }
+
+  .brand-row {
+    margin-bottom: 0;
+  }
+
+  .brand-sub {
+    margin-top: 0.05rem;
+  }
+
+  .display-stack,
+  .soft-keys {
+    gap: 0.18rem;
+  }
+
+  .mid-panel {
+    gap: 0.35rem;
+  }
+
+  .keyboard {
+    height: clamp(3.35rem, min(11.5dvh, 23vw), 4.5rem);
+    margin-top: 0.18rem;
+  }
+}

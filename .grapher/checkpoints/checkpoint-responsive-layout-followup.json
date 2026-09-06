@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-responsive-layout-followup",
+  "refreshed_at": "2026-09-06T04:44:06+00:00",
+  "title": "Verified user-testing follow-up #2: portrait containment passes at 320x568, 375x667, 390x844, and 430x932; chassis, keyboard, controls, all six menu rows, SETTINGS reachability, and document overflow are bounded",
+  "node_ids": [
+    "problem-main-menu-portrait-clipping-20260905",
+    "task-repair-portrait-menu-loop-discovery-20260905",
+    "finding-ui-fullbleed-layout",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
