@@ -114,13 +114,14 @@ export function renderLoopTrackView(state) {
           </div>
           <div class="loop-tgrid">${rows}</div>
         </div>
+        <div class="green loop-thint">PATTERN SEQUENCER · HOLD B</div>
         <div class="muted loop-thint">TAP ROW · ▲▼ LANE · ◀▶ ±1s · L${sel}${selEmpty ? "" : ` @ ${selOff}s`}</div>
-        <div class="lib-hint">${hintOk} · HOLD B PATTERN · HOLD C OPTIONS</div>
+        <div class="lib-hint">${hintOk} · HOLD C OPTIONS</div>
         <div class="lib-hint muted">REC · PIANO → TRACK · A +LANE · HOLD A −LANE · ${selEmpty ? "D LIST" : "D SAVE/UNDO"} · B MUTE · C SOLO</div>
       </div>
       <div class="lcd-soft">
         <div><span class="sk">A</span> <span class="green">+LANE</span></div>
-        <div><span class="sk">B</span> <span class="green">MUTE${selTrack.mute ? " ●" : ""}</span></div>
+        <div><span class="sk">B</span> <span class="green">MUTE/SEQ${selTrack.mute ? " ●" : ""}</span></div>
         <div><span class="sk">C</span> <span class="green">SOLO${selTrack.solo ? " ●" : ""}</span></div>
         <div><span class="sk">D</span> <span class="green">${softD}</span></div>
       </div>
@@ -137,14 +138,14 @@ export function renderLoopTrackMenu(state) {
     ? [
       "PICK TRACK…",
       `DROP PATTERN ${letter}…`,
-      "PATTERN SEQ…",
+      "PATTERN SEQUENCER…",
       "+ LANE",
       "DELETE LANE",
       "TRACK LIST…",
       "LOOP OPTIONS…"
     ]
     : [
-      "PATTERN SEQ…",
+      "PATTERN SEQUENCER…",
       `DROP PATTERN ${letter}…`,
       "FX / SETTINGS…",
       `LENGTH ${t.lengthBars || state.loop?.lengthBars || 4} BARS`,
@@ -202,7 +203,7 @@ export function renderLoopOptions(state) {
   const key = OPTION_ROWS[row] || "length"
   const pdr = loop.playDuringRec || "all"
   const labels = {
-    patternSeq: "PATTERN SEQ (6 LANES · A–D)…",
+    patternSeq: "PATTERN SEQUENCER (6 LANES · A–D)…",
     length: `SONG LENGTH ${loop.lengthBars || 4} BARS`,
     quantize: `QUANTIZE ${QUANTIZE_LABELS[loop.quantize] || loop.quantize || "1/16"}`,
     countIn: `COUNT-IN ${loop.countInBars ?? 1} BAR`,
@@ -235,7 +236,7 @@ export function renderLoopOptions(state) {
         <div class="muted">${key === "playDuringRec" ? "" : "METRO ALSO: HOLD TAP ON PLAY"}</div>
       </div>
       <div class="lcd-soft">
-        <div><span class="sk">A</span> <span class="green">PATTERN</span></div>
+        <div><span class="sk">A</span> <span class="green">SEQ</span></div>
         <div><span class="sk">B</span> <span class="green">LENGTH</span></div>
         <div><span class="sk">C</span> <span class="green">MONITOR</span></div>
         <div><span class="sk">D</span> <span class="green">DONE</span></div>
