@@ -152,5 +152,5 @@ export async function exportProjectAudio(app, format, basename = "CASSIO_PROJECT
   const fmt = String(format || "wav").toLowerCase()
   if (!PROJECT_AUDIO_FORMATS.includes(fmt)) throw new Error("UNKNOWN FORMAT")
   const buffer = await captureProjectMaster(app)
-  return exportSample(buffer, fmt, basename)
+  return exportSample(buffer, fmt, basename, { audioContext: app?.engine?.ctx || null })
 }
