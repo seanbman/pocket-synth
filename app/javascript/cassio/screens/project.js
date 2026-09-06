@@ -58,7 +58,7 @@ export function renderProjectManage(state) {
 
 export function renderProjectAudioExport(state) {
   const formats = ["WAV", "MP3", "M4A"]
-  const list = formats.map((label, i) => `<div class="lib-row ${i === state.projectAudioFormatIndex ? "selected" : ""}><span>${label}</span><span class="muted">${i === 0 ? "LOSSLESS" : i === 1 ? "SHARE" : "AAC"}</span></div>`).join("")
+  const list = formats.map((label, i) => `<div class="lib-row ${i === state.projectAudioFormatIndex ? "selected" : ""}"><span>${label}</span><span class="muted">${i === 0 ? "LOSSLESS" : i === 1 ? "SHARE" : "AAC"}</span></div>`).join("")
   const status = state.projectExportBusy ? "RENDERING MASTER…" : "FULL SONG · MASTER MIX"
   return `
     <div class="lcd-screen project-audio-export-screen">
