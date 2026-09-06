@@ -56,5 +56,6 @@ assert.match(audioScreen, /WAV/)
 assert.match(audioScreen, /MP3/)
 assert.match(audioScreen, /M4A/)
 assert.match(audioScreen, /METRONOME EXCLUDED/)
+assert.match(audioScreen, /<div class="lib-row selected"><span>WAV<\/span>/, "selected export row markup must remain valid")
 
 console.log("project audio export unit: ok")
