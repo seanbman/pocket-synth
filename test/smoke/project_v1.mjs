@@ -134,21 +134,40 @@ try {
     const deleted = rt.projects.length === 2
 
     const targetIndex = rt.projects.findIndex((p) => p.id !== rt.activeProjectId && p.state?.bpm === 133)
-    rt.projectIndex = targetIndex
+    const targetReady = targetIndex >= 0
+    rt.projectIndex = Math.max(0, targetIndex)
     app.render()
     app.transport.bpm = 77
     app.project.bpm = 77
-    await press('soft-d')
-    const switchPrompt = app.screen === 'project-switch-confirm'
-    await press('soft-c', 50)
 
-    return { savePrompt, savedOne, savedBpm, renamed, manage, duplicated, exportOk, imported, deletePrompt, deleted, switchPrompt }
+    return { savePrompt, savedOne, savedBpm, renamed, manage, duplicated, exportOk, imported, deletePrompt, deleted, targetReady }
   })()`)
 
-  for (const [key, value] of Object.entries(lifecycle)) {
+  for (const [key, value] of Object.entries(lifecycle || {})) {
     if (value) pass(key)
     else fail(key)
   }
+  if (!lifecycle) fail("PROJECT lifecycle did not return before reload")
+
+  const switchPrompt = await evalJs(`(async () => {
+    const root = document.querySelector('[data-controller~="cassio"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const el = root.querySelector('[data-action="soft-d"]')
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 4 }))
+    el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 4 }))
+    await new Promise((r) => setTimeout(r, 100))
+    return app.screen === 'project-switch-confirm'
+  })()`)
+  if (switchPrompt) pass("opening another saved project prompts Save/Discard")
+  else fail("saved-project switch confirmation missing")
+
+  await evalJs(`(() => {
+    const root = document.querySelector('[data-controller~="cassio"]')
+    const el = root.querySelector('[data-action="soft-c"]')
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 5 }))
+    el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 5 }))
+    return true
+  })()`)
 
   await sleep(6500)
   const reopened = await evalJs(`(() => {
@@ -165,8 +184,8 @@ try {
     const rt = app.projectRuntime
     const press = async (action, wait = 80) => {
       const el = root.querySelector('[data-action="' + action + '"]')
-      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 3 }))
-      el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 3 }))
+      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 6 }))
+      el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 6 }))
       await new Promise((r) => setTimeout(r, wait))
     }
     await rt.open()
@@ -174,14 +193,22 @@ try {
     const confirm = app.screen === 'project-switch-confirm'
     await press('soft-c')
     const naming = app.screen === 'project-name'
-    const input = app.vscreen.querySelector('#cassio-project-name-field')
-    input.value = 'NEW CLEAN'
-    input.dispatchEvent(new Event('input', { bubbles: true }))
-    await press('soft-d', 50)
     return { confirm, naming }
   })()`)
   if (newStart.confirm && newStart.naming) pass("NEW prompts through the project workflow")
   else fail(`new project flow failed: ${JSON.stringify(newStart)}`)
+
+  await evalJs(`(() => {
+    const root = document.querySelector('[data-controller~="cassio"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const input = app.vscreen.querySelector('#cassio-project-name-field')
+    input.value = 'NEW CLEAN'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    const el = root.querySelector('[data-action="soft-d"]')
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 7 }))
+    el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 7 }))
+    return true
+  })()`)
 
   await sleep(6500)
   const fresh = await evalJs(`(() => {
