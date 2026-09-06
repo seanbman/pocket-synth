@@ -88,7 +88,18 @@ try {
     const exportScreen = app.screen
     const exportText = app.vscreen.textContent
     const soft = [...app.vscreen.querySelectorAll('.lcd-soft > div')].map((x) => x.textContent.trim())
+    const beforeNav = {
+      formatIndex: app.projectAudioExportRuntime.formatIndex,
+      screen: app.screen,
+      rows: [...app.vscreen.querySelectorAll('.lib-row')].map((x) => ({ text: x.textContent.trim(), className: x.className }))
+    }
     await press('nav-down')
+    const afterNav = {
+      formatIndex: app.projectAudioExportRuntime.formatIndex,
+      screen: app.screen,
+      rows: [...app.vscreen.querySelectorAll('.lib-row')].map((x) => ({ text: x.textContent.trim(), className: x.className })),
+      html: app.vscreen.innerHTML.slice(0, 1400)
+    }
     const selected = app.vscreen.querySelector('.lib-row.selected')?.textContent?.trim() || ''
     await press('soft-d')
 
@@ -98,6 +109,8 @@ try {
       exportScreen,
       exportText,
       soft,
+      beforeNav,
+      afterNav,
       selected,
       backScreen: app.screen
     }
@@ -114,7 +127,7 @@ try {
   else fail(`format soft keys missing: ${JSON.stringify(result.soft)}`)
 
   if (result.selected.includes("MP3")) pass("format selector follows hardware navigation")
-  else fail(`format navigation failed: ${result.selected}`)
+  else fail(`format navigation failed: ${JSON.stringify({ beforeNav: result.beforeNav, afterNav: result.afterNav, selected: result.selected })}`)
 
   if (result.backScreen === "project-manage") pass("export screen returns to PROJECT Manage")
   else fail(`export back navigation failed: ${result.backScreen}`)
