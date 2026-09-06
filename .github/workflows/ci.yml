@@ -158,6 +158,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/settings_bridge.mjs
 
+      - name: Verify pointer, touch, mapped-key, HOLD, and TAP/BPM feedback
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/input_feedback.mjs
+
       - name: Print Rails log on failure
         if: failure()
         run: cat /tmp/cassio-rails.log || true
