@@ -2,6 +2,16 @@
 
 const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0))
 
+function withTimeout(promise, ms, message) {
+  return new Promise((resolve, reject) => {
+    const id = setTimeout(() => reject(new Error(message)), ms)
+    Promise.resolve(promise).then(
+      (value) => { clearTimeout(id); resolve(value) },
+      (error) => { clearTimeout(id); reject(error) }
+    )
+  })
+}
+
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
@@ -144,39 +154,55 @@ function pickM4aMime() {
   return null
 }
 
-async function encodeM4a(buf) {
+async function encodeM4a(buf, audioContext = null) {
   const mime = pickM4aMime()
   if (!mime) throw new Error("M4A NOT SUPPORTED HERE")
 
+  const ownsContext = !audioContext
   const Ctx = window.AudioContext || window.webkitAudioContext
-  const ctx = new Ctx()
+  const ctx = audioContext || new Ctx()
+  let src = null
+  let dest = null
+  let rec = null
   try {
-    const dest = ctx.createMediaStreamDestination()
-    const src = ctx.createBufferSource()
+    if (ctx.state === "suspended") await ctx.resume?.()
+    if (ctx.state === "suspended") throw new Error("M4A AUDIO CONTEXT BLOCKED")
+
+    dest = ctx.createMediaStreamDestination()
+    src = ctx.createBufferSource()
     src.buffer = buf
     src.connect(dest)
-    const rec = new MediaRecorder(dest.stream, { mimeType: mime })
+    rec = new MediaRecorder(dest.stream, { mimeType: mime })
     const chunks = []
     const done = new Promise((resolve, reject) => {
       rec.ondataavailable = (e) => { if (e.data?.size) chunks.push(e.data) }
       rec.onerror = () => reject(new Error("M4A RECORD FAILED"))
       rec.onstop = () => resolve()
     })
+    const ended = new Promise((resolve) => { src.onended = resolve })
+
     rec.start()
     src.start()
-    await new Promise((r) => { src.onended = r })
-    await new Promise((r) => setTimeout(r, 40))
+    await withTimeout(ended, Math.ceil((buf.duration + 5) * 1000), "M4A ENCODE TIMED OUT")
+    await new Promise((resolve) => setTimeout(resolve, 40))
     rec.stop()
-    await done
-    await ctx.close()
+    await withTimeout(done, 5000, "M4A FINALIZE TIMED OUT")
     return new Blob(chunks, { type: "audio/mp4" })
   } catch (e) {
-    try { await ctx.close() } catch (_) { /* ignore */ }
+    try {
+      if (rec?.state === "recording") rec.stop()
+    } catch (_) { /* ignore */ }
     throw e instanceof Error ? e : new Error("M4A FAILED")
+  } finally {
+    try { src?.disconnect() } catch (_) { /* ignore */ }
+    try { dest?.stream?.getTracks?.().forEach((track) => track.stop()) } catch (_) { /* ignore */ }
+    if (ownsContext) {
+      try { await ctx.close() } catch (_) { /* ignore */ }
+    }
   }
 }
 
-export async function exportSample(buf, format, basename = "CASSIO_SAMPLE") {
+export async function exportSample(buf, format, basename = "CASSIO_SAMPLE", { audioContext = null } = {}) {
   if (!buf) throw new Error("NO AUDIO")
   const name = String(basename || "CASSIO_SAMPLE").replace(/[^\w\-]+/g, "_")
   const fmt = String(format || "wav").toLowerCase()
@@ -190,7 +216,7 @@ export async function exportSample(buf, format, basename = "CASSIO_SAMPLE") {
     return "mp3"
   }
   if (fmt === "m4a") {
-    const blob = await encodeM4a(buf)
+    const blob = await encodeM4a(buf, audioContext)
     downloadBlob(blob, `${name}.m4a`)
     return "m4a"
   }
