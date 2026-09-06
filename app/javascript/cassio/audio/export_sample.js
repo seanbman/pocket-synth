@@ -1,5 +1,7 @@
 /** Export trimmed AudioBuffer as WAV / MP3 / M4A downloads. */
 
+const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0))
+
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
@@ -32,7 +34,7 @@ function floatTo16BitPCM(float32) {
   return out
 }
 
-export function encodeWav(buf) {
+function wavHeader(buf) {
   const numCh = buf.numberOfChannels
   const rate = buf.sampleRate
   const len = buf.length
@@ -57,15 +59,37 @@ export function encodeWav(buf) {
   view.setUint16(34, 16, true)
   writeStr(36, "data")
   view.setUint32(40, dataSize, true)
+  return { ab, view, numCh }
+}
+
+export function encodeWav(buf) {
+  const { ab, view, numCh } = wavHeader(buf)
   let off = 44
   const chans = []
   for (let c = 0; c < numCh; c++) chans.push(buf.getChannelData(c))
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < buf.length; i++) {
     for (let c = 0; c < numCh; c++) {
       const s = Math.max(-1, Math.min(1, chans[c][i]))
       view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true)
       off += 2
     }
+  }
+  return new Blob([ab], { type: "audio/wav" })
+}
+
+async function encodeWavCooperative(buf) {
+  if (buf.length <= buf.sampleRate * 10) return encodeWav(buf)
+  const { ab, view, numCh } = wavHeader(buf)
+  let off = 44
+  const chans = []
+  for (let c = 0; c < numCh; c++) chans.push(buf.getChannelData(c))
+  for (let i = 0; i < buf.length; i++) {
+    for (let c = 0; c < numCh; c++) {
+      const s = Math.max(-1, Math.min(1, chans[c][i]))
+      view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true)
+      off += 2
+    }
+    if (i > 0 && i % 16384 === 0) await yieldToBrowser()
   }
   return new Blob([ab], { type: "audio/wav" })
 }
@@ -95,11 +119,14 @@ async function encodeMp3(buf) {
     : left
   const block = 1152
   const parts = []
+  let encodedBlocks = 0
   for (let i = 0; i < left.length; i += block) {
     const l = left.subarray(i, i + block)
     const r = right.subarray(i, i + block)
     const mp3buf = channels === 2 ? enc.encodeBuffer(l, r) : enc.encodeBuffer(l)
     if (mp3buf.length) parts.push(mp3buf)
+    encodedBlocks++
+    if (encodedBlocks % 64 === 0) await yieldToBrowser()
   }
   const end = enc.flush()
   if (end.length) parts.push(end)
@@ -108,9 +135,8 @@ async function encodeMp3(buf) {
 
 function pickM4aMime() {
   const types = [
-    "audio/mp4",
     "audio/mp4;codecs=mp4a.40.2",
-    "audio/aac"
+    "audio/mp4"
   ]
   for (const t of types) {
     if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(t)) return t
@@ -155,7 +181,7 @@ export async function exportSample(buf, format, basename = "CASSIO_SAMPLE") {
   const name = String(basename || "CASSIO_SAMPLE").replace(/[^\w\-]+/g, "_")
   const fmt = String(format || "wav").toLowerCase()
   if (fmt === "wav") {
-    downloadBlob(encodeWav(buf), `${name}.wav`)
+    downloadBlob(await encodeWavCooperative(buf), `${name}.wav`)
     return "wav"
   }
   if (fmt === "mp3") {
