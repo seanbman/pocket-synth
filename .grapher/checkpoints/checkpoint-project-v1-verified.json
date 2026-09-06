@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-project-v1-verified",
+  "refreshed_at": "2026-09-06T05:57:00+00:00",
+  "title": "PROJECT V1 verified in CI: project list, save, rename, duplicate, portable export/import, delete, Save/Discard switch guard, reload restore at BPM 133, and clean New reset all passed at 390x844; existing responsive, sequencer, and LOOP recording regressions remained green",
+  "node_ids": [
+    "concept-area-project",
+    "concept-screen-27",
+    "concept-screen-28",
+    "concept-persistence",
+    "checkpoint-project-v1-implementation"
+  ],
+  "graph_version": 2
+}
