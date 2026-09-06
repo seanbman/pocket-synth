@@ -1,9 +1,10 @@
 # SQLite. Versions 3.8.0 and up are supported.
 #   gem install sqlite3
 #
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem "sqlite3"
-#
+# CASSIO currently keeps user projects/sounds in the browser, not Active Record.
+# Development/test use repo-local SQLite files. Heroku production uses /tmp so
+# Rails can boot on an ephemeral dyno without pretending server-side persistence
+# exists. Move production to Postgres before adding server-persisted app data.
 default: &default
   adapter: sqlite3
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -20,21 +21,6 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-    <<: *default
-    database: storage/production.sqlite3
-  cache:
-    <<: *default
-    database: storage/production_cache.sqlite3
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *default
-    database: storage/production_queue.sqlite3
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *default
-    database: storage/production_cable.sqlite3
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_PATH", "/tmp/cassio-production.sqlite3") %>
