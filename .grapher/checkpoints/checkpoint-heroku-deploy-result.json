@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-heroku-deploy-result",
   "refreshed_at": "2026-09-06T22:00:00-06:00",
-  "title": "Heroku deployment implementation: Procfile and app.json added; production Rails runtime moved off Solid Queue/Cache/Cable database dependencies; production SQLite isolated to /tmp for the current browser-persisted prototype; dedicated production asset-precompile and Puma health smoke added. Verification pending CI.",
+  "title": "Verified Heroku deployment implementation: Procfile and app.json added; production Rails runtime uses process-local cache/jobs/cable with named ephemeral /tmp SQLite databases required by Rails 8 Solid gem eager loading; production asset precompile and Puma /up health boot passed Heroku smoke #8; full application regression CI #141 passed.",
   "node_ids": [
     "checkpoint-heroku-deploy-plan",
     "checkpoint-current-ui-controls",
