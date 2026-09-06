@@ -11,9 +11,13 @@ export class AudioEngine {
     this.delayFeedback = null
     this.bassEq = null
     this.trebleEq = null
+    this.limiter = null
     this.analyser = null
     this.ready = false
     this.masterVolume = 0.7
+    this.masterBassDb = 0
+    this.masterTrebleDb = 0
+    this.limiterEnabled = true
     this.space = 0.24
     this.delayAmt = 0
     this._wave = null
@@ -29,12 +33,17 @@ export class AudioEngine {
     this.bassEq = this.ctx.createBiquadFilter()
     this.bassEq.type = "lowshelf"
     this.bassEq.frequency.value = 120
-    this.bassEq.gain.value = 0
+    this.bassEq.gain.value = this.masterBassDb
 
     this.trebleEq = this.ctx.createBiquadFilter()
     this.trebleEq.type = "highshelf"
     this.trebleEq.frequency.value = 6000
-    this.trebleEq.gain.value = 0
+    this.trebleEq.gain.value = this.masterTrebleDb
+
+    this.limiter = this.ctx.createDynamicsCompressor()
+    this.limiter.attack.value = 0.003
+    this.limiter.release.value = 0.12
+    this.#applyLimiterState()
 
     this.analyser = this.ctx.createAnalyser()
     this.analyser.fftSize = 256
@@ -43,7 +52,8 @@ export class AudioEngine {
 
     this.master.connect(this.bassEq)
     this.bassEq.connect(this.trebleEq)
-    this.trebleEq.connect(this.analyser)
+    this.trebleEq.connect(this.limiter)
+    this.limiter.connect(this.analyser)
     this.analyser.connect(this.ctx.destination)
 
     this.dry = this.ctx.createGain()
@@ -139,13 +149,18 @@ export class AudioEngine {
   }
 
   setBassDb(db) {
-    const g = Math.min(12, Math.max(-12, db))
-    if (this.bassEq) this.bassEq.gain.setTargetAtTime(g, this.ctx.currentTime, 0.04)
+    this.masterBassDb = Math.min(12, Math.max(-12, Number(db) || 0))
+    if (this.bassEq) this.bassEq.gain.setTargetAtTime(this.masterBassDb, this.ctx.currentTime, 0.04)
   }
 
   setTrebleDb(db) {
-    const g = Math.min(12, Math.max(-12, db))
-    if (this.trebleEq) this.trebleEq.gain.setTargetAtTime(g, this.ctx.currentTime, 0.04)
+    this.masterTrebleDb = Math.min(12, Math.max(-12, Number(db) || 0))
+    if (this.trebleEq) this.trebleEq.gain.setTargetAtTime(this.masterTrebleDb, this.ctx.currentTime, 0.04)
+  }
+
+  setLimiterEnabled(enabled) {
+    this.limiterEnabled = !!enabled
+    this.#applyLimiterState()
   }
 
   recTapForTrack(trackId) {
@@ -184,6 +199,17 @@ export class AudioEngine {
     g.cancelScheduledValues(this.ctx.currentTime)
     g.setValueAtTime(0, this.ctx.currentTime)
     g.setTargetAtTime(this.masterVolume, this.ctx.currentTime + 0.05, 0.05)
+  }
+
+  #applyLimiterState() {
+    if (!this.limiter) return
+    const now = this.ctx?.currentTime || 0
+    const threshold = this.limiterEnabled ? -3 : 0
+    const knee = this.limiterEnabled ? 3 : 0
+    const ratio = this.limiterEnabled ? 20 : 1
+    this.limiter.threshold.setTargetAtTime(threshold, now, 0.02)
+    this.limiter.knee.setTargetAtTime(knee, now, 0.02)
+    this.limiter.ratio.setTargetAtTime(ratio, now, 0.02)
   }
 
   #makeImpulse(seconds) {
