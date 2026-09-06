@@ -154,6 +154,7 @@ export class ProjectRuntime {
   }
 
   cancelName() {
+    if (this.projectNamePurpose === "save-before-switch") this.pendingSwitch = null
     this.projectNamePurpose = null
     this.app.screen = "project-list"
     this.app.render()
@@ -186,7 +187,7 @@ export class ProjectRuntime {
       return
     }
 
-    if (purpose === "save-as") {
+    if (purpose === "save-as" || purpose === "save-before-switch") {
       const state = this.snapshotCurrent()
       const row = await putProject({ id: newProjectId(), name, state })
       this.activeProjectId = row.id
@@ -194,8 +195,15 @@ export class ProjectRuntime {
       await saveRecovery(state)
       await this.refreshProjects()
       this.projectIndex = Math.max(0, this.projects.findIndex((p) => p.id === row.id))
-      this.app.screen = "project-list"
       this.app.toast?.(`SAVED AS ${row.name}`)
+
+      if (purpose === "save-before-switch") {
+        const pending = this.pendingSwitch
+        this.pendingSwitch = null
+        if (pending) return this.#finishSwitch(pending)
+      }
+
+      this.app.screen = "project-list"
       this.app.render()
       return
     }
@@ -296,36 +304,41 @@ export class ProjectRuntime {
     input.click()
   }
 
-  async requestOpenSelected() {
+  requestOpenSelected() {
     const row = selectedProject(this)
     if (!row) return this.app.toast?.("NO PROJECT")
     if (row.id === this.activeProjectId) return this.app.toast?.(`${row.name} IS ACTIVE`)
-    if (this.activeProjectId) {
-      this.pendingSwitch = { kind: "open", id: row.id }
-      this.app.screen = "project-switch-confirm"
-      this.app.render()
-      return
-    }
-    await this.#openProject(row.id)
+    this.pendingSwitch = { kind: "open", id: row.id }
+    this.app.screen = "project-switch-confirm"
+    this.app.render()
   }
 
   requestNew() {
-    if (this.activeProjectId) {
-      this.pendingSwitch = { kind: "new" }
-      this.app.screen = "project-switch-confirm"
-      this.app.render()
-      return
-    }
-    this.startName("new", "NEW PROJECT", "NEW PROJECT")
+    this.pendingSwitch = { kind: "new" }
+    this.app.screen = "project-switch-confirm"
+    this.app.render()
   }
 
   async continueSwitch(saveFirst) {
     const pending = this.pendingSwitch
-    this.pendingSwitch = null
     if (!pending) return
-    if (saveFirst) await this.saveCurrent()
-    if (pending.kind === "open") await this.#openProject(pending.id)
-    if (pending.kind === "new") this.startName("new", "NEW PROJECT", "NEW PROJECT")
+
+    if (saveFirst) {
+      const existing = this.projects.find((p) => p.id === this.activeProjectId)
+      if (!existing) {
+        this.startName("save-before-switch", "UNTITLED", "SAVE CURRENT AS")
+        return
+      }
+      await this.saveCurrent()
+    }
+
+    this.pendingSwitch = null
+    await this.#finishSwitch(pending)
+  }
+
+  async #finishSwitch(pending) {
+    if (pending.kind === "open") return this.#openProject(pending.id)
+    if (pending.kind === "new") return this.startName("new", "NEW PROJECT", "NEW PROJECT")
   }
 
   async #openProject(id) {
