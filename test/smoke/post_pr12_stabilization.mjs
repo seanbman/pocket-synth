@@ -68,7 +68,7 @@ try {
     const darkStart = getComputedStyle(document.body).backgroundColor === 'rgb(5, 5, 5)'
       && !document.body.textContent.trim().match(/^$/)
 
-    while (app.loopEngine.tracks.length < 10) app.loopEngine.addLane()
+    while (app.loopEngine.tracks.length < 24) app.loopEngine.addLane()
     const target = app.loopEngine.tracks[app.loopEngine.tracks.length - 1]
     const library = app.loopEngine.createLibraryTrack({ name: 'PIANO TAKE', lengthBars: 4 })
     app.loopEngine.assignLibraryToLane(target.id, library.id)
@@ -83,7 +83,9 @@ try {
     const sr = scroller.getBoundingClientRect()
     const rr = selected.getBoundingClientRect()
     const rulerH = app.vscreen.querySelector('.loop-ruler-row')?.getBoundingClientRect().height || 0
-    const verticalFollow = scroller.scrollTop > 0 && rr.top >= sr.top + rulerH - 2 && rr.bottom <= sr.bottom + 2
+    const selectedVisible = rr.top >= sr.top + rulerH - 2 && rr.bottom <= sr.bottom + 2
+    const needsVerticalScroll = scroller.scrollHeight > scroller.clientHeight + 1
+    const verticalFollow = selectedVisible && (!needsVerticalScroll || scroller.scrollTop > 0)
 
     target.buffer = app.engine.ctx.createBuffer(1, 256, app.engine.ctx.sampleRate)
     target.seq.steps[0] = { ...target.seq.steps[0], on: true }
