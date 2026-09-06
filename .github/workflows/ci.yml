@@ -146,6 +146,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/project_v1.mjs
 
+      - name: Verify PROJECT song export navigation and formats
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/project_audio_export.mjs
+
       - name: Verify unnamed PROJECT sessions cannot be replaced silently
         env:
           CASSIO_URL: http://127.0.0.1:3000/

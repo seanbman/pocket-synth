@@ -4,6 +4,7 @@ import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
 import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installPostPr12StabilizationRuntime } from "cassio/post_pr12_stabilization_runtime"
+import { installProjectAudioExportRuntime } from "cassio/project_audio_export_runtime"
 import { installProjectRuntime } from "cassio/project_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
 import { installSequenceVoiceGuardRuntime } from "cassio/sequence_voice_guard_runtime"
@@ -46,6 +47,9 @@ export default class extends Controller {
       installTrackNamingRuntime(this.app)
       installPlayRecordLaneRuntime(this.app)
       installRecordingRuntime(this.app)
+      // Install before ProjectRuntime so its capture/render extensions can
+      // intercept PROJECT Manage without modifying the stable persistence core.
+      installProjectAudioExportRuntime(this.app)
       installProjectRuntime(this.app)
       installSettingsRuntime(this.app)
       installSettingsBridgeRuntime(this.app)
