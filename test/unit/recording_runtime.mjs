@@ -67,7 +67,7 @@ function makeApp({ playContext = null } = {}) {
 }
 
 // REC from stop is input-only: backing starts requested by CassioApp are suppressed.
-// Stage 3 restores library save + recovery persistence, but not the legacy callback.
+// Stage 4 restores the original completion callback, but only after deferred teardown/cache.
 {
   const { app, calls, finish } = makeApp({ playContext: null })
   assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
@@ -89,13 +89,13 @@ function makeApp({ playContext = null } = {}) {
 
   await nextTask()
   await Promise.resolve()
-  assert.equal(calls.done, 0)
+  assert.equal(calls.done, 1)
   assert.equal(calls.transportStops, 1)
   assert.equal(calls.loopStops, 1)
   assert.equal(calls.seqStops, 1)
-  assert.equal(calls.persists, 1)
-  assert.deepEqual(calls.librarySaves, [2])
-  assert.ok(calls.renders >= 1)
+  assert.equal(calls.persists, 0)
+  assert.deepEqual(calls.librarySaves, [])
+  assert.equal(calls.renders, 0)
   assert.deepEqual(calls.toasts, [])
 }
 
@@ -112,18 +112,11 @@ function makeApp({ playContext = null } = {}) {
   finish()
   assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
-  assert.equal(calls.renders, 0)
-  assert.equal(calls.persists, 0)
-  assert.deepEqual(calls.librarySaves, [])
 
   await nextTask()
   await Promise.resolve()
-  assert.equal(calls.done, 0)
+  assert.equal(calls.done, 1)
   assert.equal(calls.transportStops, 0)
-  assert.equal(calls.persists, 1)
-  assert.deepEqual(calls.librarySaves, [2])
-  assert.ok(calls.renders >= 1)
-  assert.deepEqual(calls.toasts, [])
 }
 
-console.log("PASS: recording runtime isolates live input and defers stage-3 persistence")
+console.log("PASS: recording runtime restores completion only after deferred stage-4 teardown/cache")
