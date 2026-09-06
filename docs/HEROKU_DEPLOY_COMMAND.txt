@@ -1,0 +1,1 @@
+Deploy by connecting the GitHub repository in Heroku and deploying main; Procfile supplies the web command.
