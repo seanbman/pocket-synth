@@ -43,7 +43,7 @@ export class ProjectAudioExportRuntime {
     if (row.id !== projectRuntime.activeProjectId) return this.app.toast?.("OPEN PROJECT TO EXPORT")
     this.formatIndex = 0
     this.app.screen = EXPORT_SCREEN
-    this.app.render()
+    this.render()
   }
 
   async export(format = PROJECT_AUDIO_FORMATS[this.formatIndex]) {
@@ -56,7 +56,7 @@ export class ProjectAudioExportRuntime {
     const fmt = String(format || "wav").toLowerCase()
     this.formatIndex = Math.max(0, PROJECT_AUDIO_FORMATS.indexOf(fmt))
     this.exportBusy = true
-    this.app.render()
+    this.render()
     this.app.toast?.(`RENDERING ${fmt.toUpperCase()}`)
 
     try {
@@ -66,7 +66,7 @@ export class ProjectAudioExportRuntime {
       this.app.toast?.(String(error?.message || "EXPORT FAILED").toUpperCase().slice(0, 28))
     } finally {
       this.exportBusy = false
-      if (this.app.screen === EXPORT_SCREEN) this.app.render()
+      if (this.app.screen === EXPORT_SCREEN) this.render()
     }
   }
 
@@ -103,7 +103,7 @@ export class ProjectAudioExportRuntime {
       if (action === "nav-up" || action === "nav-down") {
         const delta = action === "nav-down" ? 1 : -1
         this.formatIndex = (this.formatIndex + delta + PROJECT_AUDIO_FORMATS.length) % PROJECT_AUDIO_FORMATS.length
-        return this.app.render()
+        return this.render()
       }
       if (action === "nav-ok") return void this.export()
       if (action === "soft-a") return void this.export("wav")
