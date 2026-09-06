@@ -1,1 +1,0 @@
-Single-dyno Heroku deployment: Puma web process, Heroku app metadata, production-local cache/jobs/cable, ephemeral SQLite only because CASSIO user data is browser-owned, production asset/boot health smoke in CI.
