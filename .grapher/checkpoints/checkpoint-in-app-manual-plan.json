@@ -1,0 +1,10 @@
+{
+  "checkpoint_id": "checkpoint-in-app-manual-plan",
+  "refreshed_at": "2026-09-06T02:00:00-06:00",
+  "title": "Add an in-app CASSIO manual opened by a MANUAL button at the top-right of the chassis. The manual must be full-screen, searchable, indexed with working section links, responsive on phone viewports, detailed enough to document current PLAY/LOOP/SOUND/MIX/PROJECT/SETTINGS workflows, and isolated from global performance-key handlers so typing help queries cannot trigger notes.",
+  "node_ids": [
+    "checkpoint-current-ui-controls",
+    "checkpoint-current-loop-engine"
+  ],
+  "graph_version": 2
+}
