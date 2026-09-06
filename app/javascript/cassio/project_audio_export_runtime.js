@@ -2,7 +2,6 @@ import { exportProjectAudio, PROJECT_AUDIO_FORMATS } from "cassio/audio/project_
 import { renderProjectAudioExport } from "cassio/screens/project"
 
 const EXPORT_SCREEN = "project-audio-export"
-const MANAGE_ROWS = 5
 
 function selectedProject(projectRuntime) {
   return projectRuntime?.projects?.[projectRuntime.projectIndex] || null
@@ -82,25 +81,15 @@ export class ProjectAudioExportRuntime {
       if (screen === "project-manage") {
         const projectRuntime = this.app.projectRuntime
         if (!projectRuntime) return
+        const audioOpen = action === "nav-ok" && projectRuntime.projectManageIndex === 2
+        const projectFileExport = action === "soft-c"
+        if (!audioOpen && !projectFileExport) return
 
-        if (action === "nav-up" || action === "nav-down") {
-          event.preventDefault()
-          event.stopImmediatePropagation()
-          if (event.type !== "pointerdown") return
-          const delta = action === "nav-down" ? 1 : -1
-          projectRuntime.projectManageIndex = (projectRuntime.projectManageIndex + delta + MANAGE_ROWS) % MANAGE_ROWS
-          return this.app.render()
-        }
-
-        if (action === "nav-ok" && projectRuntime.projectManageIndex >= 2) {
-          event.preventDefault()
-          event.stopImmediatePropagation()
-          if (event.type !== "pointerdown") return
-          if (projectRuntime.projectManageIndex === 2) return this.open()
-          if (projectRuntime.projectManageIndex === 3) return void projectRuntime.exportSelectedBundle()
-          if (projectRuntime.projectManageIndex === 4) return projectRuntime.requestDelete()
-        }
-        return
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        if (event.type !== "pointerdown") return
+        if (audioOpen) return this.open()
+        return void projectRuntime.exportSelectedBundle()
       }
 
       if (screen !== EXPORT_SCREEN) return
