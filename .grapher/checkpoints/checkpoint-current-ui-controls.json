@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-current-ui-controls",
-  "refreshed_at": "2026-09-06T06:43:00+00:00",
-  "title": "Current: UI controls verified through responsive portrait, LOOP sequencer discoverability, and input-state/mobile feedback remediation",
+  "refreshed_at": "2026-09-06T07:13:00+00:00",
+  "title": "Current: UI controls verified through responsive portrait, LOOP sequencer discoverability, input-state/mobile feedback, and post-PR12 startup/track/display stabilization",
   "node_ids": [
     "finding-ui-fullbleed-layout",
     "finding-ui-knobs-viz-autoboot",
@@ -11,7 +11,8 @@
     "checkpoint-loop-sequencer-discoverability",
     "task-verify-input-feedback-mobile-polish-20260905",
     "checkpoint-input-feedback-mobile-polish-plan",
-    "checkpoint-input-feedback-mobile-polish-result"
+    "checkpoint-input-feedback-mobile-polish-result",
+    "checkpoint-post-pr12-stabilization-result"
   ],
   "graph_version": 2
 }

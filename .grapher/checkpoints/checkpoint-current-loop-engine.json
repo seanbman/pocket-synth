@@ -1,12 +1,13 @@
 {
   "checkpoint_id": "checkpoint-current-loop-engine",
-  "refreshed_at": "2026-09-06T04:30:00+00:00",
-  "title": "Current: loop engine through PR12 Stage 4 completion isolation",
+  "refreshed_at": "2026-09-06T07:13:00+00:00",
+  "title": "Current: loop engine through PR12 recording isolation plus PR19 lane-visibility and full track-clear stabilization",
   "node_ids": [
     "finding-loop-d2-step-sequencer",
     "finding-loop-d1",
     "concept-area-loop",
     "concept-screen-21",
+    "concept-screen-22",
     "concept-screen-24",
     "finding-lane-ux-cleanup",
     "finding-lane-clip-window-audio",
@@ -14,7 +15,8 @@
     "checkpoint-pr12-stage2-loop-record",
     "checkpoint-pr12-stage3-persistence",
     "checkpoint-pr12-next-isolation",
-    "checkpoint-pr12-stage4-completion"
+    "checkpoint-pr12-stage4-completion",
+    "checkpoint-post-pr12-stabilization-result"
   ],
   "graph_version": 2
 }

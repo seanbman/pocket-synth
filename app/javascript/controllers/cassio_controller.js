@@ -3,12 +3,14 @@ import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
 import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
+import { installPostPr12StabilizationRuntime } from "cassio/post_pr12_stabilization_runtime"
 import { installProjectRuntime } from "cassio/project_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
 import { installSequenceVoiceGuardRuntime } from "cassio/sequence_voice_guard_runtime"
 import { installSequencerUxRuntime } from "cassio/sequencer_ux_runtime"
 import { installSettingsBridgeRuntime } from "cassio/settings_bridge_runtime"
 import { installSettingsRuntime } from "cassio/settings_runtime"
+import { showStartupFailure } from "cassio/startup_guard"
 import { installTrackNamingRuntime } from "cassio/track_naming_runtime"
 import { installTrackPatternRuntime } from "cassio/track_pattern_runtime"
 import {
@@ -48,6 +50,7 @@ export default class extends Controller {
       installSettingsRuntime(this.app)
       installSettingsBridgeRuntime(this.app)
       installInputFeedbackRuntime(this.app)
+      installPostPr12StabilizationRuntime(this.app)
 
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
@@ -76,7 +79,7 @@ export default class extends Controller {
         trace("error", "cassio.construct.failed", { error }, "error")
         void flushDebug()
       }
-      throw error
+      showStartupFailure(this.element, error)
     }
   }
 }

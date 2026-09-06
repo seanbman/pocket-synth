@@ -1,0 +1,14 @@
+{
+  "checkpoint_id": "checkpoint-post-pr12-stabilization-plan",
+  "refreshed_at": "2026-09-06T07:08:00+00:00",
+  "title": "Post-PR12 stabilization diagnosis: bootstrap exceptions have no user-facing fallback; LOOP clear removes PCM but leaves seq/pattern material; timeline restores vertical scroll but only auto-follows selected clips horizontally; DIM LEVEL persists but interaction wake returns the display to awake before preview; MARK GLITCH is always rendered in development/test",
+  "node_ids": [
+    "concept-screen-01",
+    "concept-screen-21",
+    "concept-screen-22",
+    "concept-screen-33",
+    "checkpoint-current-loop-engine",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
