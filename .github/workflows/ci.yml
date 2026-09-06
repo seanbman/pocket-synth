@@ -134,6 +134,18 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/loop_sequencer_discovery.mjs
 
+      - name: Verify PROJECT V1 save/open/import/export lifecycle
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/project_v1.mjs
+
+      - name: Verify unnamed PROJECT sessions cannot be replaced silently
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/project_unsaved_guard.mjs
+
       - name: Print Rails log on failure
         if: failure()
         run: cat /tmp/cassio-rails.log || true

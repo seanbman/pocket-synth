@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "checkpoint-current-project",
+  "refreshed_at": "2026-09-06T06:03:00+00:00",
+  "title": "Current: PROJECT V1 core verified including unnamed-session Save/Discard protection",
+  "node_ids": [
+    "concept-area-project",
+    "concept-screen-27",
+    "concept-screen-28",
+    "concept-persistence",
+    "checkpoint-project-v1-plan",
+    "checkpoint-project-v1-implementation",
+    "checkpoint-project-v1-verified"
+  ],
+  "graph_version": 2
+}
