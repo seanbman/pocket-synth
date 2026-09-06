@@ -77,8 +77,11 @@ try {
     app.project.loop ||= {}
     app.project.loop.countInBars = 1
     app.project.loop.quantize = '1/16'
-    app.loopEngine.setLengthBars(1)
-    app.loopEngine.applyDefaultLengthToEmpty(1)
+    app.project.loop.lengthBars = 1
+    app.loopEngine.lengthBars = 1
+    for (const track of app.loopEngine.tracks) {
+      if (!track.buffer) track.lengthBars = 1
+    }
     app.screen = 'loop-tracks'
     app.render()
     const rec = app.root.querySelector('[data-action="rec"]')
@@ -140,13 +143,11 @@ try {
     if (!recording.recordInputOnly) fail(`cycle ${cycle}: REC-from-stop was not input-only`)
     if (recording.seqRunning || recording.seqScheduled > 0) fail(`cycle ${cycle}: sequencer scheduled during input-only take`)
 
-    // Actual pad hardware pointer path.
     await pointerControl("pad-1")
     const afterPad = await state()
     if (!afterPad.loopRecording) fail(`cycle ${cycle}: recording stopped unexpectedly after pad hit`)
     else pass(`cycle ${cycle}: pad hit kept browser responsive`)
 
-    // Actual piano pointer path through the keyboard's pointer-capture handler.
     const keyPoint = setup.keyPoint
     await send("Input.dispatchMouseEvent", { type: "mousePressed", x: keyPoint.x, y: keyPoint.y, button: "left", clickCount: 1 })
     await sleep(90)
