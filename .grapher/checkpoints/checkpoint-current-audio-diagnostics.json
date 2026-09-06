@@ -1,13 +1,17 @@
 {
   "checkpoint_id": "checkpoint-current-audio-diagnostics",
-  "refreshed_at": "2026-09-05T02:35:00+00:00",
-  "title": "Current: audio transition diagnostics",
+  "refreshed_at": "2026-09-06T04:30:00+00:00",
+  "title": "Current: audio transition diagnostics through PR12 Stage 4 completion isolation",
   "node_ids": [
     "concept-sound-engine",
     "concept-screen-24",
     "concept-recording-behavior",
     "finding-loop-d2-step-sequencer",
-    "checkpoint-current-loop-engine"
+    "checkpoint-current-loop-engine",
+    "checkpoint-pr12-stage2-loop-record",
+    "checkpoint-pr12-stage3-persistence",
+    "checkpoint-pr12-next-isolation",
+    "checkpoint-pr12-stage4-completion"
   ],
   "graph_version": 2
 }

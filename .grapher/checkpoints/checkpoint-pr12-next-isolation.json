@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-pr12-next-isolation",
+  "refreshed_at": "2026-09-06T02:40:00+00:00",
+  "title": "PR12 next isolation: restore the remaining legacy naming/toast completion path separately; duplicate scheduling remains only a hypothesis, not an established root cause",
+  "node_ids": [
+    "concept-recording-behavior",
+    "finding-loop-d2-step-sequencer",
+    "checkpoint-current-loop-engine",
+    "checkpoint-pr12-stage3-persistence"
+  ],
+  "graph_version": 2
+}
