@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-project-audio-export",
+  "refreshed_at": "2026-09-06T09:20:00+00:00",
+  "title": "PROJECT song export implemented: active project renders one full arrangement through the post-limiter master to WAV, MP3, or M4A; metronome is excluded; .cassio remains the editable project bundle",
+  "node_ids": [
+    "concept-area-project",
+    "concept-screen-27",
+    "concept-persistence",
+    "checkpoint-project-v1-verified"
+  ],
+  "graph_version": 2
+}
