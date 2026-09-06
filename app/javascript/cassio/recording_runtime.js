@@ -9,6 +9,36 @@ function deferCompletion(fn) {
   setTimeout(fn, 0)
 }
 
+const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0))
+
+async function cacheStoredAudioCooperatively(track, chunkSamples = 16384) {
+  const buffer = track?.buffer
+  if (!buffer || track._storedFor === buffer) return
+
+  const channels = []
+  for (let c = 0; c < buffer.numberOfChannels; c++) {
+    const source = buffer.getChannelData(c)
+    const copy = new Float32Array(source.length)
+    for (let offset = 0; offset < source.length; offset += chunkSamples) {
+      const end = Math.min(source.length, offset + chunkSamples)
+      copy.set(source.subarray(offset, end), offset)
+      // Browser AudioBuffer -> TypedArray copies have shown multi-second stalls
+      // when performed as one large slice on constrained/headless Chromium.
+      // Bound each main-thread task and yield between chunks.
+      await yieldToBrowser()
+    }
+    channels.push(copy)
+  }
+
+  track._stored = {
+    sampleRate: buffer.sampleRate,
+    length: buffer.length,
+    numberOfChannels: buffer.numberOfChannels,
+    channels
+  }
+  track._storedFor = buffer
+}
+
 function resizeBuffer(ctx, buf, samples) {
   if (!buf) return null
   const n = Math.max(1, samples | 0)
@@ -48,10 +78,7 @@ function mixBuffers(ctx, base, pass) {
  * This runtime preserves the same capture semantics while splitting the work:
  * 1. endCapture() marks recording false and detaches the live callback immediately.
  * 2. the graph disconnect + AudioBuffer commit happens in a later task.
- * 3. the app completion callback runs only after the commit.
- *
- * The app already installs recording policy at runtime, so keeping the browser-
- * compatibility shim here avoids duplicating product behavior in CassioApp.
+ * 3. serialized PCM is copied cooperatively before the app/library save path.
  */
 function installNonBlockingLoopCapture(loopEngine) {
   const ctx = loopEngine?.engine?.ctx
@@ -64,9 +91,7 @@ function installNonBlockingLoopCapture(loopEngine) {
   let commitPending = false
 
   const commitCapture = (snapshot) => {
-    const {
-      track, proc, sink, recBus, data, target, replace, onDone
-    } = snapshot
+    const { track, proc, sink, recBus, data, target, replace, onDone } = snapshot
 
     try {
       proc?.disconnect()
@@ -94,6 +119,9 @@ function installNonBlockingLoopCapture(loopEngine) {
       track.buffer = resizeBuffer(ctx, track.buffer, len)
     }
     track.dirty = true
+    // Buffer identity changed: invalidate any previously cached serialized PCM.
+    track._stored = null
+    track._storedFor = null
     loopEngine.refreshGains?.()
     commitPending = false
     onDone?.(track)
@@ -114,9 +142,6 @@ function installNonBlockingLoopCapture(loopEngine) {
       onDone: loopEngine._onRecDone
     }
 
-    // The live callback must become inert before STOP returns. Do not disconnect
-    // the ScriptProcessor synchronously; Chromium can stall while its callback is
-    // being serviced. The later commit task owns graph teardown.
     if (snapshot.proc) snapshot.proc.onaudioprocess = null
     loopEngine._recProc = null
     loopEngine._recSink = null
@@ -189,19 +214,6 @@ function installNonBlockingLoopCapture(loopEngine) {
   return true
 }
 
-/**
- * Recording policy:
- *
- * - REC from stop runs the count-in/transport clock but does not start backing
- *   PCM or sequencer playback.
- * - PLAY then REC keeps backing playback audible for performance monitoring.
- * - Sequencer-generated notes never enter a record bus; only physical live
- *   keyboard/pad performances are captured.
- * - Completed takes are persisted by CassioApp. Fresh unnamed lanes hand off to
- *   the track naming runtime immediately after the take instead of silently
- *   accepting a generated/default track name.
- * - Loop capture teardown is two-phase so STOP remains responsive.
- */
 export function installRecordingRuntime(app) {
   if (!app || app._recordingRuntimeInstalled) return
   app._recordingRuntimeInstalled = true
@@ -213,9 +225,6 @@ export function installRecordingRuntime(app) {
 
   installNonBlockingLoopCapture(loopEngine)
 
-  // Every call through StepSequencer.trigger is generated playback, never live
-  // input. `false` is intentional: CassioApp's nullish fallback treats null as
-  // "use the active record track", while false explicitly disables the tap.
   const originalSeqTrigger = stepSeq.trigger
   stepSeq.trigger = (target, options = {}) => originalSeqTrigger?.(target, {
     ...options,
@@ -237,8 +246,6 @@ export function installRecordingRuntime(app) {
 
   const captureBeginRecord = loopEngine.beginRecord.bind(loopEngine)
   loopEngine.beginRecord = (trackId, options = {}) => {
-    // CassioApp sets playContext when PLAY was deliberately started. During a
-    // REC-from-stop count-in it is still null when beginRecord is called.
     const inputOnly = app.playContext == null
     app._recordInputOnly = inputOnly
     const originalDone = options.onDone
@@ -248,13 +255,17 @@ export function installRecordingRuntime(app) {
       onDone: (track) => {
         app._recordInputOnly = false
 
-        deferCompletion(() => {
+        deferCompletion(async () => {
           if (inputOnly) {
             loopEngine.stopPlayback()
             stepSeq.stop()
             transport.stop()
             app.playContext = null
           }
+
+          // Prime LoopEngine's identity cache without one giant AudioBuffer.slice.
+          // saveLaneToLibrary/serialize will then reuse this stored PCM directly.
+          await cacheStoredAudioCooperatively(track)
 
           const needsName = !!track?._needsNameAfterTake
           const originalToast = needsName ? app.toast : null
