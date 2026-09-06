@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
+import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installProjectRuntime } from "cassio/project_runtime"
 import { installRecordingRuntime } from "cassio/recording_runtime"
@@ -46,6 +47,7 @@ export default class extends Controller {
       installProjectRuntime(this.app)
       installSettingsRuntime(this.app)
       installSettingsBridgeRuntime(this.app)
+      installInputFeedbackRuntime(this.app)
 
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
