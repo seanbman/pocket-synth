@@ -39,7 +39,7 @@ export function renderProjects(state) {
 }
 
 export function renderProjectManage(state) {
-  const rows = ["SAVE AS…", "DUPLICATE", "EXPORT .CASSIO", "DELETE"]
+  const rows = ["SAVE AS…", "DUPLICATE", "EXPORT AUDIO", "EXPORT .CASSIO", "DELETE"]
   const list = rows.map((label, i) => `<div class="lib-row ${i === state.projectManageIndex ? "selected" : ""}">${label}</div>`).join("")
   return `
     <div class="lcd-screen project-manage-screen">
@@ -51,6 +51,29 @@ export function renderProjectManage(state) {
       </div>
       <div class="lcd-soft">
         <div></div><div></div><div></div><div><span class="sk">D</span> <span class="green">BACK</span></div>
+      </div>
+    </div>
+  `
+}
+
+export function renderProjectAudioExport(state) {
+  const formats = ["WAV", "MP3", "M4A"]
+  const list = formats.map((label, i) => `<div class="lib-row ${i === state.projectAudioFormatIndex ? "selected" : ""}><span>${label}</span><span class="muted">${i === 0 ? "LOSSLESS" : i === 1 ? "SHARE" : "AAC"}</span></div>`).join("")
+  const status = state.projectExportBusy ? "RENDERING MASTER…" : "FULL SONG · MASTER MIX"
+  return `
+    <div class="lcd-screen project-audio-export-screen">
+      <div class="lcd-status"><span class="pink">BPM ${state.bpm}</span><span class="status-mid">EXPORT SONG</span><span class="battery"></span></div>
+      <div class="lcd-macros"><span>${esc(state.selectedProjectName || "NO PROJECT")}</span><span>${status}</span><span>M3 VOLUME</span></div>
+      <div class="edit-body">
+        <div class="lib-list">${list}</div>
+        <div class="green">▲▼ FORMAT · OK EXPORT</div>
+        <div class="muted">METRONOME EXCLUDED · ONE FULL ARRANGEMENT</div>
+      </div>
+      <div class="lcd-soft">
+        <div><span class="sk">A</span> <span class="green">WAV</span></div>
+        <div><span class="sk">B</span> <span class="green">MP3</span></div>
+        <div><span class="sk">C</span> <span class="green">M4A</span></div>
+        <div><span class="sk">D</span> <span class="green">BACK</span></div>
       </div>
     </div>
   `
