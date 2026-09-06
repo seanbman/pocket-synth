@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "checkpoint-pr12-stage4-completion",
+  "refreshed_at": "2026-09-06T04:30:00+00:00",
+  "title": "PR12 Stage 4: full CassioApp completion callback restored after deferred record commit and cooperative PCM cache; CI #86 and three-cycle REC/count-in/live-input browser gate passed. Persistence alone and completion semantics alone did not reproduce the freeze; evidence supports synchronous completion/PCM work on the old audio-callback path as the failure mechanism, while duplicate scheduling remains unsupported.",
+  "node_ids": [
+    "concept-recording-behavior",
+    "concept-sound-engine",
+    "finding-loop-d2-step-sequencer",
+    "checkpoint-current-loop-engine",
+    "checkpoint-pr12-stage2-loop-record",
+    "checkpoint-pr12-stage3-persistence",
+    "checkpoint-pr12-next-isolation"
+  ],
+  "graph_version": 2
+}
