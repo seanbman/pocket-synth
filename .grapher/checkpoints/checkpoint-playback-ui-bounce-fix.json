@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-playback-ui-bounce-fix",
+  "refreshed_at": "2026-09-06T09:38:00+00:00",
+  "title": "Playback UI stability: transport beat ticks previously forced full LCD renders across the LOOP screen family and PLAY, causing visible track/menu bounce. Playback now keeps the LOOP timeline playhead and transport label current through in-place animation-frame updates while structural renders remain driven by navigation and state changes.",
+  "node_ids": [
+    "concept-screen-21",
+    "concept-global-behavior",
+    "finding-consult-grapher-before-changes"
+  ],
+  "graph_version": 2
+}
