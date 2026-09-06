@@ -228,6 +228,7 @@ export function installRecordingRuntime(app) {
   const captureBeginRecord = loopEngine.beginRecord.bind(loopEngine)
   loopEngine.beginRecord = (trackId, options = {}) => {
     const inputOnly = app.playContext == null
+    const legacyOnDone = options.onDone
     app._recordInputOnly = inputOnly
 
     const ok = captureBeginRecord(trackId, {
@@ -245,12 +246,17 @@ export function installRecordingRuntime(app) {
 
           await cacheStoredAudioCooperatively(track)
 
-          // Diagnostic stage 3: library save remains enabled and recovery
-          // persistence is restored. The legacy CassioApp completion callback
-          // (including naming/toast side effects) remains bypassed.
-          loopEngine.saveLaneToLibrary(track?.id || trackId)
-          app.persistLoop?.()
-          app.render?.()
+          // Diagnostic stage 4: restore the original CassioApp completion path
+          // only after the record commit is off the audio callback and PCM has
+          // been cooperatively cached. This preserves naming/toast/transport
+          // semantics without reintroducing synchronous multi-megabyte copying.
+          if (typeof legacyOnDone === "function") {
+            legacyOnDone(track)
+          } else {
+            loopEngine.saveLaneToLibrary(track?.id || trackId)
+            app.persistLoop?.()
+            app.render?.()
+          }
         })
       }
     })
