@@ -1,0 +1,16 @@
+{
+  "checkpoint_id": "checkpoint-settings-v1-implementation",
+  "refreshed_at": "2026-09-06T06:17:00+00:00",
+  "title": "SETTINGS V1 implementation: global master EQ/limiter, metronome/count-in/click sound, visual dim/sleep, storage persistence status, microphone permission/test, diagnostics, and eight persistent chassis themes; PLAY metronome controls bridge into the global settings store",
+  "node_ids": [
+    "concept-area-settings",
+    "concept-screen-30",
+    "concept-screen-31",
+    "concept-screen-32",
+    "concept-screen-33",
+    "concept-screen-34",
+    "concept-screen-35",
+    "checkpoint-settings-v1-plan"
+  ],
+  "graph_version": 2
+}

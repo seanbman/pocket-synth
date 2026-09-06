@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "checkpoint-current-settings",
+  "refreshed_at": "2026-09-06T06:22:00+00:00",
+  "title": "Current: SETTINGS V1 core verified with global persistence and persistent chassis color customization",
+  "node_ids": [
+    "concept-area-settings",
+    "concept-screen-30",
+    "concept-screen-31",
+    "concept-screen-32",
+    "concept-screen-33",
+    "concept-screen-34",
+    "concept-screen-35",
+    "checkpoint-settings-v1-plan",
+    "checkpoint-settings-v1-implementation",
+    "checkpoint-settings-v1-verified"
+  ],
+  "graph_version": 2
+}
