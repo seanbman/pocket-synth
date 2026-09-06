@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-loop-sequencer-discoverability",
+  "refreshed_at": "2026-09-06T04:50:00+00:00",
+  "title": "User-testing follow-up #3: expose the existing pattern sequencer path directly inside LOOP without changing the six-area information architecture",
+  "node_ids": [
+    "problem-sequencer-discoverability-20260905",
+    "task-repair-portrait-menu-loop-discovery-20260905",
+    "image-p29-screen-24-step-sequencer-a047895360",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
