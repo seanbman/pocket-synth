@@ -1,0 +1,81 @@
+/* Input-state feedback layered on top of the established CASSIO hardware skin. */
+
+.hw-btn,
+.pad,
+.key {
+  touch-action: manipulation;
+}
+
+.hw-btn.feedback-pressed {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #000, inset 0 0 0 1px var(--pink), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.hw-btn.soft.feedback-latched {
+  color: var(--green);
+  background: #101b10;
+  box-shadow: 0 2px 0 #000, inset 0 0 0 2px var(--green), 0 0 8px rgba(57,255,20,0.35);
+}
+
+.pad.active,
+.pad.feedback-pressed,
+.pad:active {
+  background: #262026;
+  color: var(--pink);
+  transform: translateY(1px) scale(0.985);
+  box-shadow:
+    inset 0 0 0 2px var(--pink),
+    inset 0 0 12px rgba(255,46,126,0.18),
+    0 0 9px rgba(255,46,126,0.26);
+}
+
+.pad.active::before,
+.pad.feedback-pressed::before {
+  background: var(--pink);
+  box-shadow: 0 0 8px var(--pink);
+}
+
+.key.white.active,
+.key.white.feedback-pressed,
+.key.white:active {
+  background: #e9dfe3;
+  box-shadow: inset 0 0 0 2px var(--pink), 0 1px 0 #aaa;
+}
+
+.key.black.active,
+.key.black.feedback-pressed,
+.key.black:active {
+  background: #50303d;
+  box-shadow: inset 0 0 0 2px var(--pink), 0 0 7px rgba(255,46,126,0.25);
+}
+
+.hold-state.on {
+  color: var(--green);
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(57,255,20,0.42);
+}
+
+.bpm-readout.feedback-pulse,
+.lcd-status .feedback-pulse {
+  animation: cassio-bpm-feedback 0.72s steps(2, end);
+}
+
+@keyframes cassio-bpm-feedback {
+  0%, 100% {
+    color: var(--pink);
+    text-shadow: none;
+  }
+  35%, 70% {
+    color: var(--green);
+    text-shadow: 0 0 8px rgba(57,255,20,0.65);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bpm-readout.feedback-pulse,
+  .lcd-status .feedback-pulse {
+    animation: none;
+    color: var(--green);
+    text-shadow: 0 0 6px rgba(57,255,20,0.45);
+  }
+}

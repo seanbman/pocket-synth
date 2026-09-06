@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-input-feedback-mobile-polish-plan",
+  "refreshed_at": "2026-09-06T06:30:00+00:00",
+  "title": "Input feedback investigation: pad/key active state exists but is low-contrast; HOLD ON is rendered muted; TAP already emits a 1.6s tempo overlay, so remediation should strengthen feedback and stuck-state cleanup without redesigning controls",
+  "node_ids": [
+    "task-verify-input-feedback-mobile-polish-20260905",
+    "observation-grok-user-testing-20260905",
+    "finding-hold-toggle-sticky-pitch",
+    "finding-hold-sample-loop",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
