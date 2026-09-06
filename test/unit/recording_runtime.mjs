@@ -63,7 +63,7 @@ function makeApp({ playContext = null } = {}) {
 }
 
 // REC from stop is input-only: backing starts requested by CassioApp are suppressed.
-// The heavier Cassio completion callback must not execute in the audio teardown task.
+// Nothing except the runtime flag may run synchronously in LoopEngine's done callback.
 {
   const { app, calls, finish } = makeApp({ playContext: null })
   assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
@@ -74,15 +74,20 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.seqStarts, 0)
 
   finish()
-  assert.equal(calls.done, 0, "completion work must be deferred off record teardown")
-  assert.equal(calls.transportStops, 1)
-  assert.equal(calls.loopStops, 1)
-  assert.equal(calls.seqStops, 1)
   assert.equal(app._recordInputOnly, false)
+  assert.equal(calls.done, 0)
+  assert.equal(calls.transportStops, 0)
+  assert.equal(calls.loopStops, 0)
+  assert.equal(calls.seqStops, 0)
+  assert.equal(calls.renders, 0)
 
   await nextTask()
   await Promise.resolve()
   assert.equal(calls.done, 1)
+  assert.equal(calls.transportStops, 1)
+  assert.equal(calls.loopStops, 1)
+  assert.equal(calls.seqStops, 1)
+  assert.ok(calls.renders >= 1)
   assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
 }
 
@@ -97,14 +102,16 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.seqStarts, 1)
 
   finish()
-  assert.equal(calls.done, 0, "completion work must be deferred off record teardown")
+  assert.equal(calls.done, 0)
   assert.equal(calls.transportStops, 0)
-  assert.equal(app._recordInputOnly, false)
+  assert.equal(calls.renders, 0)
 
   await nextTask()
   await Promise.resolve()
   assert.equal(calls.done, 1)
+  assert.equal(calls.transportStops, 0)
+  assert.ok(calls.renders >= 1)
   assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
 }
 
-console.log("PASS: recording runtime isolates live input and defers completion off audio teardown")
+console.log("PASS: recording runtime isolates live input and defers all completion side effects")
