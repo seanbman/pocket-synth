@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "checkpoint-post-pr12-stabilization-result",
+  "refreshed_at": "2026-09-06T07:13:00+00:00",
+  "title": "PR19 post-PR12 stabilization verified by CI #127: cold/start boot remains dark and has an explicit startup-error fallback; selected LOOP lanes remain visible through real vertical overflow; Clear removes PCM plus per-track sequence and dropped pattern while retaining library assignment; DIM LEVEL previews its persisted dim value; MARK GLITCH is hidden unless persisted Developer Mode is enabled; favicon/PWA assets now use the pocket-synth hardware mark; existing responsive, LOOP record, sequencer, PROJECT, SETTINGS, input-feedback, security, unit and lint gates remain green",
+  "node_ids": [
+    "checkpoint-post-pr12-stabilization-plan",
+    "concept-screen-01",
+    "concept-screen-21",
+    "concept-screen-22",
+    "concept-screen-33",
+    "checkpoint-current-loop-engine",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
