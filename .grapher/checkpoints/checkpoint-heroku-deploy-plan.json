@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-heroku-deploy-plan",
+  "refreshed_at": "2026-09-06T22:00:00-06:00",
+  "title": "Heroku deployment plan: run CASSIO as a single Rails/Puma web dyno, keep browser-owned project/sound persistence unchanged, avoid Solid Queue/Cache/Cable multi-database assumptions in production, use ephemeral SQLite only for the currently unused Active Record surface, and verify production asset precompile plus /up health boot in CI",
+  "node_ids": [
+    "checkpoint-current-ui-controls",
+    "checkpoint-current-loop-engine",
+    "concept-screen-01"
+  ],
+  "graph_version": 2
+}

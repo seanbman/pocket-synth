@@ -1,0 +1,38 @@
+name: Heroku production smoke
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  production_boot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      RAILS_ENV: production
+      RACK_ENV: production
+      SECRET_KEY_BASE: heroku-smoke-secret-key-base
+      PORT: 3001
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Precompile production assets
+        run: bin/rails assets:precompile
+
+      - name: Boot production Puma and check health
+        run: |
+          bundle exec puma -C config/puma.rb > /tmp/cassio-heroku.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:${PORT}/up >/dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat /tmp/cassio-heroku.log
+          exit 1
