@@ -2,6 +2,8 @@
 import assert from "node:assert/strict"
 import { installRecordingRuntime } from "../../app/javascript/cassio/recording_runtime.js"
 
+const nextTask = () => new Promise((resolve) => setTimeout(resolve, 0))
+
 function makeApp({ playContext = null } = {}) {
   const calls = {
     seqTriggers: [],
@@ -11,6 +13,7 @@ function makeApp({ playContext = null } = {}) {
     seqStops: 0,
     transportStops: 0,
     renders: 0,
+    done: 0,
     toasts: []
   }
   let done = null
@@ -60,9 +63,10 @@ function makeApp({ playContext = null } = {}) {
 }
 
 // REC from stop is input-only: backing starts requested by CassioApp are suppressed.
+// The heavier Cassio completion callback must not execute in the audio teardown task.
 {
   const { app, calls, finish } = makeApp({ playContext: null })
-  assert.equal(app.loopEngine.beginRecord(2, { onDone() {} }), true)
+  assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
   assert.equal(app._recordInputOnly, true)
   app.loopEngine.startPlayback(1)
   app.stepSeq.start(1, { mode: "arrangement" })
@@ -70,18 +74,22 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.seqStarts, 0)
 
   finish()
-  await Promise.resolve()
+  assert.equal(calls.done, 0, "completion work must be deferred off record teardown")
   assert.equal(calls.transportStops, 1)
   assert.equal(calls.loopStops, 1)
   assert.equal(calls.seqStops, 1)
   assert.equal(app._recordInputOnly, false)
+
+  await nextTask()
+  await Promise.resolve()
+  assert.equal(calls.done, 1)
   assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
 }
 
 // PLAY then REC keeps backing audible, but sequencer notes still remain record-isolated.
 {
   const { app, calls, finish } = makeApp({ playContext: "loop" })
-  assert.equal(app.loopEngine.beginRecord(2, { onDone() {} }), true)
+  assert.equal(app.loopEngine.beginRecord(2, { onDone() { calls.done++ } }), true)
   assert.equal(app._recordInputOnly, false)
   app.loopEngine.startPlayback(1)
   app.stepSeq.start(1, { mode: "arrangement" })
@@ -89,10 +97,14 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.seqStarts, 1)
 
   finish()
-  await Promise.resolve()
+  assert.equal(calls.done, 0, "completion work must be deferred off record teardown")
   assert.equal(calls.transportStops, 0)
   assert.equal(app._recordInputOnly, false)
+
+  await nextTask()
+  await Promise.resolve()
+  assert.equal(calls.done, 1)
   assert.match(calls.toasts.at(-1), /^TRACK SAVED · PIANO TAKE$/)
 }
 
-console.log("PASS: recording runtime isolates live input and preserves optional monitoring")
+console.log("PASS: recording runtime isolates live input and defers completion off audio teardown")
