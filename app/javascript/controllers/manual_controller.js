@@ -5,12 +5,13 @@ export default class extends Controller {
 
   connect() {
     this.previousFocus = null
-    this.handleKeydown = this.handleKeydown.bind(this)
-    window.addEventListener("keydown", this.handleKeydown)
+    this.trigger = this.element.querySelector("[data-manual-trigger]")
+    this.boundOpen = () => this.open()
+    this.trigger?.addEventListener("click", this.boundOpen)
   }
 
   disconnect() {
-    window.removeEventListener("keydown", this.handleKeydown)
+    this.trigger?.removeEventListener("click", this.boundOpen)
   }
 
   open() {
@@ -31,8 +32,9 @@ export default class extends Controller {
     if (event.target === this.dialogTarget) this.close()
   }
 
-  handleKeydown(event) {
-    if (this.dialogTarget.hidden) return
+  keydown(event) {
+    // Keep manual typing/navigation from reaching CASSIO's global performance keys.
+    event.stopPropagation()
     if (event.key === "Escape") {
       event.preventDefault()
       this.close()
@@ -42,6 +44,10 @@ export default class extends Controller {
       event.preventDefault()
       this.searchTarget.focus()
     }
+  }
+
+  keyup(event) {
+    event.stopPropagation()
   }
 
   search() {
