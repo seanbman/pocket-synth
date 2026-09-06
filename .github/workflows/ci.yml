@@ -93,7 +93,7 @@ jobs:
 
   browser_responsive_layout:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -145,6 +145,12 @@ jobs:
           CASSIO_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/project_unsaved_guard.mjs
+
+      - name: Verify SETTINGS V1 controls, chassis color, and reload persistence
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/settings_v1.mjs
 
       - name: Print Rails log on failure
         if: failure()
