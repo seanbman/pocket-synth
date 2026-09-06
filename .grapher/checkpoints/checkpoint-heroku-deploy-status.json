@@ -1,0 +1,10 @@
+{
+  "checkpoint_id": "checkpoint-heroku-deploy-status",
+  "refreshed_at": "2026-09-06T22:00:00-06:00",
+  "title": "Heroku deployment branch assembled; production smoke CI is the remaining verification gate before merge.",
+  "node_ids": [
+    "checkpoint-heroku-deploy-plan",
+    "checkpoint-heroku-deploy-result"
+  ],
+  "graph_version": 2
+}
