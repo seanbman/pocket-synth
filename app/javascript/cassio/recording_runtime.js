@@ -245,10 +245,11 @@ export function installRecordingRuntime(app) {
 
           await cacheStoredAudioCooperatively(track)
 
-          // Diagnostic stage 2: the browser survived three cycles with the old
-          // CassioApp completion callback removed. Re-introduce only the library
-          // save here; persistence and the old callback remain bypassed.
+          // Diagnostic stage 3: library save remains enabled and recovery
+          // persistence is restored. The legacy CassioApp completion callback
+          // (including naming/toast side effects) remains bypassed.
           loopEngine.saveLaneToLibrary(track?.id || trackId)
+          app.persistLoop?.()
           app.render?.()
         })
       }
