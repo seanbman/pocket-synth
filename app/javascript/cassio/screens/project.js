@@ -39,7 +39,7 @@ export function renderProjects(state) {
 }
 
 export function renderProjectManage(state) {
-  const rows = ["SAVE AS…", "DUPLICATE", "EXPORT AUDIO", "EXPORT .CASSIO", "DELETE"]
+  const rows = ["SAVE AS…", "DUPLICATE", "EXPORT AUDIO", "DELETE"]
   const list = rows.map((label, i) => `<div class="lib-row ${i === state.projectManageIndex ? "selected" : ""}">${label}</div>`).join("")
   return `
     <div class="lcd-screen project-manage-screen">
@@ -47,10 +47,10 @@ export function renderProjectManage(state) {
       <div class="lcd-macros"><span>${esc(state.selectedProjectName || "NO PROJECT")}</span><span></span><span>M3 VOLUME</span></div>
       <div class="edit-body">
         <div class="lib-list">${list}</div>
-        <div class="muted">▲▼ ROW · OK · D BACK</div>
+        <div class="muted">▲▼ ROW · OK · C PROJECT FILE · D BACK</div>
       </div>
       <div class="lcd-soft">
-        <div></div><div></div><div></div><div><span class="sk">D</span> <span class="green">BACK</span></div>
+        <div></div><div></div><div><span class="sk">C</span> <span class="green">EXPORT .CASSIO</span></div><div><span class="sk">D</span> <span class="green">BACK</span></div>
       </div>
     </div>
   `
