@@ -5,6 +5,7 @@ export class Metronome {
     this.on = true
     this.level = 0.7
     this.accent = true
+    this.sound = "block"
   }
 
   setOn(v) {
@@ -17,6 +18,10 @@ export class Metronome {
 
   setAccent(v) {
     this.accent = !!v
+  }
+
+  setSound(value) {
+    this.sound = ["block", "tick", "soft"].includes(value) ? value : "block"
   }
 
   /** Fire a click; accent = bar beat 1. Respects metro on/off. */
@@ -37,18 +42,26 @@ export class Metronome {
     const ctx = this.engine.ctx
     const master = this.engine.master
     if (!ctx || !master) return
+
+    const profile = {
+      block: { type: "square", normal: 880, accent: 1350, peak: 0.14, accentPeak: 0.28, duration: 0.045, accentDuration: 0.07 },
+      tick: { type: "triangle", normal: 1250, accent: 1750, peak: 0.1, accentPeak: 0.2, duration: 0.028, accentDuration: 0.045 },
+      soft: { type: "sine", normal: 720, accent: 1040, peak: 0.085, accentPeak: 0.15, duration: 0.06, accentDuration: 0.085 }
+    }[this.sound] || null
+
     const osc = ctx.createOscillator()
     const g = ctx.createGain()
-    osc.type = "square"
-    osc.frequency.value = accent ? 1350 : 880
-    const peak = lvl * (accent ? 0.28 : 0.14)
+    osc.type = profile?.type || "square"
+    osc.frequency.value = accent ? (profile?.accent || 1350) : (profile?.normal || 880)
+    const peak = lvl * (accent ? (profile?.accentPeak || 0.28) : (profile?.peak || 0.14))
+    const duration = accent ? (profile?.accentDuration || 0.07) : (profile?.duration || 0.045)
     const t = ctx.currentTime
     g.gain.setValueAtTime(0.0001, t)
     g.gain.exponentialRampToValueAtTime(peak, t + 0.0015)
-    g.gain.exponentialRampToValueAtTime(0.0001, t + (accent ? 0.07 : 0.045))
+    g.gain.exponentialRampToValueAtTime(0.0001, t + duration)
     osc.connect(g)
     g.connect(master)
     osc.start(t)
-    osc.stop(t + 0.09)
+    osc.stop(t + duration + 0.02)
   }
 }
