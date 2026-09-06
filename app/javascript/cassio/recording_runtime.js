@@ -4,9 +4,8 @@ function hasInputOnlyTake(app) {
 
 function deferCompletion(fn) {
   // ScriptProcessor callbacks and transport STOP both run on the main thread.
-  // Saving PCM, persisting recovery state and re-rendering from inside that
-  // teardown stack can starve input/audio work (and was observed hanging the
-  // browser during LOOP recording). Always unwind the record callback first.
+  // Never perform transport graph changes, rendering, PCM persistence or naming
+  // from inside LoopEngine's record-finalization callback.
   setTimeout(fn, 0)
 }
 
@@ -21,8 +20,8 @@ function deferCompletion(fn) {
  * - Completed takes are persisted by CassioApp. Fresh unnamed lanes hand off to
  *   the track naming runtime immediately after the take instead of silently
  *   accepting a generated/default track name.
- * - Completion/save UI is deferred one task so audio/STOP teardown can unwind
- *   before PCM serialization, recovery persistence or DOM replacement begins.
+ * - ALL completion side effects are deferred one task so LoopEngine can fully
+ *   unwind its ScriptProcessor/STOP finalization before touching transport/UI.
  */
 export function installRecordingRuntime(app) {
   if (!app || app._recordingRuntimeInstalled) return
@@ -66,18 +65,18 @@ export function installRecordingRuntime(app) {
     const ok = originalBeginRecord(trackId, {
       ...options,
       onDone: (track) => {
-        // Stop the input-only transport immediately, but do not invoke Cassio's
-        // heavier save/persist/render callback until this audio teardown returns.
-        if (inputOnly) {
-          loopEngine.stopPlayback()
-          stepSeq.stop()
-          transport.stop()
-          app.playContext = null
-        }
+        // Keep LoopEngine's callback intentionally tiny. In particular, do not
+        // render or touch the Web Audio graph while #finishRecord is unwinding.
         app._recordInputOnly = false
-        app.render?.()
 
         deferCompletion(() => {
+          if (inputOnly) {
+            loopEngine.stopPlayback()
+            stepSeq.stop()
+            transport.stop()
+            app.playContext = null
+          }
+
           const needsName = !!track?._needsNameAfterTake
           const originalToast = needsName ? app.toast : null
           if (needsName && originalToast) app.toast = () => {}
