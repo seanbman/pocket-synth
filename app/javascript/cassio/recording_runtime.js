@@ -2,6 +2,14 @@ function hasInputOnlyTake(app) {
   return app?._recordInputOnly === true
 }
 
+function deferCompletion(fn) {
+  // ScriptProcessor callbacks and transport STOP both run on the main thread.
+  // Saving PCM, persisting recovery state and re-rendering from inside that
+  // teardown stack can starve input/audio work (and was observed hanging the
+  // browser during LOOP recording). Always unwind the record callback first.
+  setTimeout(fn, 0)
+}
+
 /**
  * Recording policy:
  *
@@ -13,6 +21,8 @@ function hasInputOnlyTake(app) {
  * - Completed takes are persisted by CassioApp. Fresh unnamed lanes hand off to
  *   the track naming runtime immediately after the take instead of silently
  *   accepting a generated/default track name.
+ * - Completion/save UI is deferred one task so audio/STOP teardown can unwind
+ *   before PCM serialization, recovery persistence or DOM replacement begins.
  */
 export function installRecordingRuntime(app) {
   if (!app || app._recordingRuntimeInstalled) return
@@ -56,34 +66,37 @@ export function installRecordingRuntime(app) {
     const ok = originalBeginRecord(trackId, {
       ...options,
       onDone: (track) => {
-        const needsName = !!track?._needsNameAfterTake
-        const originalToast = needsName ? app.toast : null
-        if (needsName && originalToast) app.toast = () => {}
-
-        try {
-          originalDone?.(track)
-        } finally {
-          if (needsName && originalToast) app.toast = originalToast
-          if (inputOnly) {
-            // The original completion callback may request backing playback
-            // because the count-in transport is technically still running.
-            // startPlayback is suppressed above; now stop that clock cleanly.
-            loopEngine.stopPlayback()
-            stepSeq.stop()
-            transport.stop()
-            app.playContext = null
-          }
-          app._recordInputOnly = false
-          app.render?.()
-          queueMicrotask(() => {
-            if (needsName && app.renameTrack) {
-              app.renameTrack(track?.id || trackId, { afterTake: true })
-              return
-            }
-            const name = String(track?.name || `TRK ${track?.id || trackId}`).slice(0, 18)
-            app.toast?.(`TRACK SAVED · ${name}`)
-          })
+        // Stop the input-only transport immediately, but do not invoke Cassio's
+        // heavier save/persist/render callback until this audio teardown returns.
+        if (inputOnly) {
+          loopEngine.stopPlayback()
+          stepSeq.stop()
+          transport.stop()
+          app.playContext = null
         }
+        app._recordInputOnly = false
+        app.render?.()
+
+        deferCompletion(() => {
+          const needsName = !!track?._needsNameAfterTake
+          const originalToast = needsName ? app.toast : null
+          if (needsName && originalToast) app.toast = () => {}
+
+          try {
+            originalDone?.(track)
+          } finally {
+            if (needsName && originalToast) app.toast = originalToast
+            app.render?.()
+            queueMicrotask(() => {
+              if (needsName && app.renameTrack) {
+                app.renameTrack(track?.id || trackId, { afterTake: true })
+                return
+              }
+              const name = String(track?.name || `TRK ${track?.id || trackId}`).slice(0, 18)
+              app.toast?.(`TRACK SAVED · ${name}`)
+            })
+          }
+        })
       }
     })
 
