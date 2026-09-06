@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-pr12-stage3-persistence",
+  "refreshed_at": "2026-09-06T02:40:00+00:00",
+  "title": "PR12 Stage 3: recovery persistence restored after cooperative PCM caching; three-cycle REC/live-input browser gate and CI #79 passed; persistence alone did not reproduce the freeze",
+  "node_ids": [
+    "concept-recording-behavior",
+    "concept-sound-engine",
+    "finding-loop-d2-step-sequencer",
+    "checkpoint-current-loop-engine",
+    "checkpoint-pr12-stage2-loop-record"
+  ],
+  "graph_version": 2
+}
