@@ -1,6 +1,6 @@
 <% content_for :title, "CASSIO" %>
 
-<div class="cassio-stage" data-controller="cassio manual">
+<div class="cassio-stage" data-controller="cassio">
   <div class="portrait-gate" data-portrait-gate hidden>
     <div class="portrait-gate-inner">
       <div class="boot-title">CASSIO</div>
@@ -18,7 +18,7 @@
         </div>
         <div class="brand-sub">POCKET SYNTH / SAMPLER</div>
       </div>
-      <button type="button" class="manual-trigger" data-action="manual#open" aria-haspopup="dialog" aria-controls="cassio-manual-title">MANUAL</button>
+      <button type="button" class="manual-trigger" data-manual-trigger aria-haspopup="dialog">MANUAL</button>
     </header>
 
     <div class="top-row">
@@ -118,9 +118,9 @@
       </div>
     </div>
   </div>
-
-  <%= render "manual" %>
 </div>
+
+<%= render "manual" %>
 
 <% if Rails.env.development? || Rails.env.test? %>
   <button
