@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "checkpoint-settings-v1-plan",
+  "refreshed_at": "2026-09-06T06:17:00+00:00",
+  "title": "SETTINGS V1 plan: replace the dead end with Audio, Metronome, Display, Storage, Permissions, and About; persist system preferences independently of projects; add user-requested chassis color selection under Display",
+  "node_ids": [
+    "concept-area-settings",
+    "concept-screen-30",
+    "concept-screen-31",
+    "concept-screen-32",
+    "concept-screen-33",
+    "concept-screen-34",
+    "concept-screen-35"
+  ],
+  "graph_version": 2
+}
