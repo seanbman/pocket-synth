@@ -3,9 +3,6 @@ function hasInputOnlyTake(app) {
 }
 
 function deferCompletion(fn) {
-  // ScriptProcessor callbacks and transport STOP both run on the main thread.
-  // Never perform transport graph changes, rendering, PCM persistence or naming
-  // from inside the input/audio teardown stack.
   setTimeout(fn, 0)
 }
 
@@ -22,9 +19,6 @@ async function cacheStoredAudioCooperatively(track, chunkSamples = 16384) {
     for (let offset = 0; offset < source.length; offset += chunkSamples) {
       const end = Math.min(source.length, offset + chunkSamples)
       copy.set(source.subarray(offset, end), offset)
-      // Browser AudioBuffer -> TypedArray copies have shown multi-second stalls
-      // when performed as one large slice on constrained/headless Chromium.
-      // Bound each main-thread task and yield between chunks.
       await yieldToBrowser()
     }
     channels.push(copy)
@@ -68,18 +62,6 @@ function mixBuffers(ctx, base, pass) {
   return out
 }
 
-/**
- * Installs a non-blocking record capture path on LoopEngine.
- *
- * The original LoopEngine finalizes synchronously from STOP/onaudioprocess:
- * disconnect ScriptProcessor -> create/copy/mix AudioBuffers -> refresh graph ->
- * callback. On mobile/headless Chrome this can lock the client event loop.
- *
- * This runtime preserves the same capture semantics while splitting the work:
- * 1. endCapture() marks recording false and detaches the live callback immediately.
- * 2. the graph disconnect + AudioBuffer commit happens in a later task.
- * 3. serialized PCM is copied cooperatively before the app/library save path.
- */
 function installNonBlockingLoopCapture(loopEngine) {
   const ctx = loopEngine?.engine?.ctx
   const engine = loopEngine?.engine
@@ -97,7 +79,7 @@ function installNonBlockingLoopCapture(loopEngine) {
       proc?.disconnect()
       if (proc && recBus) recBus.disconnect(proc)
       sink?.disconnect()
-    } catch (_) { /* already detached or browser-specific graph state */ }
+    } catch (_) { /* already detached */ }
 
     if (!track || !data) {
       commitPending = false
@@ -119,7 +101,6 @@ function installNonBlockingLoopCapture(loopEngine) {
       track.buffer = resizeBuffer(ctx, track.buffer, len)
     }
     track.dirty = true
-    // Buffer identity changed: invalidate any previously cached serialized PCM.
     track._stored = null
     track._storedFor = null
     loopEngine.refreshGains?.()
@@ -248,7 +229,6 @@ export function installRecordingRuntime(app) {
   loopEngine.beginRecord = (trackId, options = {}) => {
     const inputOnly = app.playContext == null
     app._recordInputOnly = inputOnly
-    const originalDone = options.onDone
 
     const ok = captureBeginRecord(trackId, {
       ...options,
@@ -263,28 +243,13 @@ export function installRecordingRuntime(app) {
             app.playContext = null
           }
 
-          // Prime LoopEngine's identity cache without one giant AudioBuffer.slice.
-          // saveLaneToLibrary/serialize will then reuse this stored PCM directly.
           await cacheStoredAudioCooperatively(track)
 
-          const needsName = !!track?._needsNameAfterTake
-          const originalToast = needsName ? app.toast : null
-          if (needsName && originalToast) app.toast = () => {}
-
-          try {
-            originalDone?.(track)
-          } finally {
-            if (needsName && originalToast) app.toast = originalToast
-            app.render?.()
-            queueMicrotask(() => {
-              if (needsName && app.renameTrack) {
-                app.renameTrack(track?.id || trackId, { afterTake: true })
-                return
-              }
-              const name = String(track?.name || `TRK ${track?.id || trackId}`).slice(0, 18)
-              app.toast?.(`TRACK SAVED · ${name}`)
-            })
-          }
+          // Diagnostic isolation: intentionally skip CassioApp's original
+          // completion callback (saveLaneToLibrary -> #persist -> render).
+          // If the 3-cycle browser gate passes, the remaining freeze is inside
+          // that post-record completion path rather than capture/PCM commit.
+          app.render?.()
         })
       }
     })
