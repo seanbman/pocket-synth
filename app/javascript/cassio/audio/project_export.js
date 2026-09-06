@@ -64,6 +64,7 @@ export async function captureProjectMaster(app) {
 
   let written = 0
   let settled = false
+  let completionQueued = false
   let timeoutId = null
   let resolveCapture
   let rejectCapture
@@ -90,6 +91,13 @@ export async function captureProjectMaster(app) {
     else resolveCapture(makeStereoBuffer(ctx, left, right, sampleRate))
   }
 
+  const queueFinish = (error = null) => {
+    if (completionQueued || settled) return
+    completionQueued = true
+    processor.onaudioprocess = null
+    setTimeout(() => finish(error), 0)
+  }
+
   const metroWasOn = !!app.metro?.on
   if (app.metro) app.metro.on = false
   silenceLiveVoices(app)
@@ -98,7 +106,7 @@ export async function captureProjectMaster(app) {
 
   const origin = ctx.currentTime + 0.08
   processor.onaudioprocess = (event) => {
-    if (settled) return
+    if (settled || completionQueued) return
     const input = event.inputBuffer
     const l = input.getChannelData(0)
     const r = input.numberOfChannels > 1 ? input.getChannelData(1) : l
@@ -111,7 +119,7 @@ export async function captureProjectMaster(app) {
       right[written] = r[i]
       written++
     }
-    if (written >= target) finish()
+    if (written >= target) queueFinish()
   }
 
   source.connect(processor)
@@ -120,7 +128,7 @@ export async function captureProjectMaster(app) {
 
   if (!transport.playAt(origin)) {
     if (app.metro) app.metro.on = metroWasOn
-    finish(new Error("TRANSPORT NOT READY"))
+    queueFinish(new Error("TRANSPORT NOT READY"))
     return capture
   }
   app.playContext = "loop"
@@ -128,7 +136,7 @@ export async function captureProjectMaster(app) {
   stepSeq.start(origin, { mode: "arrangement" })
 
   timeoutId = setTimeout(() => {
-    finish(new Error("EXPORT CAPTURE TIMED OUT"))
+    queueFinish(new Error("EXPORT CAPTURE TIMED OUT"))
   }, Math.ceil((durationSec + 5) * 1000))
 
   try {
