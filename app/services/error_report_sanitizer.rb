@@ -83,7 +83,7 @@ class ErrorReportSanitizer
 
       keys.to_h do |key|
         number = Float(value[key], exception: false)
-        [key, number&.finite? ? number : nil]
+        [ key, number&.finite? ? number : nil ]
       end.compact
     end
 
