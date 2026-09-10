@@ -2,7 +2,7 @@
   "name": "cassio-pocket-synth",
   "private": true,
   "engines": {
-    "node": "24.x"
+    "node": "24.13.0"
   },
   "scripts": {
     "build": "node scripts/build-js.mjs",
