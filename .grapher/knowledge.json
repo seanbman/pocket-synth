@@ -5253,6 +5253,39 @@
         "integrity": "declared",
         "recorded_at": "2026-09-05T09:12:35+00:00"
       }
+    },
+    "finding-browser-capability-error-reporting": {
+      "id": "finding-browser-capability-error-reporting",
+      "type": "finding",
+      "title": "Capability-driven browser admission and client error outbox",
+      "content": "Removed the Rails modern-browser version gate so CASSIO can attempt to run on older Safari instead of returning 406 before startup. Added lightweight always-on runtime/startup error capture with sanitized browser capability metadata, a bounded diagnostics-only IndexedDB outbox with localStorage fallback, retry/ack delivery to POST /error_reports, server-side re-sanitization/rate limiting, and structured cassio_client_error logging. Deep audio tracing remains opt-in so normal phone performance is not burdened. GitHub issue deduplication/forwarding remains a planned server-side increment.",
+      "path": null,
+      "tags": [
+        "cassio",
+        "browser",
+        "ios",
+        "errors",
+        "diagnostics",
+        "offline"
+      ],
+      "meta": {},
+      "created_at": "2026-09-10T03:12:28+00:00",
+      "updated_at": "2026-09-10T03:12:28+00:00",
+      "stage": "maintaining",
+      "status": "current",
+      "workflow_state": "not_applicable",
+      "verification": "partially_verified",
+      "evidence": [
+        {
+          "type": "test",
+          "ref": "node test/unit/error_reporter.mjs",
+          "summary": "sanitization and stable fingerprint unit test passes"
+        }
+      ],
+      "source_refs": [],
+      "owners": [],
+      "scope": {},
+      "provenance": {}
     }
   },
   "edges": [
@@ -7852,6 +7885,20 @@
       "rel": "related",
       "created_at": "2026-09-05T09:12:17+00:00",
       "note": "SOUND C exposes blank-kit creation again"
+    },
+    {
+      "from": "finding-browser-capability-error-reporting",
+      "to": "checkpoint-current-persistence",
+      "rel": "implements",
+      "created_at": "2026-09-10T03:12:28+00:00",
+      "note": "Diagnostics persistence is bounded and separate from creative project persistence."
+    },
+    {
+      "from": "finding-browser-capability-error-reporting",
+      "to": "concept-screen-01",
+      "rel": "implements",
+      "created_at": "2026-09-10T03:12:28+00:00",
+      "note": "Startup failures now surface locally and are queued for reporting."
     }
   ]
 }

@@ -122,6 +122,11 @@ jobs:
           cat /tmp/cassio-rails.log
           exit 1
 
+      - name: Verify older Safari is admitted and error reporting ingests
+        env:
+          CASSIO_URL: http://127.0.0.1:3000/
+        run: node test/smoke/browser_compat_error_reporting.mjs
+
       - name: Check portrait chassis, keyboard, and menu containment
         env:
           CASSIO_URL: http://127.0.0.1:3000/

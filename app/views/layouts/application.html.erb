@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CASSIO">
     <meta name="application-name" content="CASSIO">
+    <meta name="cassio-build" content="<%= ENV.fetch("HEROKU_SLUG_COMMIT", ENV.fetch("SOURCE_VERSION", "unknown")) %>">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
