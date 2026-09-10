@@ -5270,16 +5270,26 @@
       ],
       "meta": {},
       "created_at": "2026-09-10T03:12:28+00:00",
-      "updated_at": "2026-09-10T03:12:28+00:00",
+      "updated_at": "2026-09-10T03:22:13+00:00",
       "stage": "maintaining",
       "status": "current",
       "workflow_state": "not_applicable",
-      "verification": "partially_verified",
+      "verification": "verified",
       "evidence": [
         {
           "type": "test",
           "ref": "node test/unit/error_reporter.mjs",
           "summary": "sanitization and stable fingerprint unit test passes"
+        },
+        {
+          "type": "external_artifact",
+          "ref": "https://github.com/seanbman/pocket-synth/actions/runs/34432810438",
+          "summary": "CI run 164 passed including Ruby/JS scans, lint, full responsive/browser regression suite, and old Safari admission plus error-report ingest smoke"
+        },
+        {
+          "type": "external_artifact",
+          "ref": "https://github.com/seanbman/pocket-synth/actions/runs/34432810501",
+          "summary": "Heroku production smoke passed for PR head 8797b38"
         }
       ],
       "source_refs": [],
