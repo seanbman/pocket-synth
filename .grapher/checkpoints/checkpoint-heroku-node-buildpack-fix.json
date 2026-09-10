@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-heroku-node-buildpack-fix",
+  "refreshed_at": "2026-09-10T08:47:00+00:00",
+  "title": "Heroku Safari 15 bundle deployment fix: existing production app was confirmed to have only heroku/ruby, causing Rails assets:precompile to invoke npm without a Node buildpack-installed toolchain. Repository now pins Node 24.13.0, avoids redundant npm install inside the Rails Rake hook, and documents the required live buildpack order heroku/nodejs then heroku/ruby; app.json remains the template for new/review apps but is not treated as authority for existing app configuration.",
+  "node_ids": [
+    "checkpoint-safari15-transpile-implementation",
+    "checkpoint-heroku-deploy-plan",
+    "checkpoint-heroku-deploy-result"
+  ],
+  "graph_version": 2
+}
