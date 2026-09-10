@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-safari15-smoke-migration-fix",
+  "refreshed_at": "2026-09-10T07:31:00+00:00",
+  "title": "Safari 15 smoke migration fix: the only browser-suite failure after bundling was a legacy smoke test dynamically importing the former import-map specifier cassio/startup_guard; startup diagnostics are now exposed from the bundled runtime and the smoke test exercises that bundle path without reintroducing import maps",
+  "node_ids": [
+    "checkpoint-safari15-transpile-implementation",
+    "checkpoint-safari15-transpile-ci-fix",
+    "checkpoint-post-pr12-stabilization-plan"
+  ],
+  "graph_version": 2
+}

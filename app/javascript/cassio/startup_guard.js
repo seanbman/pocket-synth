@@ -67,3 +67,10 @@ export function showStartupFailure(root, error, { reload = () => window.location
   panel.append(title, status, detail, retry)
   return panel
 }
+
+// Keep the startup guard reachable from the bundled runtime for diagnostics and
+// browser smoke tests without reintroducing a runtime ES-module/import-map path.
+if (typeof window !== "undefined") {
+  window.CassioDiagnostics = window.CassioDiagnostics || {}
+  window.CassioDiagnostics.showStartupFailure = showStartupFailure
+}
