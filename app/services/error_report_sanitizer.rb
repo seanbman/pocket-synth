@@ -30,7 +30,7 @@ class ErrorReportSanitizer
         "route" => path_only(data["route"]),
         "userAgent" => text(data["userAgent"], MAX_USER_AGENT),
         "language" => text(data["language"], 40),
-        "viewport" => numeric_hash(data["viewport"], %w[width height dpr]),
+        "viewport" => numeric_hash(data["viewport"], %w[ width height dpr ]),
         "capabilities" => boolean_hash(data["capabilities"]),
         "breadcrumbs" => breadcrumbs(data["breadcrumbs"]),
         "retryCount" => integer(data["retryCount"])
