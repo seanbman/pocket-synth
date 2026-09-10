@@ -160,7 +160,7 @@ export class StepSequencer {
             const velocity = step.accent ? 1 : step.vel
             this.#at(when, () => {
               if (!this.running) return
-              this.trigger?.(padId, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+              this.trigger?.(padId, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true, recTrack: false })
             })
           }
         }
@@ -193,7 +193,7 @@ export class StepSequencer {
               const velocity = step.accent ? 1 : step.vel
               this.#at(hitWhen, () => {
                 if (!this.running) return
-                this.trigger?.(padId, { when: hitWhen, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+                this.trigger?.(padId, { when: hitWhen, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true, recTrack: false })
               })
             }
           }
@@ -234,7 +234,8 @@ export class StepSequencer {
         lane,
         laneId: pattern.laneIds?.[lane] || null,
         accent: !!step.accent,
-        fromSeq: true
+        fromSeq: true,
+        recTrack: false
       })
     })
     return true
@@ -313,7 +314,7 @@ export class StepSequencer {
         hits.push(lane)
         this.#at(when, () => {
           if (!this.running) return
-          this.trigger?.(lane + 1, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true })
+          this.trigger?.(lane + 1, { when, velocity, gateSec, step: i, accent: !!step.accent, fromSeq: true, recTrack: false })
         })
       }
       if (hits.length && this.onStep) {
