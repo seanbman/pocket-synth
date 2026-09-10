@@ -7,6 +7,6 @@ namespace :javascript do
 end
 
 unless ENV["SKIP_JAVASCRIPT_BUILD"]
-  Rake::Task["assets:precompile"].enhance(["javascript:build"]) if Rake::Task.task_defined?("assets:precompile")
-  Rake::Task["test:prepare"].enhance(["javascript:build"]) if Rake::Task.task_defined?("test:prepare")
+  Rake::Task["assets:precompile"].enhance([ "javascript:build" ]) if Rake::Task.task_defined?("assets:precompile")
+  Rake::Task["test:prepare"].enhance([ "javascript:build" ]) if Rake::Task.task_defined?("test:prepare")
 end
