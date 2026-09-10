@@ -46,7 +46,12 @@ npm run build:watch
 
 ## Deployment
 
-`javascript:build` is attached to Rails `assets:precompile`. This provides a Ruby-buildpack-safe path on the existing Heroku deployment because the presence of `package.json` makes Node/npm available during the Ruby build. `app.json` additionally declares `heroku/nodejs` before `heroku/ruby` for fresh/review deployments.
+`javascript:build` is attached to Rails `assets:precompile`, but production must provide Node/npm before the Ruby asset phase runs. On Heroku, the live app therefore requires buildpacks in this order:
+
+1. `heroku/nodejs`
+2. `heroku/ruby`
+
+The Node buildpack installs the pinned Node runtime and JavaScript dependencies; the Ruby buildpack then runs Rails asset precompilation and `npm run build`. `app.json` declares this order for newly-created/review apps only and does not alter an existing Heroku app's configured buildpacks.
 
 Docker installs Node/npm in the throw-away build stage, runs the same asset precompile path, and removes `node_modules` before producing the runtime image.
 
