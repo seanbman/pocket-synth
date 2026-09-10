@@ -2,12 +2,37 @@
 
 CASSIO is configured to run as a single Heroku web dyno with Puma.
 
+## Required buildpack order
+
+The live Heroku app must have these buildpacks in this exact order:
+
+1. `heroku/nodejs`
+2. `heroku/ruby`
+
+The Node buildpack installs the JavaScript dependencies and the pinned Node runtime from `package.json`. The Ruby buildpack then runs Rails asset precompilation, whose `javascript:build` task invokes the already-installed `npm run build` to produce the Safari 15-compatible bundle.
+
+`app.json` declares this order for newly-created apps and review apps, but it does **not** reconfigure an existing Heroku app. For an existing app, configure the buildpacks in the Heroku dashboard under **Settings -> Buildpacks** or with the Heroku CLI.
+
+If the dashboard currently shows only `heroku/ruby`, remove it, add `heroku/nodejs`, then add `heroku/ruby` again so Node is first.
+
+CLI equivalent:
+
+```sh
+heroku buildpacks:clear -a <app-name>
+heroku buildpacks:add --index 1 heroku/nodejs -a <app-name>
+heroku buildpacks:add --index 2 heroku/ruby -a <app-name>
+```
+
 ## Deploy
 
-1. Create a Heroku app from this GitHub repository or connect the repo in the Heroku dashboard.
-2. Use the Ruby buildpack. `app.json` targets `heroku-24` and the repository pins Ruby 3.4.10 via `.ruby-version`.
-3. Deploy `main`. Heroku will precompile Rails assets and start `web: bundle exec puma -C config/puma.rb`.
-4. Verify `https://<app>.herokuapp.com/up` returns 200, then open the root app.
+1. Confirm the buildpack order above.
+2. Deploy the intended branch.
+3. Heroku installs Node dependencies first, then Ruby dependencies.
+4. Rails asset precompilation runs `npm run build` and produces the Safari 15-compatible JavaScript bundle.
+5. Heroku starts `web: bundle exec puma -C config/puma.rb`.
+6. Verify `https://<app>.herokuapp.com/up` returns 200, then open the root app.
+
+The repository pins Node in `package.json` and Ruby in `.ruby-version` so production builds are reproducible.
 
 ## Current persistence model
 

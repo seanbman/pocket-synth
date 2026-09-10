@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   scan_ruby:
@@ -20,10 +20,10 @@ jobs:
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
-      
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
+
   scan_js:
     runs-on: ubuntu-latest
 
@@ -39,16 +39,22 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+
+      - name: Install JavaScript dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build Safari 15-compatible JavaScript
+        run: npm run build
 
       - name: Check JavaScript syntax
-        run: find app/javascript test -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
+        run: find app/javascript test scripts -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
 
       - name: Run JavaScript unit tests
         run: find test/unit -maxdepth 1 -type f -name '*.mjs' -print0 | sort -z | xargs -0 -n1 node
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
+      - name: Scan JavaScript dependencies
+        run: npm audit --audit-level=high
 
   browser_responsive_layout:
     runs-on: ubuntu-latest
@@ -66,7 +72,13 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+
+      - name: Install JavaScript dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build Safari 15-compatible JavaScript
+        run: npm run build
 
       - name: Prepare app
         run: bin/rails db:prepare

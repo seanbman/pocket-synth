@@ -118,7 +118,8 @@ try {
     localStorage.removeItem('cassio.debug')
     app.render()
 
-    const { showStartupFailure } = await import('cassio/startup_guard')
+    const showStartupFailure = window.CassioDiagnostics?.showStartupFailure
+    if (typeof showStartupFailure !== 'function') return { fatal: 'bundled startup diagnostics missing' }
     const panel = showStartupFailure(root, new Error('SMOKE STARTUP FAILURE'), { reload: () => {} })
     const startupGuard = !!panel
       && panel.textContent.includes('STARTUP ERROR')

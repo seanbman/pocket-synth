@@ -88,7 +88,15 @@
     </style>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "cassio_manual", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <script>
+      window.setTimeout(function () {
+        var preload = document.getElementById("cassio-preload");
+        if (!preload) return;
+        var message = preload.querySelector(".cassio-preload-msg");
+        if (message) message.textContent = "STARTUP FAILED / CHECK CONNECTION";
+      }, 12000);
+    </script>
+    <%= javascript_include_tag "application", defer: true, "data-turbo-track": "reload" %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">

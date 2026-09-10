@@ -1,0 +1,10 @@
+{
+  "checkpoint_id": "checkpoint-safari15-transpile-ci-fix",
+  "refreshed_at": "2026-09-10T07:22:00+00:00",
+  "title": "Safari 15 transpile CI correction: initial compatibility build, JavaScript unit suite, dependency audit, Ruby security scans, and older-browser admission passed; the only failed check was RuboCop spacing in the new Rake prerequisite arrays, corrected without changing runtime behavior",
+  "node_ids": [
+    "checkpoint-safari15-transpile-plan",
+    "checkpoint-safari15-transpile-implementation"
+  ],
+  "graph_version": 2
+}
