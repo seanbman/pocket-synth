@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   post "debug_ingest" => "debug_logs#create"
+  post "error_reports" => "error_reports#create"
 
   root "instrument#show"
 end

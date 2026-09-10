@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { CassioApp } from "cassio/app"
 import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
 import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
+import { errorBreadcrumb, installErrorReporter, reportError } from "cassio/error_reporter"
 import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
 import { installPostPr12StabilizationRuntime } from "cassio/post_pr12_stabilization_runtime"
 import { installProjectAudioExportRuntime } from "cassio/project_audio_export_runtime"
@@ -33,6 +34,9 @@ function debugTracingEnabled() {
 
 export default class extends Controller {
   connect() {
+    installErrorReporter()
+    errorBreadcrumb("cassio.connect")
+
     const debug = debugTracingEnabled()
     if (debug) {
       installGlobalDebugHooks()
@@ -40,6 +44,7 @@ export default class extends Controller {
     }
 
     try {
+      errorBreadcrumb("cassio.construct.before")
       this.app = new CassioApp(this.element)
       installTrackPatternRuntime(this.app)
       installSequenceVoiceGuardRuntime(this.app)
@@ -59,6 +64,8 @@ export default class extends Controller {
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
       // must never run in the normal performance path on constrained phones.
+      errorBreadcrumb("cassio.construct.after")
+
       if (debug) {
         installAudioTrace(this.app)
         installDeepAudioTrace(this.app)
@@ -79,6 +86,8 @@ export default class extends Controller {
         trace("app", "cassio.construct.after", { audio: audioSnapshot(this.app) })
       }
     } catch (error) {
+      errorBreadcrumb("cassio.construct.failed")
+      void reportError(error, { kind: "startup" })
       if (debug) {
         trace("error", "cassio.construct.failed", { error }, "error")
         void flushDebug()

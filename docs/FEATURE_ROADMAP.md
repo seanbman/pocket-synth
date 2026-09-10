@@ -17,23 +17,24 @@ This list records product direction beyond the current prototype. Items marked
 - Version caches and stored data independently. App updates must migrate user
   data without erasing creative work.
 
-## Offline error-report delivery — planned
+## Offline error-report delivery — core implemented; GitHub/SW delivery pending
 
-- Sanitize and save reportable errors to a bounded IndexedDB outbox immediately,
-  including a report UUID, timestamp, build SHA, fingerprint, trace tail, retry
-  count, and next-attempt time.
-- Retry delivery on app launch, return to the foreground, restored connectivity,
-  and successful network activity. Use service-worker Background Sync as an
-  additional delivery path where the browser supports it, not as the only path.
-- Send idempotent batches to CASSIO's Rails backend. The server—not the installed
-  app—compares fingerprints against GitHub issues and comments on a match or
-  creates a new issue.
-- Remove a queued report only after the server acknowledges its UUID. Concurrent
-  retries must not create duplicate reports or GitHub issues.
-- Never include recordings, audio buffers, user sound names, credentials, or
-  GitHub tokens. Cap and prune the queue by age, record count, and total bytes.
-- Store diagnostics separately from creative work so an error-report migration
-  or failure cannot endanger a user's sounds or projects.
+- **Implemented:** Sanitize runtime/startup errors into a bounded diagnostics-only
+  IndexedDB outbox with localStorage fallback. Reports include UUID, timestamp,
+  build SHA, fingerprint, browser capabilities, a short lifecycle breadcrumb tail,
+  retry count, and next-attempt time.
+- **Implemented:** Retry on app launch, foreground return, and restored connectivity
+  with exponential backoff. Service-worker Background Sync remains an additional
+  future path, never the only path.
+- **Implemented:** Send bounded batches to the Rails backend and remove a queued
+  report only after the server acknowledges its UUID. The server re-sanitizes,
+  rate-limits, and emits structured `cassio_client_error` logs.
+- **Implemented:** Do not serialize recordings, audio buffers, project/sound state,
+  credentials, query strings, or GitHub tokens. Diagnostics remain separate from
+  creative-work storage and are pruned by age and record count.
+- **Planned:** Server-side GitHub issue delivery should compare fingerprints against
+  existing issues, comment on a match, create a new issue otherwise, and remain
+  idempotent across client retries.
 
 ## Portable Pocket Synth files — planned
 
