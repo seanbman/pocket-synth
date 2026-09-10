@@ -30,9 +30,9 @@ ENV RAILS_ENV="production" \
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Install packages needed to build gems
+# Install packages needed to build gems and the Safari 15 JavaScript bundle.
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips libyaml-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git libvips libyaml-dev pkg-config nodejs npm && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -51,11 +51,9 @@ COPY . .
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
+# Precompile Rails assets. The javascript:build prerequisite installs npm
+# dependencies and emits the Safari 15-compatible application bundle.
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile && rm -rf node_modules
 
 # Final stage for app image
 FROM base

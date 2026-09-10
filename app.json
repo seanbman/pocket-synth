@@ -3,10 +3,12 @@
   "description": "Browser-based pocket synth, sampler, looper, and sequencer.",
   "stack": "heroku-24",
   "buildpacks": [
+    { "url": "heroku/nodejs" },
     { "url": "heroku/ruby" }
   ],
   "env": {
     "RAILS_ENV": { "value": "production" },
-    "RACK_ENV": { "value": "production" }
+    "RACK_ENV": { "value": "production" },
+    "USE_NPM_INSTALL": { "value": "true" }
   }
 }

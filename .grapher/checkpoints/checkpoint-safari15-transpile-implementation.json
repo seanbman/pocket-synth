@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-safari15-transpile-implementation",
+  "refreshed_at": "2026-09-10T07:18:00+00:00",
+  "title": "Safari 15 transpile implementation: CASSIO now has an esbuild IIFE target for Safari 15, static Stimulus registration, non-importmap layout bootstrap with failure fallback, Rails asset-precompile integration, local dev watcher, Heroku and Docker build wiring, CI build enforcement, and a bundle contract regression test",
+  "node_ids": [
+    "checkpoint-safari15-transpile-plan",
+    "checkpoint-current-ui-controls",
+    "checkpoint-heroku-deploy-plan",
+    "checkpoint-post-pr12-stabilization-plan"
+  ],
+  "graph_version": 2
+}
