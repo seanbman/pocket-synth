@@ -1,7 +1,6 @@
 namespace :javascript do
-  desc "Install JavaScript dependencies and build the Safari 15-compatible bundle"
+  desc "Build the Safari 15-compatible JavaScript bundle"
   task :build do
-    sh "npm install --no-audit --no-fund"
     sh "npm run build"
   end
 end
