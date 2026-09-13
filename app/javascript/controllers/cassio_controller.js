@@ -15,6 +15,7 @@ import { installSettingsRuntime } from "cassio/settings_runtime"
 import { showStartupFailure } from "cassio/startup_guard"
 import { installTrackNamingRuntime } from "cassio/track_naming_runtime"
 import { installTrackPatternRuntime } from "cassio/track_pattern_runtime"
+import { installUserReportRegressionRuntime } from "cassio/user_report_regression_runtime"
 import {
   audioSnapshot,
   flushDebug,
@@ -60,6 +61,9 @@ export default class extends Controller {
       installSettingsBridgeRuntime(this.app)
       installInputFeedbackRuntime(this.app)
       installPostPr12StabilizationRuntime(this.app)
+      // User-testing fixes are installed last so they can bridge the final
+      // sampler, project, sequencer and mixer wrappers without rewriting them.
+      installUserReportRegressionRuntime(this.app)
 
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
@@ -80,7 +84,7 @@ export default class extends Controller {
           if (document.visibilityState !== "hidden") return
           trace("app", "persist.visibility.before", { audio: audioSnapshot(this.app) })
           this.app?.flushPersist?.()
-          void flushDebug({ beacon: true })
+          void flushDebug()
         })
 
         trace("app", "cassio.construct.after", { audio: audioSnapshot(this.app) })

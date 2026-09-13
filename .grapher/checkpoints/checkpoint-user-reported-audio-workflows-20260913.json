@@ -1,0 +1,18 @@
+{
+  "checkpoint_id": "checkpoint-user-reported-audio-workflows-20260913",
+  "refreshed_at": "2026-09-13T23:30:00+00:00",
+  "title": "User-reported audio workflow remediation: sample preview is a PLAY/STOP toggle; project and track naming isolate computer-key synth mappings; recorded synth PCM is surfaced as an R lane in the track sequencer; mixer level, pan, mute and solo now govern both recorded PCM and track-owned sequenced voices; unit coverage added",
+  "node_ids": [
+    "concept-global-behavior",
+    "concept-screen-15",
+    "concept-screen-24",
+    "concept-screen-26",
+    "concept-screen-27",
+    "concept-screen-29",
+    "concept-recording-behavior",
+    "checkpoint-current-audio-graph",
+    "checkpoint-current-loop-engine",
+    "checkpoint-current-ui-controls"
+  ],
+  "graph_version": 2
+}
