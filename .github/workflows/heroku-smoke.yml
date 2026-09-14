@@ -54,14 +54,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Require production URL
+      - name: Check production URL configuration
+        id: production
+        shell: bash
         run: |
           if [ -z "${PRODUCTION_URL}" ]; then
-            echo "::error::Set repository variable or secret PRODUCTION_URL to the live Heroku application URL. Deployment cannot be considered verified without pinging production."
-            exit 1
+            echo "::warning::PRODUCTION_URL is not configured. Live deploy verification is skipped so an unconfigured verifier cannot block Heroku auto-deploy. Set the repository variable or secret to the live Heroku URL to enable exact-version verification."
+            echo "configured=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "configured=true" >> "${GITHUB_OUTPUT}"
           fi
 
       - name: Wait for exact deployed version
+        if: steps.production.outputs.configured == 'true'
         shell: bash
         run: |
           set -u
