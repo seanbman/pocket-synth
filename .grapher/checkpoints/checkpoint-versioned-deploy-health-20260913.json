@@ -1,0 +1,9 @@
+{
+  "checkpoint_id": "checkpoint-versioned-deploy-health-20260913",
+  "refreshed_at": "2026-09-14T03:04:00+00:00",
+  "title": "Production deployment verification hardened: each deploy carries an explicit DEPLOY_VERSION, /health/deploy reports the running version without caching, production boot smoke exercises the endpoint, and main-push verification polls the live Heroku URL until the exact version is observed",
+  "node_ids": [
+    "concept-global-behavior"
+  ],
+  "graph_version": 2
+}

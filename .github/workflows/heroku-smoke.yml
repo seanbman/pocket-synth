@@ -1,4 +1,4 @@
-name: Heroku production smoke
+name: Production deploy verification
 
 on:
   pull_request:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   production_boot:
+    name: Production build smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -29,10 +30,60 @@ jobs:
 
       - name: Boot production Puma and check health
         run: |
-          bundle exec puma -C config/puma.rb > /tmp/cassio-heroku.log 2>&1 &
+          bundle exec puma -C config/puma.rb > /tmp/cassio-production-smoke.log 2>&1 &
           for i in {1..40}; do
-            if curl --fail --silent http://127.0.0.1:${PORT}/up >/dev/null; then exit 0; fi
+            if curl --fail --silent http://127.0.0.1:${PORT}/up >/dev/null; then
+              curl --fail --silent http://127.0.0.1:${PORT}/health/deploy
+              exit 0
+            fi
             sleep 0.5
           done
-          cat /tmp/cassio-heroku.log
+          cat /tmp/cassio-production-smoke.log
+          exit 1
+
+  verify_live_deploy:
+    name: Verify live deploy version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: production_boot
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PRODUCTION_URL: ${{ vars.PRODUCTION_URL || secrets.PRODUCTION_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Require production URL
+        run: |
+          if [ -z "${PRODUCTION_URL}" ]; then
+            echo "::error::Set repository variable or secret PRODUCTION_URL to the live Heroku application URL. Deployment cannot be considered verified without pinging production."
+            exit 1
+          fi
+
+      - name: Wait for exact deployed version
+        shell: bash
+        run: |
+          set -u
+          EXPECTED_VERSION="$(tr -d '\r\n' < DEPLOY_VERSION)"
+          BASE_URL="${PRODUCTION_URL%/}"
+          HEALTH_URL="${BASE_URL}/health/deploy"
+
+          echo "Expecting deploy version ${EXPECTED_VERSION} at ${HEALTH_URL}"
+
+          for attempt in {1..60}; do
+            BODY="$(curl --fail --silent --show-error --max-time 10 "${HEALTH_URL}" 2>/dev/null || true)"
+            ACTUAL_VERSION="$(printf '%s' "${BODY}" | ruby -rjson -e 'begin; print JSON.parse(STDIN.read).fetch("deploy_version", ""); rescue JSON::ParserError; end' 2>/dev/null || true)"
+
+            if [ "${ACTUAL_VERSION}" = "${EXPECTED_VERSION}" ]; then
+              echo "Live deployment verified: ${ACTUAL_VERSION}"
+              printf '%s\n' "${BODY}"
+              exit 0
+            fi
+
+            echo "Attempt ${attempt}/60: live version '${ACTUAL_VERSION:-unavailable}' does not match '${EXPECTED_VERSION}'"
+            sleep 10
+          done
+
+          echo "::error::Production never reported deploy version ${EXPECTED_VERSION}."
           exit 1
