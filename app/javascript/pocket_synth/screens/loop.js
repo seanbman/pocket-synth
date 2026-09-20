@@ -1,5 +1,5 @@
-import { knobParamsAt, renderMacroLabels, renderSettingsRows } from "cassio/screens/settings_list"
-import { QUANTIZE_LABELS } from "cassio/store"
+import { knobParamsAt, renderMacroLabels, renderSettingsRows } from "pocket_synth/screens/settings_list"
+import { QUANTIZE_LABELS } from "pocket_synth/store"
 
 export const LOOP_BAR_WIDTH_PX = 52
 

@@ -1,13 +1,13 @@
-import { MicCapture } from "cassio/audio/mic_capture"
+import { MicCapture } from "pocket_synth/audio/mic_capture"
 import {
   decodeAudioFile, bufferToStored, storedToBuffer, formatDuration,
   peakNormalizeBuffer, sliceBuffer
-} from "cassio/audio/sample_io"
-import { putUserSound, listUserSounds } from "cassio/store"
-import { noteNameToMidi } from "cassio/voices/glass_poly"
-import { nudgeRoot, isSample, DEFAULT_SAMPLE_GAIN, patchFromSound } from "cassio/patch"
-import { fxDefaults, sanitizeFx, nudgeFx, stepFx, fmtFx } from "cassio/audio/fx_params"
-import { buildSettingsRows, knobParamsAt } from "cassio/screens/settings_list"
+} from "pocket_synth/audio/sample_io"
+import { putUserSound, listUserSounds } from "pocket_synth/store"
+import { noteNameToMidi } from "pocket_synth/voices/glass_poly"
+import { nudgeRoot, isSample, DEFAULT_SAMPLE_GAIN, patchFromSound } from "pocket_synth/patch"
+import { fxDefaults, sanitizeFx, nudgeFx, stepFx, fmtFx } from "pocket_synth/audio/fx_params"
+import { buildSettingsRows, knobParamsAt } from "pocket_synth/screens/settings_list"
 
 const DRAFT_UI_KEYS = new Set(["name", "durationLabel", "sourceId", "dirty"])
 const DEFAULT_EXPANDED = ["mix", "sample"]

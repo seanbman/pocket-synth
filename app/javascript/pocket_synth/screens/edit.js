@@ -1,4 +1,4 @@
-import { meterPct, dbLabel } from "cassio/patch"
+import { meterPct, dbLabel } from "pocket_synth/patch"
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => (

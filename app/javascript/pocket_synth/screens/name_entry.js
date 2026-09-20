@@ -22,7 +22,7 @@ export function renderNameEntry(state) {
       <div class="name-body">
         <div class="muted">TYPE A NAME</div>
         <input
-          id="cassio-name-field"
+          id="pocket_synth-name-field"
           class="name-field"
           type="text"
           maxlength="18"
