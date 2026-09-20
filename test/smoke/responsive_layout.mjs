@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
  * Regression for the 2026-09-05 portrait-layout user-test finding.
- * The full CASSIO chassis, keyboard, and all six main-menu rows must remain
+ * The full POCKET SYNTH chassis, keyboard, and all six main-menu rows must remain
  * contained on representative phone portrait viewports.
  */
 import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9342
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-responsive-layout")
 const chromeBin = process.env.CHROME_BIN || "google-chrome"
@@ -114,8 +114,8 @@ try {
     await sleep(220)
 
     const snapshot = await evalJs(`(async () => {
-      const root = document.querySelector('[data-controller~="cassio"]')
-      const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+      const root = document.querySelector('[data-controller~="pocket_synth"]')
+      const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
       if (!root || !app) return { fatal: 'no app' }
       app.screen = 'menu'
       app.menuIndex = 5

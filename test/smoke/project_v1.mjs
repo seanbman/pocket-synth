@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9344
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-project-v1")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -59,11 +59,11 @@ try {
   await sleep(8000)
 
   const setup = await evalJs(`(async () => {
-    indexedDB.deleteDatabase('cassio-projects-v1')
-    localStorage.removeItem('cassio.activeProjectId')
+    indexedDB.deleteDatabase('pocket_synth-projects-v1')
+    localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.projectRuntime) return { fatal: 'project runtime missing' }
     const press = (action) => {
       const el = root.querySelector('[data-action="' + action + '"]')
@@ -84,8 +84,8 @@ try {
   else fail(`PROJECT list missing: ${JSON.stringify(setup)}`)
 
   const lifecycle = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.projectRuntime
     const press = async (action, wait = 80) => {
       const el = root.querySelector('[data-action="' + action + '"]')
@@ -94,7 +94,7 @@ try {
       await new Promise((r) => setTimeout(r, wait))
     }
     const name = async (value) => {
-      const input = app.vscreen.querySelector('#cassio-project-name-field')
+      const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
       input.value = value
       input.dispatchEvent(new Event('input', { bubbles: true }))
       await press('soft-d', 180)
@@ -116,13 +116,13 @@ try {
     const renamed = rt.projects.some((p) => p.name === 'RENAMED JAM')
 
     await press('nav-right')
-    const manage = app.screen === 'project-manage' && app.vscreen.textContent.includes('SAVE AS') && app.vscreen.textContent.includes('DUPLICATE') && app.vscreen.textContent.includes('EXPORT .CASSIO') && app.vscreen.textContent.includes('DELETE')
+    const manage = app.screen === 'project-manage' && app.vscreen.textContent.includes('SAVE AS') && app.vscreen.textContent.includes('DUPLICATE') && app.vscreen.textContent.includes('EXPORT .POCKET SYNTH') && app.vscreen.textContent.includes('DELETE')
     await press('nav-down')
     await press('nav-ok', 180)
     const duplicated = rt.projects.length === 2
 
     const bundle = await rt.exportSelectedBundle({ download: false })
-    const exportOk = bundle?.format === 'cassio-project-v1' && bundle?.project?.state?.bpm === 133
+    const exportOk = bundle?.format === 'pocket_synth-project-v1' && bundle?.project?.state?.bpm === 133
     await rt.importBundle(bundle)
     const imported = rt.projects.length === 3
 
@@ -150,8 +150,8 @@ try {
   if (!lifecycle) fail("PROJECT lifecycle did not return before reload")
 
   const switchPrompt = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const el = root.querySelector('[data-action="soft-d"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 4 }))
     el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 4 }))
@@ -162,7 +162,7 @@ try {
   else fail("saved-project switch confirmation missing")
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
     const el = root.querySelector('[data-action="soft-c"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 5 }))
     el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 5 }))
@@ -171,16 +171,16 @@ try {
 
   await sleep(6500)
   const reopened = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return { bpm: app?.transport?.bpm, active: app?.projectRuntime?.activeProjectId || null, ready: !!app?.projectRuntime }
   })()`)
   if (reopened.ready && reopened.bpm === 133 && reopened.active) pass("opening a saved project restores the serialized session through recovery")
   else fail(`reopen restore failed: ${JSON.stringify(reopened)}`)
 
   const newStart = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.projectRuntime
     const press = async (action, wait = 80) => {
       const el = root.querySelector('[data-action="' + action + '"]')
@@ -199,9 +199,9 @@ try {
   else fail(`new project flow failed: ${JSON.stringify(newStart)}`)
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
-    const input = app.vscreen.querySelector('#cassio-project-name-field')
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
+    const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
     input.value = 'NEW CLEAN'
     input.dispatchEvent(new Event('input', { bubbles: true }))
     const el = root.querySelector('[data-action="soft-d"]')
@@ -212,8 +212,8 @@ try {
 
   await sleep(6500)
   const fresh = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return { bpm: app?.transport?.bpm, active: app?.projectRuntime?.activeProjectId || null }
   })()`)
   if (fresh.bpm === 120 && fresh.active) pass("NEW starts a clean default project and makes it active")

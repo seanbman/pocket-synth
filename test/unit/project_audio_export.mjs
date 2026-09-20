@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs"
 
 const asDataModule = (source) => `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`
 
-let projectSource = readFileSync("app/javascript/cassio/audio/project_export.js", "utf8")
-projectSource = projectSource.replace('import { exportSample } from "cassio/audio/export_sample"', "const exportSample = async () => 'test'")
+let projectSource = readFileSync("app/javascript/pocket_synth/audio/project_export.js", "utf8")
+projectSource = projectSource.replace('import { exportSample } from "pocket_synth/audio/export_sample"', "const exportSample = async () => 'test'")
 const projectMod = await import(asDataModule(projectSource))
 
 assert.deepEqual(projectMod.PROJECT_AUDIO_FORMATS, ["wav", "mp3", "m4a"])
@@ -27,7 +27,7 @@ await assert.rejects(
   /UNKNOWN FORMAT/
 )
 
-const sampleSource = readFileSync("app/javascript/cassio/audio/export_sample.js", "utf8")
+const sampleSource = readFileSync("app/javascript/pocket_synth/audio/export_sample.js", "utf8")
 const sampleMod = await import(asDataModule(sampleSource))
 const previousMediaRecorder = globalThis.MediaRecorder
 try {
@@ -40,11 +40,11 @@ try {
   else globalThis.MediaRecorder = previousMediaRecorder
 }
 
-const screenSource = readFileSync("app/javascript/cassio/screens/project.js", "utf8")
+const screenSource = readFileSync("app/javascript/pocket_synth/screens/project.js", "utf8")
 const screenMod = await import(asDataModule(screenSource))
 const manage = screenMod.renderProjectManage({ bpm: 120, selectedProjectName: "TEST", projectManageIndex: 2 })
 assert.match(manage, /EXPORT AUDIO/)
-assert.match(manage, /EXPORT \.CASSIO/)
+assert.match(manage, /EXPORT \.POCKET SYNTH/)
 const audioScreen = screenMod.renderProjectAudioExport({
   bpm: 120,
   selectedProjectName: "TEST",

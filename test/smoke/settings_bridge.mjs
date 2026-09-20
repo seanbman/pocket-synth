@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9347
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-settings-bridge")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -59,14 +59,14 @@ try {
   await sleep(7500)
 
   const changed = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.settingsRuntime
     if (!rt) return { fatal: 'settings runtime missing' }
     rt.update({ chassisTheme: 'mint' })
     app.setMetroOn(false)
     app.setMetroLevel(0.4)
-    const persisted = JSON.parse(localStorage.getItem('cassio.systemSettings.v1') || '{}')
+    const persisted = JSON.parse(localStorage.getItem('pocket_synth.systemSettings.v1') || '{}')
     const chassis = root.querySelector('.chassis')
     return {
       theme: rt.settings.chassisTheme,
@@ -90,8 +90,8 @@ try {
   await evalJs("location.reload(); true")
   await sleep(7000)
   const reloaded = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return {
       theme: app?.settingsRuntime?.settings?.chassisTheme,
       metroOn: app?.settingsRuntime?.settings?.metroOn,
