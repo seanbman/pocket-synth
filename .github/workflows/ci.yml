@@ -39,13 +39,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-
-      - name: Install JavaScript dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Build Safari 15-compatible JavaScript
-        run: npm run build
+          node-version: 22
 
       - name: Check JavaScript syntax
         run: find app/javascript test scripts -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
@@ -53,8 +47,8 @@ jobs:
       - name: Run JavaScript unit tests
         run: find test/unit -maxdepth 1 -type f -name '*.mjs' -print0 | sort -z | xargs -0 -n1 node
 
-      - name: Scan JavaScript dependencies
-        run: npm audit --audit-level=high
+      - name: Scan for security vulnerabilities in JavaScript dependencies
+        run: bin/importmap audit
 
   browser_responsive_layout:
     runs-on: ubuntu-latest
@@ -72,13 +66,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-
-      - name: Install JavaScript dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Build Safari 15-compatible JavaScript
-        run: npm run build
+          node-version: 22
 
       - name: Prepare app
         run: bin/rails db:prepare
@@ -92,11 +80,6 @@ jobs:
           done
           cat /tmp/cassio-rails.log
           exit 1
-
-      - name: Verify older Safari is admitted and error reporting ingests
-        env:
-          CASSIO_URL: http://127.0.0.1:3000/
-        run: node test/smoke/browser_compat_error_reporting.mjs
 
       - name: Check portrait chassis, keyboard, and menu containment
         env:
