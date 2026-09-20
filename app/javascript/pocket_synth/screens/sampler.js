@@ -1,4 +1,4 @@
-import { knobParamsAt, renderMacroLabels, renderSettingsRows } from "cassio/screens/settings_list"
+import { knobParamsAt, renderMacroLabels, renderSettingsRows } from "pocket_synth/screens/settings_list"
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => (

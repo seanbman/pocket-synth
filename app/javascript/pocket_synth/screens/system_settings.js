@@ -1,4 +1,4 @@
-import { CHASSIS_THEMES } from "cassio/settings_store"
+import { CHASSIS_THEMES } from "pocket_synth/settings_store"
 
 const HOME_ROWS = ["AUDIO", "METRONOME", "DISPLAY", "STORAGE", "PERMISSIONS", "ABOUT"]
 
@@ -108,7 +108,7 @@ export function renderSettingsPermissions(state) {
 
 export function renderSettingsAbout(state) {
   const body = `<div class="settings-about">
-    <div class="settings-about-title">CASSIO</div>
+    <div class="settings-about-title">POCKET SYNTH</div>
     <div>V1 PROTOTYPE</div>
     <div class="muted">POCKET SAMPLER / SYNTH / LOOPER</div>
     <hr>

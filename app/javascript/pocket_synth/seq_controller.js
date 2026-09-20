@@ -1,7 +1,7 @@
 import {
   SEQ_PATTERNS, SEQ_LENGTHS, SEQ_LANES, defaultStep, sanitizeStep,
   trackSeqHasHits
-} from "cassio/store"
+} from "pocket_synth/store"
 import {
   addTrackPatternLane,
   defaultTrackPattern,
@@ -11,7 +11,7 @@ import {
   trackLaneSourceSignature,
   trackPatternHasHits,
   trackSeqToTrackPattern
-} from "cassio/track_pattern"
+} from "pocket_synth/track_pattern"
 
 export const SEQ_SCREENS = new Set(["sequencer", "step-edit"])
 const PAGE = 16

@@ -50,7 +50,7 @@ export function renderProjectManage(state) {
         <div class="muted">▲▼ ROW · OK · C PROJECT FILE · D BACK</div>
       </div>
       <div class="lcd-soft">
-        <div></div><div></div><div><span class="sk">C</span> <span class="green">EXPORT .CASSIO</span></div><div><span class="sk">D</span> <span class="green">BACK</span></div>
+        <div></div><div></div><div><span class="sk">C</span> <span class="green">EXPORT .POCKET SYNTH</span></div><div><span class="sk">D</span> <span class="green">BACK</span></div>
       </div>
     </div>
   `
@@ -86,7 +86,7 @@ export function renderProjectName(state) {
       <div class="lcd-macros"><span>DEVICE KEYBOARD</span><span></span><span>ENTER DONE</span></div>
       <div class="name-body">
         <div class="muted">TYPE A PROJECT NAME</div>
-        <input id="cassio-project-name-field" class="name-field" type="text" maxlength="18" autocomplete="off" autocapitalize="characters" enterkeyhint="done" inputmode="text" value="${esc(state.projectNameDraft || "")}" />
+        <input id="pocket_synth-project-name-field" class="name-field" type="text" maxlength="18" autocomplete="off" autocapitalize="characters" enterkeyhint="done" inputmode="text" value="${esc(state.projectNameDraft || "")}" />
         <div class="muted" style="margin-top:0.45rem">ENTER / D TO CONFIRM</div>
         <div class="muted">A CANCEL</div>
       </div>

@@ -1,4 +1,4 @@
-import { FX_GROUPS, fmtFx, fxKnob01 } from "cassio/audio/fx_params"
+import { FX_GROUPS, fmtFx, fxKnob01 } from "pocket_synth/audio/fx_params"
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => (

@@ -1,6 +1,6 @@
-import { noteNameToMidi } from "cassio/voices/glass_poly"
-import { patchFromSound, isKit, isDrum, isSample } from "cassio/patch"
-import { normalizeTrackLaneSource } from "cassio/track_pattern"
+import { noteNameToMidi } from "pocket_synth/voices/glass_poly"
+import { patchFromSound, isKit, isDrum, isSample } from "pocket_synth/patch"
+import { normalizeTrackLaneSource } from "pocket_synth/track_pattern"
 
 const PAD_DEG = [0, 2, 4, 5, 7, 9]
 
