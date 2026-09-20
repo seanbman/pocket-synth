@@ -8,7 +8,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9343
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-loop-seq-discovery")
 const chromeBin = process.env.CHROME_BIN || "google-chrome"
@@ -84,8 +84,8 @@ try {
   await sleep(7000)
 
   const result = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!root || !app) return { fatal: 'no app' }
 
     app.looper.openHome()

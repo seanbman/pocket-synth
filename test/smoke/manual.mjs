@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regression for the in-app CASSIO manual.
+ * Regression for the in-app POCKET SYNTH manual.
  * Verifies the chassis trigger, full-screen modal, linked index, search filtering,
  * keyboard isolation, and close behavior on a representative phone viewport.
  */
@@ -8,7 +8,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9347
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-manual")
 const chromeBin = process.env.CHROME_BIN || "google-chrome"
@@ -79,8 +79,8 @@ try {
   const opened = await evalJs(`(async () => {
     const trigger = document.querySelector('[data-manual-trigger]')
     const modal = document.querySelector('[data-manual-target="dialog"]')
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!trigger || !modal || !app) return { fatal: 'missing trigger/modal/app' }
     const tr = trigger.getBoundingClientRect()
     const chassis = root.querySelector('.chassis').getBoundingClientRect()
@@ -128,8 +128,8 @@ try {
   if (!filtered.text.includes("microphone")) fail("visible search results do not contain query"); else pass("search results contain query")
 
   const isolated = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const search = document.querySelector('[data-manual-target="search"]')
     const before = app.heldKeys?.size ?? -1
     search.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', code: 'KeyZ', bubbles: true, cancelable: true }))

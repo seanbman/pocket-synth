@@ -11,7 +11,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9341
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-interactive-record")
 const chromeBin = process.env.CHROME_BIN || "google-chrome"
@@ -90,7 +90,7 @@ try {
 
   const setup = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="cassio"]'), 'cassio')?.app
+      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth')?.app
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
     app.metro.setOn(false)
@@ -121,7 +121,7 @@ try {
 
   const pointerControl = async (action) => evalJs(`(() => {
     const app = window.Stimulus.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="cassio"]'), 'cassio').app
+      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth').app
     const el = app.root.querySelector('[data-action="${action}"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 71, clientX: 10, clientY: 10 }))
     el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 71, clientX: 10, clientY: 10 }))
@@ -130,7 +130,7 @@ try {
 
   const state = () => evalJs(`(() => {
     const app = window.Stimulus.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="cassio"]'), 'cassio').app
+      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth').app
     return {
       now: performance.now(),
       countingIn: app.transport.countingIn,
