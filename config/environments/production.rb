@@ -8,7 +8,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  # CASSIO user projects/sounds are browser-persisted. Keep server-side runtime
+  # POCKET SYNTH user projects/sounds are browser-persisted. Keep server-side runtime
   # services process-local on Heroku until the app actually introduces durable
   # server data and a shared database/queue backend.
   config.active_storage.service = :local
