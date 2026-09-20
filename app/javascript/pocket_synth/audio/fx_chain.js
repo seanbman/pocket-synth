@@ -1,4 +1,4 @@
-import { resolveFx, syncSeconds, fxDefaults } from "cassio/audio/fx_params"
+import { resolveFx, syncSeconds, fxDefaults } from "pocket_synth/audio/fx_params"
 
 /**
  * Per-source processing chain (sample voice or loop track).

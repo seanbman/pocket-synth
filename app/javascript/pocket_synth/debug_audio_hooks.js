@@ -1,4 +1,4 @@
-import { audioSnapshot, flushDebug, trace } from "cassio/debug_trace"
+import { audioSnapshot, flushDebug, trace } from "pocket_synth/debug_trace"
 
 let installed = false
 let transitionUntil = 0
@@ -19,7 +19,7 @@ function traceAudio(app, event, data = {}, severity = "info", withState = true) 
 function wrap(target, name, app, label, argsData = null, { always = true, settle = true } = {}) {
   if (!target || typeof target[name] !== "function") return
   const original = target[name]
-  if (original.__cassioDeepDebugWrapped) return
+  if (original.__pocket_synthDeepDebugWrapped) return
   let callNo = 0
 
   const wrapped = function(...args) {
@@ -58,13 +58,13 @@ function wrap(target, name, app, label, argsData = null, { always = true, settle
     return result
   }
 
-  wrapped.__cassioDeepDebugWrapped = true
+  wrapped.__pocket_synthDeepDebugWrapped = true
   target[name] = wrapped
 }
 
 function installTransitionWindow(app) {
   const previous = app.render?.bind(app)
-  if (!previous || previous.__cassioTransitionWindowWrapped) return
+  if (!previous || previous.__pocket_synthTransitionWindowWrapped) return
   let lastScreen = app.screen
 
   const wrapped = (...args) => {
@@ -81,7 +81,7 @@ function installTransitionWindow(app) {
     return previous(...args)
   }
 
-  wrapped.__cassioTransitionWindowWrapped = true
+  wrapped.__pocket_synthTransitionWindowWrapped = true
   app.render = wrapped
 }
 
@@ -114,10 +114,10 @@ function installSourceWatch(app) {
 }
 
 function installGlitchMarker(app) {
-  const button = document.querySelector("[data-cassio-glitch-marker]")
-  if (!button || button.dataset.cassioGlitchBound === "true") return false
+  const button = document.querySelector("[data-pocket_synth-glitch-marker]")
+  if (!button || button.dataset.pocket_synthGlitchBound === "true") return false
 
-  button.dataset.cassioGlitchBound = "true"
+  button.dataset.pocket_synthGlitchBound = "true"
   button.addEventListener("click", () => {
     transitionUntil = Math.max(transitionUntil, perfNow() + 2500)
     traceAudio(app, "user.glitch_marker", {

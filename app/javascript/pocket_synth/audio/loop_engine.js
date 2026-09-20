@@ -1,11 +1,11 @@
-import { bufferToStored, storedToBuffer } from "cassio/audio/sample_io"
-import { FxChain } from "cassio/audio/fx_chain"
-import { sanitizeFx } from "cassio/audio/fx_params"
+import { bufferToStored, storedToBuffer } from "pocket_synth/audio/sample_io"
+import { FxChain } from "pocket_synth/audio/fx_chain"
+import { sanitizeFx } from "pocket_synth/audio/fx_params"
 import {
   QUANTIZE_OPTS, sanitizeTrackSeq, defaultTrackSeq, sanitizePattern,
   defaultLibraryTrack, newTrackLibraryId, seqLengthBars, trackSeqHasHits,
   patternHasHits, trackSeqToPattern, sanitizeLaneDisplayName, nextLibraryTrackName
-} from "cassio/store"
+} from "pocket_synth/store"
 
 /** Presets for user-set loop / track lengths (OPTIONS + track menu). */
 export const LOOP_LENGTH_PRESETS = [1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]

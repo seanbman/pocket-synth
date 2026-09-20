@@ -1,5 +1,5 @@
-import { sanitizeSeq, SEQ_LANES } from "cassio/store"
-import { sanitizeTrackPattern, trackPatternHasHits } from "cassio/track_pattern"
+import { sanitizeSeq, SEQ_LANES } from "pocket_synth/store"
+import { sanitizeTrackPattern, trackPatternHasHits } from "pocket_synth/track_pattern"
 
 /**
  * Step sequencer driven by the Transport clock. Global patterns retain six pad

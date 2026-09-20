@@ -1,4 +1,4 @@
-import { exportSample } from "cassio/audio/export_sample"
+import { exportSample } from "pocket_synth/audio/export_sample"
 
 export const PROJECT_AUDIO_FORMATS = Object.freeze(["wav", "mp3", "m4a"])
 
@@ -33,7 +33,7 @@ function makeStereoBuffer(ctx, left, right, sampleRate) {
 }
 
 /**
- * Real-time bounce of one complete CASSIO arrangement cycle from the final
+ * Real-time bounce of one complete POCKET SYNTH arrangement cycle from the final
  * post-limiter master path. The metronome and live-held notes are excluded.
  */
 export async function captureProjectMaster(app) {
@@ -148,7 +148,7 @@ export async function captureProjectMaster(app) {
   }
 }
 
-export async function exportProjectAudio(app, format, basename = "CASSIO_PROJECT") {
+export async function exportProjectAudio(app, format, basename = "POCKET_SYNTH_PROJECT") {
   const fmt = String(format || "wav").toLowerCase()
   if (!PROJECT_AUDIO_FORMATS.includes(fmt)) throw new Error("UNKNOWN FORMAT")
   const buffer = await captureProjectMaster(app)

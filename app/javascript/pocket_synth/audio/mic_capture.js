@@ -1,4 +1,4 @@
-import { formatDuration, peakNormalizeBuffer } from "cassio/audio/sample_io"
+import { formatDuration, peakNormalizeBuffer } from "pocket_synth/audio/sample_io"
 
 const MAX_SECONDS = 20
 const SPEC_BARS = 28

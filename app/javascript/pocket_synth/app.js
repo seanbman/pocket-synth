@@ -1,43 +1,43 @@
-import { AudioEngine } from "cassio/audio_engine"
-import { GlassPolyVoice, noteNameToMidi } from "cassio/voices/glass_poly"
-import { DrumVoice } from "cassio/voices/drum"
-import { SampleVoice } from "cassio/voices/sample"
-import { Transport } from "cassio/transport"
+import { AudioEngine } from "pocket_synth/audio_engine"
+import { GlassPolyVoice, noteNameToMidi } from "pocket_synth/voices/glass_poly"
+import { DrumVoice } from "pocket_synth/voices/drum"
+import { SampleVoice } from "pocket_synth/voices/sample"
+import { Transport } from "pocket_synth/transport"
 import {
   loadRecovery, saveRecovery, defaultProject, defaultPads, defaultLoop, defaultSeq,
   listUserSounds, putUserSound, deleteUserSound, loadFavorites, saveFavorites,
   quantizeGridSec
-} from "cassio/store"
-import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum, isSample } from "cassio/patch"
-import { renderBoot, renderBootError, renderSplash } from "cassio/screens/boot"
-import { renderPlay } from "cassio/screens/play"
-import { renderMenu, AREAS } from "cassio/screens/menu"
-import { renderLibrary } from "cassio/screens/library"
-import { renderDetail } from "cassio/screens/detail"
-import { renderEdit } from "cassio/screens/edit"
-import { renderSaveSound } from "cassio/screens/save_sound"
-import { renderPadAssign } from "cassio/screens/pad_assign"
-import { renderManage } from "cassio/screens/manage"
-import { renderConfirm } from "cassio/screens/confirm"
-import { renderNameEntry } from "cassio/screens/name_entry"
+} from "pocket_synth/store"
+import { patchFromSound, nudgeRoot, sanitizePatch, isUserSound, isKit, isDrum, isSample } from "pocket_synth/patch"
+import { renderBoot, renderBootError, renderSplash } from "pocket_synth/screens/boot"
+import { renderPlay } from "pocket_synth/screens/play"
+import { renderMenu, AREAS } from "pocket_synth/screens/menu"
+import { renderLibrary } from "pocket_synth/screens/library"
+import { renderDetail } from "pocket_synth/screens/detail"
+import { renderEdit } from "pocket_synth/screens/edit"
+import { renderSaveSound } from "pocket_synth/screens/save_sound"
+import { renderPadAssign } from "pocket_synth/screens/pad_assign"
+import { renderManage } from "pocket_synth/screens/manage"
+import { renderConfirm } from "pocket_synth/screens/confirm"
+import { renderNameEntry } from "pocket_synth/screens/name_entry"
 import {
   renderSoundHub, renderSamplerHome, renderMicRecord, renderSampleEdit,
   renderSampleSave, renderAssignSample
-} from "cassio/screens/sampler"
-import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx, LOOP_BAR_WIDTH_PX } from "cassio/screens/loop"
-import { renderTrackList } from "cassio/screens/track_list"
-import { SamplerController, SAMPLER_SCREENS } from "cassio/sampler_controller"
-import { LoopController, LOOP_SCREENS } from "cassio/loop_controller"
-import { SeqController, SEQ_SCREENS } from "cassio/seq_controller"
-import { MixController, MIX_SCREENS } from "cassio/mix_controller"
-import { renderSequencer, renderStepEdit } from "cassio/screens/sequencer"
-import { renderMixer } from "cassio/screens/mixer"
-import { StepSequencer } from "cassio/audio/step_sequencer"
-import { fxKnob01 } from "cassio/audio/fx_params"
-import { knobParamsAt } from "cassio/screens/settings_list"
-import { Metronome } from "cassio/audio/metronome"
-import { LoopEngine } from "cassio/audio/loop_engine"
-import { storedToBuffer } from "cassio/audio/sample_io"
+} from "pocket_synth/screens/sampler"
+import { renderLoopTrackView, renderLoopTrackMenu, renderLoopOptions, renderLoopFx, LOOP_BAR_WIDTH_PX } from "pocket_synth/screens/loop"
+import { renderTrackList } from "pocket_synth/screens/track_list"
+import { SamplerController, SAMPLER_SCREENS } from "pocket_synth/sampler_controller"
+import { LoopController, LOOP_SCREENS } from "pocket_synth/loop_controller"
+import { SeqController, SEQ_SCREENS } from "pocket_synth/seq_controller"
+import { MixController, MIX_SCREENS } from "pocket_synth/mix_controller"
+import { renderSequencer, renderStepEdit } from "pocket_synth/screens/sequencer"
+import { renderMixer } from "pocket_synth/screens/mixer"
+import { StepSequencer } from "pocket_synth/audio/step_sequencer"
+import { fxKnob01 } from "pocket_synth/audio/fx_params"
+import { knobParamsAt } from "pocket_synth/screens/settings_list"
+import { Metronome } from "pocket_synth/audio/metronome"
+import { LoopEngine } from "pocket_synth/audio/loop_engine"
+import { storedToBuffer } from "pocket_synth/audio/sample_io"
 
 const NEW_KIT_ENTRY = {
   id: "__new-kit__",
@@ -67,7 +67,7 @@ const DRUM_EDIT_SCREENS = new Set([
 ])
 const PAD_DEG = [0, 2, 4, 5, 7, 9]
 
-export class CassioApp {
+export class PocketSynthApp {
   constructor(root) {
     this.root = root
     this.vscreen = root.querySelector("[data-vscreen]")
@@ -182,12 +182,12 @@ export class CassioApp {
   }
 
   #setPreloadMsg(msg) {
-    const el = document.querySelector("#cassio-preload .cassio-preload-msg")
+    const el = document.querySelector("#pocket_synth-preload .pocket_synth-preload-msg")
     if (el) el.textContent = msg
   }
 
   #dismissPreload() {
-    document.getElementById("cassio-preload")?.remove()
+    document.getElementById("pocket_synth-preload")?.remove()
   }
 
   /** Load under preload (if present), then V-screen logo fade → PLAY. Also used for retry. */
@@ -340,7 +340,7 @@ export class CassioApp {
   #setBootProgress(p, msg) {
     this.bootProgress = p
     this.bootMessage = msg
-    if (document.getElementById("cassio-preload")) {
+    if (document.getElementById("pocket_synth-preload")) {
       this.#setPreloadMsg(msg)
       return
     }
@@ -3229,7 +3229,7 @@ export class CassioApp {
   }
 
   #bindNameField() {
-    const input = this.vscreen.querySelector("#cassio-name-field")
+    const input = this.vscreen.querySelector("#pocket_synth-name-field")
     if (!input) return
     input.focus()
     input.select()
@@ -3264,7 +3264,7 @@ export class CassioApp {
   }
 
   async #commitName() {
-    const input = this.vscreen.querySelector("#cassio-name-field")
+    const input = this.vscreen.querySelector("#pocket_synth-name-field")
     const v = (input?.value || this.nameDraft || "").trim().toUpperCase().slice(0, 18)
     if (!v) {
       this.toast("NAME REQUIRED")
@@ -4004,7 +4004,7 @@ export class CassioApp {
   #bindComputerKeys() {
     window.addEventListener("keydown", (e) => {
       if (e.repeat || this.root.classList.contains("landscape")) return
-      if (this.#namingActive() || e.target?.id === "cassio-name-field") return
+      if (this.#namingActive() || e.target?.id === "pocket_synth-name-field") return
       if (this.booting || this.bootError) {
         void this.#unlockAudioFromGesture()
         if (this.bootError) {
@@ -4027,7 +4027,7 @@ export class CassioApp {
       if (e.code >= "Digit1" && e.code <= "Digit6") this.#padDown(Number(e.code.slice(-1)))
     })
     window.addEventListener("keyup", (e) => {
-      if (this.#namingActive() || e.target?.id === "cassio-name-field") return
+      if (this.#namingActive() || e.target?.id === "pocket_synth-name-field") return
       if (e.code in KEY_MAP) this.#keyUp(KEY_MAP[e.code])
       if (e.code === "ArrowLeft" || e.code === "ArrowRight") {
         this.#handleAction(e.code === "ArrowRight" ? "nav-right" : "nav-left", null, "up", e)

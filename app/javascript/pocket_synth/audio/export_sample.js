@@ -202,9 +202,9 @@ async function encodeM4a(buf, audioContext = null) {
   }
 }
 
-export async function exportSample(buf, format, basename = "CASSIO_SAMPLE", { audioContext = null } = {}) {
+export async function exportSample(buf, format, basename = "POCKET_SYNTH_SAMPLE", { audioContext = null } = {}) {
   if (!buf) throw new Error("NO AUDIO")
-  const name = String(basename || "CASSIO_SAMPLE").replace(/[^\w\-]+/g, "_")
+  const name = String(basename || "POCKET_SYNTH_SAMPLE").replace(/[^\w\-]+/g, "_")
   const fmt = String(format || "wav").toLowerCase()
   if (fmt === "wav") {
     downloadBlob(await encodeWavCooperative(buf), `${name}.wav`)
