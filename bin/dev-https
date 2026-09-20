@@ -38,12 +38,12 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 if command -v python3 >/dev/null 2>&1; then
-  python3 -m http.server "$CA_PORT" --bind 0.0.0.0 --directory "$ROOT/public" >/tmp/cassio-ca-http.log 2>&1 &
+  python3 -m http.server "$CA_PORT" --bind 0.0.0.0 --directory "$ROOT/public" >/tmp/pocket_synth-ca-http.log 2>&1 &
   CA_PID=$!
   sleep 0.3
 fi
 
-echo "CASSIO HTTPS → https://localhost:${PORT}/  https://${IP:-LAN}:${PORT}/"
+echo "POCKET SYNTH HTTPS → https://localhost:${PORT}/  https://${IP:-LAN}:${PORT}/"
 echo "Phone step 1 (once): http://${IP:-LAN}:${CA_PORT}/dev-ca.crt  → install + trust CA"
 echo "Phone step 2:        https://${IP:-LAN}:${PORT}/"
 echo
