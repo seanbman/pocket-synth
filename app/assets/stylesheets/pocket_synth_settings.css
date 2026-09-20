@@ -1,19 +1,19 @@
-.cassio-stage {
+.pocket_synth-stage {
   --chassis-hi: #ff4d94;
   --lcd-brightness-effective: 0.8;
 }
 
 /* SETTINGS can recolor the physical shell without changing the LCD accent palette. */
-.cassio-stage .chassis {
+.pocket_synth-stage .chassis {
   background: linear-gradient(145deg, var(--chassis-hi) 0%, var(--chassis) 40%, var(--chassis-deep) 100%);
 }
 
-.cassio-stage .vscreen-frame {
+.pocket_synth-stage .vscreen-frame {
   filter: brightness(var(--lcd-brightness-effective));
   transition: filter 140ms linear;
 }
 
-.cassio-stage.cassio-display-sleep .vscreen-overlay {
+.pocket_synth-stage.pocket_synth-display-sleep .vscreen-overlay {
   opacity: 0 !important;
 }
 

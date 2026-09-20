@@ -17,7 +17,7 @@ class ErrorReportsController < ApplicationController
     return head :bad_request if reports.empty?
 
     accepted = reports.filter_map do |report|
-      Rails.logger.error(JSON.generate(event: "cassio_client_error", report: report))
+      Rails.logger.error(JSON.generate(event: "pocket_synth_client_error", report: report))
       report["id"]
     end
 
@@ -35,7 +35,7 @@ class ErrorReportsController < ApplicationController
   def within_rate_limit?
     bucket = Time.current.utc.strftime("%Y%m%d%H%M")
     identity = Digest::SHA256.hexdigest("#{Rails.application.secret_key_base}:#{request.remote_ip}:#{bucket}")
-    key = "cassio:error-report-rate:#{identity}"
+    key = "pocket_synth:error-report-rate:#{identity}"
     count = Rails.cache.read(key).to_i
     return false if count >= RATE_LIMIT_PER_MINUTE
 

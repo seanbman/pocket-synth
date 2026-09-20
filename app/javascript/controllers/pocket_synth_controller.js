@@ -1,33 +1,33 @@
 import { Controller } from "@hotwired/stimulus"
-import { CassioApp } from "cassio/app"
-import { installDeepAudioTrace } from "cassio/debug_audio_hooks"
-import { installInputFeedbackRuntime } from "cassio/input_feedback_runtime"
-import { errorBreadcrumb, installErrorReporter, reportError } from "cassio/error_reporter"
-import { installPlayRecordLaneRuntime } from "cassio/play_record_lane_runtime"
-import { installPostPr12StabilizationRuntime } from "cassio/post_pr12_stabilization_runtime"
-import { installProjectAudioExportRuntime } from "cassio/project_audio_export_runtime"
-import { installProjectRuntime } from "cassio/project_runtime"
-import { installRecordingRuntime } from "cassio/recording_runtime"
-import { installSequenceVoiceGuardRuntime } from "cassio/sequence_voice_guard_runtime"
-import { installSequencerUxRuntime } from "cassio/sequencer_ux_runtime"
-import { installSettingsBridgeRuntime } from "cassio/settings_bridge_runtime"
-import { installSettingsRuntime } from "cassio/settings_runtime"
-import { showStartupFailure } from "cassio/startup_guard"
-import { installTrackNamingRuntime } from "cassio/track_naming_runtime"
-import { installTrackPatternRuntime } from "cassio/track_pattern_runtime"
-import { installUserReportRegressionRuntime } from "cassio/user_report_regression_runtime"
+import { PocketSynthApp } from "pocket_synth/app"
+import { installDeepAudioTrace } from "pocket_synth/debug_audio_hooks"
+import { installInputFeedbackRuntime } from "pocket_synth/input_feedback_runtime"
+import { errorBreadcrumb, installErrorReporter, reportError } from "pocket_synth/error_reporter"
+import { installPlayRecordLaneRuntime } from "pocket_synth/play_record_lane_runtime"
+import { installPostPr12StabilizationRuntime } from "pocket_synth/post_pr12_stabilization_runtime"
+import { installProjectAudioExportRuntime } from "pocket_synth/project_audio_export_runtime"
+import { installProjectRuntime } from "pocket_synth/project_runtime"
+import { installRecordingRuntime } from "pocket_synth/recording_runtime"
+import { installSequenceVoiceGuardRuntime } from "pocket_synth/sequence_voice_guard_runtime"
+import { installSequencerUxRuntime } from "pocket_synth/sequencer_ux_runtime"
+import { installSettingsBridgeRuntime } from "pocket_synth/settings_bridge_runtime"
+import { installSettingsRuntime } from "pocket_synth/settings_runtime"
+import { showStartupFailure } from "pocket_synth/startup_guard"
+import { installTrackNamingRuntime } from "pocket_synth/track_naming_runtime"
+import { installTrackPatternRuntime } from "pocket_synth/track_pattern_runtime"
+import { installUserReportRegressionRuntime } from "pocket_synth/user_report_regression_runtime"
 import {
   audioSnapshot,
   flushDebug,
   installAudioTrace,
   installGlobalDebugHooks,
   trace
-} from "cassio/debug_trace"
+} from "pocket_synth/debug_trace"
 
 function debugTracingEnabled() {
   try {
     const params = new URLSearchParams(window.location.search)
-    return params.get("debug") === "1" || window.localStorage?.getItem("cassio.debug") === "1"
+    return params.get("debug") === "1" || window.localStorage?.getItem("pocket_synth.debug") === "1"
   } catch (_) {
     return false
   }
@@ -36,17 +36,17 @@ function debugTracingEnabled() {
 export default class extends Controller {
   connect() {
     installErrorReporter()
-    errorBreadcrumb("cassio.connect")
+    errorBreadcrumb("pocket_synth.connect")
 
     const debug = debugTracingEnabled()
     if (debug) {
       installGlobalDebugHooks()
-      trace("app", "cassio.construct.before")
+      trace("app", "pocket_synth.construct.before")
     }
 
     try {
-      errorBreadcrumb("cassio.construct.before")
-      this.app = new CassioApp(this.element)
+      errorBreadcrumb("pocket_synth.construct.before")
+      this.app = new PocketSynthApp(this.element)
       installTrackPatternRuntime(this.app)
       installSequenceVoiceGuardRuntime(this.app)
       installSequencerUxRuntime(this.app)
@@ -68,7 +68,7 @@ export default class extends Controller {
       // Deep audio instrumentation is intentionally opt-in. The source watcher,
       // transport wrappers and periodic probes are useful for diagnosis, but they
       // must never run in the normal performance path on constrained phones.
-      errorBreadcrumb("cassio.construct.after")
+      errorBreadcrumb("pocket_synth.construct.after")
 
       if (debug) {
         installAudioTrace(this.app)
@@ -87,13 +87,13 @@ export default class extends Controller {
           void flushDebug()
         })
 
-        trace("app", "cassio.construct.after", { audio: audioSnapshot(this.app) })
+        trace("app", "pocket_synth.construct.after", { audio: audioSnapshot(this.app) })
       }
     } catch (error) {
-      errorBreadcrumb("cassio.construct.failed")
+      errorBreadcrumb("pocket_synth.construct.failed")
       void reportError(error, { kind: "startup" })
       if (debug) {
-        trace("error", "cassio.construct.failed", { error }, "error")
+        trace("error", "pocket_synth.construct.failed", { error }, "error")
         void flushDebug()
       }
       showStartupFailure(this.element, error)
