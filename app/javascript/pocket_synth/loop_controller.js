@@ -1,8 +1,8 @@
-import { OPTION_ROWS, LOOP_BAR_WIDTH_PX } from "cassio/screens/loop"
-import { nudgeFx, stepFx, fmtFx, fxKnob01, fxDefaults } from "cassio/audio/fx_params"
-import { buildSettingsRows, knobParamsAt } from "cassio/screens/settings_list"
-import { QUANTIZE_OPTS, QUANTIZE_LABELS, trackSeqHasHits, patternHasHits } from "cassio/store"
-import { LOOP_LENGTH_PRESETS } from "cassio/audio/loop_engine"
+import { OPTION_ROWS, LOOP_BAR_WIDTH_PX } from "pocket_synth/screens/loop"
+import { nudgeFx, stepFx, fmtFx, fxKnob01, fxDefaults } from "pocket_synth/audio/fx_params"
+import { buildSettingsRows, knobParamsAt } from "pocket_synth/screens/settings_list"
+import { QUANTIZE_OPTS, QUANTIZE_LABELS, trackSeqHasHits, patternHasHits } from "pocket_synth/store"
+import { LOOP_LENGTH_PRESETS } from "pocket_synth/audio/loop_engine"
 
 export const LOOP_SCREENS = new Set([
   "loop-tracks", "loop-menu", "loop-options", "loop-fx", "track-list"

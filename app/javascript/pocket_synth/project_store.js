@@ -1,4 +1,4 @@
-const DB_NAME = "cassio-projects-v1"
+const DB_NAME = "pocket_synth-projects-v1"
 const DB_VERSION = 1
 const PROJECTS = "projects"
 
@@ -98,18 +98,18 @@ export function collectReferencedSoundIds(value, out = new Set()) {
 
 function portableReplacer(_key, value) {
   if (value instanceof ArrayBuffer) {
-    return { __cassioType: "ArrayBuffer", data: Array.from(new Uint8Array(value)) }
+    return { __pocket_synthType: "ArrayBuffer", data: Array.from(new Uint8Array(value)) }
   }
   if (ArrayBuffer.isView(value)) {
-    return { __cassioType: value.constructor.name, data: Array.from(value) }
+    return { __pocket_synthType: value.constructor.name, data: Array.from(value) }
   }
   return value
 }
 
 function portableReviver(_key, value) {
-  if (!value || typeof value !== "object" || !value.__cassioType || !Array.isArray(value.data)) return value
-  if (value.__cassioType === "ArrayBuffer") return new Uint8Array(value.data).buffer
-  const ctor = globalThis[value.__cassioType]
+  if (!value || typeof value !== "object" || !value.__pocket_synthType || !Array.isArray(value.data)) return value
+  if (value.__pocket_synthType === "ArrayBuffer") return new Uint8Array(value.data).buffer
+  const ctor = globalThis[value.__pocket_synthType]
   if (typeof ctor === "function" && ctor.BYTES_PER_ELEMENT) return new ctor(value.data)
   return value.data
 }
@@ -117,7 +117,7 @@ function portableReviver(_key, value) {
 export function makeProjectBundle(project, userSounds = []) {
   const referenced = collectReferencedSoundIds(project?.state)
   return {
-    format: "cassio-project-v1",
+    format: "pocket_synth-project-v1",
     version: 1,
     exportedAt: new Date().toISOString(),
     project: {
@@ -137,8 +137,8 @@ export function encodeProjectBundle(bundle) {
 
 export function decodeProjectBundle(text) {
   const bundle = JSON.parse(String(text || ""), portableReviver)
-  if (bundle?.format !== "cassio-project-v1" || bundle?.version !== 1 || !bundle?.project?.state) {
-    throw new Error("NOT A CASSIO V1 PROJECT")
+  if (bundle?.format !== "pocket_synth-project-v1" || bundle?.version !== 1 || !bundle?.project?.state) {
+    throw new Error("NOT A POCKET SYNTH V1 PROJECT")
   }
   return bundle
 }

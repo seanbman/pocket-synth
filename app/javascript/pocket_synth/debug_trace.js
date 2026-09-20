@@ -1,7 +1,7 @@
 const DEBUG_ENDPOINT = "/debug_ingest"
-const SESSION_KEY = "cassio.debug.session.v2"
-const ACTIVE_RUN_KEY = "cassio.debug.activeRun.v2"
-const TAIL_KEY = "cassio.debug.tail.v2"
+const SESSION_KEY = "pocket_synth.debug.session.v2"
+const ACTIVE_RUN_KEY = "pocket_synth.debug.activeRun.v2"
+const TAIL_KEY = "pocket_synth.debug.tail.v2"
 const SESSION_MAX_AGE_MS = 6 * 60 * 60 * 1000
 const FLUSH_MS = 350
 const MAX_BATCH = 60
@@ -257,7 +257,7 @@ function traceAudio(app, event, data = {}, severity = "info") {
 function wrapMethod(target, name, app, label, argsToData = null) {
   if (!target || typeof target[name] !== "function") return
   const original = target[name]
-  if (original.__cassioDebugWrapped) return
+  if (original.__pocket_synthDebugWrapped) return
   let callNo = 0
   const wrapped = function(...args) {
     const callId = `${label}:${++callNo}`
@@ -274,7 +274,7 @@ function wrapMethod(target, name, app, label, argsToData = null) {
     setTimeout(() => traceAudio(app, `${label}.settled.120ms`, { callId }), 120)
     return result
   }
-  wrapped.__cassioDebugWrapped = true
+  wrapped.__pocket_synthDebugWrapped = true
   target[name] = wrapped
 }
 

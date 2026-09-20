@@ -18,7 +18,7 @@ const MACRO_ALIASES = {
   cutoff: "brightness"
 }
 
-import { fxDefaults } from "cassio/audio/fx_params"
+import { fxDefaults } from "pocket_synth/audio/fx_params"
 
 export const DEFAULT_SAMPLE_GAIN = 1.5
 

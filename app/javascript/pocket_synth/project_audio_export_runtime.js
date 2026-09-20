@@ -1,5 +1,5 @@
-import { exportProjectAudio, PROJECT_AUDIO_FORMATS } from "cassio/audio/project_export"
-import { renderProjectAudioExport } from "cassio/screens/project"
+import { exportProjectAudio, PROJECT_AUDIO_FORMATS } from "pocket_synth/audio/project_export"
+import { renderProjectAudioExport } from "pocket_synth/screens/project"
 
 const EXPORT_SCREEN = "project-audio-export"
 
@@ -8,7 +8,7 @@ function selectedProject(projectRuntime) {
 }
 
 function exportBaseName(name) {
-  return String(name || "CASSIO PROJECT").trim().replace(/[^a-z0-9_-]+/gi, "_") || "CASSIO_PROJECT"
+  return String(name || "POCKET SYNTH PROJECT").trim().replace(/[^a-z0-9_-]+/gi, "_") || "POCKET_SYNTH_PROJECT"
 }
 
 export class ProjectAudioExportRuntime {

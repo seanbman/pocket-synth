@@ -1,4 +1,4 @@
-import { defaultTrackSeq } from "cassio/store"
+import { defaultTrackSeq } from "pocket_synth/store"
 
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value || {}, key)
 
@@ -72,14 +72,14 @@ function installDimLevelPreview(app) {
 function developerModeEnabled(app) {
   try {
     if (app.settingsRuntime?.state) return !!app.settingsRuntime.state().debugEnabled
-    return window.localStorage?.getItem("cassio.debug") === "1"
+    return window.localStorage?.getItem("pocket_synth.debug") === "1"
   } catch (_) {
     return false
   }
 }
 
 function syncDeveloperControls(app) {
-  const marker = document.querySelector("[data-cassio-glitch-marker]")
+  const marker = document.querySelector("[data-pocket_synth-glitch-marker]")
   if (!marker) return
   marker.hidden = !developerModeEnabled(app)
 }

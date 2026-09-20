@@ -1,8 +1,8 @@
 const ENDPOINT = "/error_reports"
-const DB_NAME = "cassio-diagnostics-v1"
+const DB_NAME = "pocket_synth-diagnostics-v1"
 const DB_VERSION = 1
 const STORE_NAME = "outbox"
-const FALLBACK_KEY = "cassio.error.outbox.v1"
+const FALLBACK_KEY = "pocket_synth.error.outbox.v1"
 const MAX_REPORTS = 40
 const MAX_REPORT_AGE_MS = 7 * 24 * 60 * 60 * 1000
 const MAX_BREADCRUMBS = 24
@@ -91,7 +91,7 @@ function safeSource(value) {
 }
 
 function buildSha() {
-  const meta = documentGlobal()?.querySelector?.('meta[name="cassio-build"]')
+  const meta = documentGlobal()?.querySelector?.('meta[name="pocket_synth-build"]')
   return sanitizeReportText(meta?.content || "unknown", 80)
 }
 

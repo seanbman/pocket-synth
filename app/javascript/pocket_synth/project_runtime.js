@@ -1,4 +1,4 @@
-import { defaultProject, putUserSound, saveRecovery } from "cassio/store"
+import { defaultProject, putUserSound, saveRecovery } from "pocket_synth/store"
 import {
   cloneProjectState,
   decodeProjectBundle,
@@ -8,14 +8,14 @@ import {
   makeProjectBundle,
   newProjectId,
   putProject
-} from "cassio/project_store"
+} from "pocket_synth/project_store"
 import {
   renderProjectManage,
   renderProjectName,
   renderProjects,
   renderProjectSwitchConfirm
-} from "cassio/screens/project"
-import { renderProjectDeleteConfirm } from "cassio/screens/project_delete"
+} from "pocket_synth/screens/project"
+import { renderProjectDeleteConfirm } from "pocket_synth/screens/project_delete"
 
 const PROJECT_SCREENS = new Set([
   "project-list",
@@ -24,7 +24,7 @@ const PROJECT_SCREENS = new Set([
   "project-switch-confirm",
   "project-delete-confirm"
 ])
-const ACTIVE_KEY = "cassio.activeProjectId"
+const ACTIVE_KEY = "pocket_synth.activeProjectId"
 
 function selectedProject(runtime) {
   return runtime.projects[runtime.projectIndex] || null
@@ -35,7 +35,7 @@ function safeName(name) {
 }
 
 function downloadName(name) {
-  return safeName(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "cassio-project"
+  return safeName(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "pocket_synth-project"
 }
 
 export class ProjectRuntime {
@@ -161,7 +161,7 @@ export class ProjectRuntime {
   }
 
   async commitName() {
-    const input = this.app.vscreen.querySelector("#cassio-project-name-field")
+    const input = this.app.vscreen.querySelector("#pocket_synth-project-name-field")
     const name = safeName(input?.value || this.projectNameDraft)
     this.projectNameDraft = name
     const purpose = this.projectNamePurpose
@@ -256,7 +256,7 @@ export class ProjectRuntime {
       const url = URL.createObjectURL(blob)
       const anchor = document.createElement("a")
       anchor.href = url
-      anchor.download = `${downloadName(row.name)}.cassio`
+      anchor.download = `${downloadName(row.name)}.pocket_synth`
       document.body.appendChild(anchor)
       anchor.click()
       anchor.remove()
@@ -267,7 +267,7 @@ export class ProjectRuntime {
   }
 
   async importBundle(bundle) {
-    if (bundle?.format !== "cassio-project-v1" || !bundle?.project?.state) throw new Error("NOT A CASSIO PROJECT")
+    if (bundle?.format !== "pocket_synth-project-v1" || !bundle?.project?.state) throw new Error("NOT A POCKET SYNTH PROJECT")
     for (const sound of bundle.userSounds || []) await putUserSound(sound)
     if (bundle.userSounds?.length) this.app.userSounds = [...(this.app.userSounds || []).filter((s) => !bundle.userSounds.some((x) => x.id === s.id)), ...bundle.userSounds]
     const row = await putProject({
@@ -286,7 +286,7 @@ export class ProjectRuntime {
   importFile() {
     const input = document.createElement("input")
     input.type = "file"
-    input.accept = ".cassio,.json,application/json"
+    input.accept = ".pocket_synth,.json,application/json"
     input.hidden = true
     input.addEventListener("change", async () => {
       try {
@@ -366,7 +366,7 @@ export class ProjectRuntime {
   }
 
   #bindProjectNameField() {
-    const input = this.app.vscreen.querySelector("#cassio-project-name-field")
+    const input = this.app.vscreen.querySelector("#pocket_synth-project-name-field")
     if (!input || input.dataset.projectBound) return
     input.dataset.projectBound = "1"
     input.addEventListener("input", () => { this.projectNameDraft = safeName(input.value) })

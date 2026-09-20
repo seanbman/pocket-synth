@@ -246,7 +246,7 @@ export function installRecordingRuntime(app) {
 
           await cacheStoredAudioCooperatively(track)
 
-          // Diagnostic stage 4: restore the original CassioApp completion path
+          // Diagnostic stage 4: restore the original PocketSynthApp completion path
           // only after the record commit is off the audio callback and PCM has
           // been cooperatively cached. This preserves naming/toast/transport
           // semantics without reintroducing synchronous multi-megabyte copying.
