@@ -2,37 +2,34 @@
 
 CASSIO is configured to run as a single Heroku web dyno with Puma.
 
-## Required buildpack order
+## Buildpack policy
 
-The live Heroku app must have these buildpacks in this exact order:
+CASSIO uses the Rails 8.1 import-map JavaScript path and does not require a Node build step in production.
 
-1. `heroku/nodejs`
-2. `heroku/ruby`
+The live Heroku app should have one buildpack:
 
-The Node buildpack installs the JavaScript dependencies and the pinned Node runtime from `package.json`. The Ruby buildpack then runs Rails asset precompilation, whose `javascript:build` task invokes the already-installed `npm run build` to produce the Safari 15-compatible bundle.
+1. `heroku/ruby`
 
-`app.json` declares this order for newly-created apps and review apps, but it does **not** reconfigure an existing Heroku app. For an existing app, configure the buildpacks in the Heroku dashboard under **Settings -> Buildpacks** or with the Heroku CLI.
+The former `heroku/nodejs` + esbuild Safari 15 compatibility path is superseded. Do not add a dummy `package.json` and do not restore the Node buildpack solely for legacy-browser support.
 
-If the dashboard currently shows only `heroku/ruby`, remove it, add `heroku/nodejs`, then add `heroku/ruby` again so Node is first.
-
-CLI equivalent:
+For an existing Heroku app:
 
 ```sh
 heroku buildpacks:clear -a <app-name>
-heroku buildpacks:add --index 1 heroku/nodejs -a <app-name>
-heroku buildpacks:add --index 2 heroku/ruby -a <app-name>
+heroku buildpacks:set heroku/ruby -a <app-name>
 ```
 
 ## Deploy
 
-1. Confirm the buildpack order above.
+1. Confirm `heroku/ruby` is the only buildpack.
 2. Deploy the intended branch.
-3. Heroku installs Node dependencies first, then Ruby dependencies.
-4. Rails asset precompilation runs `npm run build` and produces the Safari 15-compatible JavaScript bundle.
-5. Heroku starts `web: bundle exec puma -C config/puma.rb`.
-6. Verify `https://<app>.herokuapp.com/up` returns 200, then open the root app.
+3. Heroku installs Ruby dependencies and precompiles Rails assets.
+4. Heroku starts `web: bundle exec puma -C config/puma.rb`.
+5. Verify `https://<app>.herokuapp.com/up` returns 200, then open the root app.
 
-The repository pins Node in `package.json` and Ruby in `.ruby-version` so production builds are reproducible.
+## Browser policy
+
+CASSIO targets modern browsers capable of the current Rails import-map/module path and the Web APIs required by the full synth/sampler experience. Legacy Safari/iOS compatibility is not a product requirement. We prefer the full feature set over transpilation, shims, or degraded modes for obsolete browsers.
 
 ## Current persistence model
 
