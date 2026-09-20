@@ -8,12 +8,12 @@ function errorText(error) {
 export function showStartupFailure(root, error, { reload = () => window.location.reload() } = {}) {
   document.documentElement.style.background = STARTUP_BG
   if (document.body) document.body.style.background = STARTUP_BG
-  root?.setAttribute?.("data-cassio-startup-error", "true")
+  root?.setAttribute?.("data-pocket_synth-startup-error", "true")
 
-  let panel = document.getElementById("cassio-bootstrap-error")
+  let panel = document.getElementById("pocket_synth-bootstrap-error")
   if (!panel) {
     panel = document.createElement("div")
-    panel.id = "cassio-bootstrap-error"
+    panel.id = "pocket_synth-bootstrap-error"
     panel.setAttribute("role", "alert")
     Object.assign(panel.style, {
       position: "fixed",
@@ -36,7 +36,7 @@ export function showStartupFailure(root, error, { reload = () => window.location
 
   panel.replaceChildren()
   const title = document.createElement("div")
-  title.textContent = "CASSIO"
+  title.textContent = "POCKET SYNTH"
   title.style.fontWeight = "800"
   title.style.fontSize = "2rem"
   title.style.letterSpacing = "0.14em"
@@ -55,7 +55,7 @@ export function showStartupFailure(root, error, { reload = () => window.location
 
   const retry = document.createElement("button")
   retry.type = "button"
-  retry.textContent = "RELOAD CASSIO"
+  retry.textContent = "RELOAD POCKET SYNTH"
   retry.style.padding = "0.55rem 0.8rem"
   retry.style.border = "1px solid #39ff14"
   retry.style.background = "#0b0b0b"

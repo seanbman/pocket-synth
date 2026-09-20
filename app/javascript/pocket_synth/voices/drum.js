@@ -1,4 +1,4 @@
-import { midiToFreq } from "cassio/voices/glass_poly"
+import { midiToFreq } from "pocket_synth/voices/glass_poly"
 
 const TYPES = new Set(["kick", "snare", "hat", "openhat", "clap", "tom"])
 

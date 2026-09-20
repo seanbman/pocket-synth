@@ -1,4 +1,4 @@
-import { saveSettings } from "cassio/settings_store"
+import { saveSettings } from "pocket_synth/settings_store"
 
 /**
  * Existing PLAY/LOOP hardware controls predate the global SETTINGS store.

@@ -1,4 +1,4 @@
-const DB_NAME = "cassio-v1"
+const DB_NAME = "pocket_synth-v1"
 const DB_VERSION = 2
 const RECOVERY = "recovery"
 const USER_SOUNDS = "userSounds"

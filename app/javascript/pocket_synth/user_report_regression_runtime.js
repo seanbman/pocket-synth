@@ -90,13 +90,13 @@ export function hasRecordedTrackAudio(track) {
 }
 
 function stopSamplePreview(app, { toast = true } = {}) {
-  const midi = app?._cassioSamplePreviewMidi
+  const midi = app?._pocket_synthSamplePreviewMidi
   if (midi == null) return false
 
   try { app.sampleVoice?.noteOff?.(midi, true) } catch (_) { /* already stopped */ }
-  if (app._cassioSamplePreviewTimer) clearTimeout(app._cassioSamplePreviewTimer)
-  app._cassioSamplePreviewTimer = null
-  app._cassioSamplePreviewMidi = null
+  if (app._pocket_synthSamplePreviewTimer) clearTimeout(app._pocket_synthSamplePreviewTimer)
+  app._pocket_synthSamplePreviewTimer = null
+  app._pocket_synthSamplePreviewMidi = null
   if (toast) app.toast?.("PREVIEW STOPPED")
   return true
 }
@@ -108,12 +108,12 @@ function decoratePreviewControl(app) {
   }
 
   const label = app.root?.querySelector?.(".sample-edit-screen .lcd-soft > div:first-child .green")
-  if (label) label.textContent = app._cassioSamplePreviewMidi == null ? "PLAY" : "STOP"
+  if (label) label.textContent = app._pocket_synthSamplePreviewMidi == null ? "PLAY" : "STOP"
 }
 
 function stopTextEntryPropagation(input) {
-  if (!input || input.dataset.cassioKeyIsolation === "1") return
-  input.dataset.cassioKeyIsolation = "1"
+  if (!input || input.dataset.pocket_synthKeyIsolation === "1") return
+  input.dataset.pocket_synthKeyIsolation = "1"
   const stop = (event) => event.stopPropagation()
   input.addEventListener("keydown", stop)
   input.addEventListener("keyup", stop)
@@ -197,7 +197,7 @@ export function installUserReportRegressionRuntime(app) {
   if (sampler?.preview) {
     const originalPreview = sampler.preview.bind(sampler)
     sampler.preview = async () => {
-      if (app._cassioSamplePreviewMidi != null) {
+      if (app._pocket_synthSamplePreviewMidi != null) {
         stopSamplePreview(app)
         app.render?.()
         return false
@@ -207,16 +207,16 @@ export function installUserReportRegressionRuntime(app) {
       if (!app.sampleBuffer || !app.sampleDraft || !app.sampleVoice?.activeCount) return result
 
       const midi = noteNameToMidi(app.sampleDraft.root || "C3")
-      app._cassioSamplePreviewMidi = midi
+      app._pocket_synthSamplePreviewMidi = midi
       app.render?.()
 
       const loops = !!app.sampleDraft.loopOn || !!app.sampleDraft.stutter
       if (!loops) {
         const seconds = Math.max(0.05, Number(app.sampleVoice.playSeconds?.(midi)) || 0.05)
-        app._cassioSamplePreviewTimer = setTimeout(() => {
-          if (app._cassioSamplePreviewMidi !== midi) return
-          app._cassioSamplePreviewMidi = null
-          app._cassioSamplePreviewTimer = null
+        app._pocket_synthSamplePreviewTimer = setTimeout(() => {
+          if (app._pocket_synthSamplePreviewMidi !== midi) return
+          app._pocket_synthSamplePreviewMidi = null
+          app._pocket_synthSamplePreviewTimer = null
           if (app.screen === "sample-edit") app.render?.()
         }, seconds * 1000 + 100)
       }
@@ -230,18 +230,18 @@ export function installUserReportRegressionRuntime(app) {
       : null)
   if (promptFn) {
     app.trackNamePrompt = (...args) => {
-      app._cassioTextEntryActive = true
+      app._pocket_synthTextEntryActive = true
       try {
         return promptFn(...args)
       } finally {
-        app._cassioTextEntryActive = false
+        app._pocket_synthTextEntryActive = false
       }
     }
   }
 
   if (typeof window !== "undefined") {
     const guardPromptKeys = (event) => {
-      if (!app._cassioTextEntryActive) return
+      if (!app._pocket_synthTextEntryActive) return
       event.stopImmediatePropagation()
     }
     window.addEventListener("keydown", guardPromptKeys, true)

@@ -1,4 +1,4 @@
-import { SEQ_LENGTHS, defaultStep, sanitizeStep } from "cassio/store"
+import { SEQ_LENGTHS, defaultStep, sanitizeStep } from "pocket_synth/store"
 
 export const TRACK_PATTERN_KIND = "track-pattern-v2"
 

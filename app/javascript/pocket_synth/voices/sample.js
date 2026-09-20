@@ -1,7 +1,7 @@
-import { midiToFreq, noteNameToMidi } from "cassio/voices/glass_poly"
-import { DEFAULT_SAMPLE_GAIN } from "cassio/patch"
-import { FxChain } from "cassio/audio/fx_chain"
-import { sanitizeFx, syncSeconds } from "cassio/audio/fx_params"
+import { midiToFreq, noteNameToMidi } from "pocket_synth/voices/glass_poly"
+import { DEFAULT_SAMPLE_GAIN } from "pocket_synth/patch"
+import { FxChain } from "pocket_synth/audio/fx_chain"
+import { sanitizeFx, syncSeconds } from "pocket_synth/audio/fx_params"
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 

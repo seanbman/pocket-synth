@@ -1,4 +1,4 @@
-const SETTINGS_KEY = "cassio.systemSettings.v1"
+const SETTINGS_KEY = "pocket_synth.systemSettings.v1"
 
 export const CHASSIS_THEMES = [
   { id: "pink", name: "PINK", hi: "#ff4d94", base: "#ff2d7a", deep: "#d4145a" },

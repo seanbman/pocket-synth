@@ -1,12 +1,12 @@
 import {
   cloneTrackPattern,
   sanitizeTrackPattern
-} from "cassio/track_pattern"
+} from "pocket_synth/track_pattern"
 import {
   captureAllPadSequenceSources,
   capturePadSequenceSource,
   triggerSequenceLaneSource
-} from "cassio/sequence_lane_source"
+} from "pocket_synth/sequence_lane_source"
 
 function patternMap(items = []) {
   return new Map((items || []).filter(Boolean).map((item) => [item.id, item.pattern || null]))

@@ -1,5 +1,5 @@
-import { listProjects } from "cassio/project_store"
-import { CHASSIS_THEMES, DEFAULT_SETTINGS, chassisTheme, loadSettings, saveSettings } from "cassio/settings_store"
+import { listProjects } from "pocket_synth/project_store"
+import { CHASSIS_THEMES, DEFAULT_SETTINGS, chassisTheme, loadSettings, saveSettings } from "pocket_synth/settings_store"
 import {
   HOME_ROWS,
   renderSettingsAbout,
@@ -9,7 +9,7 @@ import {
   renderSettingsMetro,
   renderSettingsPermissions,
   renderSettingsStorage
-} from "cassio/screens/system_settings"
+} from "pocket_synth/screens/system_settings"
 
 export const SETTINGS_SCREENS = new Set([
   "settings-home",
@@ -389,20 +389,20 @@ export class SettingsRuntime {
       storagePersisted: this.storage.persisted,
       micPermission: this.micPermission
     }
-    console.info("CASSIO DIAGNOSTICS", snapshot)
+    console.info("POCKET SYNTH DIAGNOSTICS", snapshot)
     this.app.toast?.("DIAG IN CONSOLE")
     return snapshot
   }
 
   #debugEnabled() {
-    try { return localStorage.getItem("cassio.debug") === "1" } catch (_) { return false }
+    try { return localStorage.getItem("pocket_synth.debug") === "1" } catch (_) { return false }
   }
 
   #toggleDebug() {
     const enabled = !this.#debugEnabled()
     try {
-      if (enabled) localStorage.setItem("cassio.debug", "1")
-      else localStorage.removeItem("cassio.debug")
+      if (enabled) localStorage.setItem("pocket_synth.debug", "1")
+      else localStorage.removeItem("pocket_synth.debug")
     } catch (_) { /* ignore */ }
     this.app.toast?.(`DEBUG ${enabled ? "ON" : "OFF"}`)
     this.app.render()
@@ -415,7 +415,7 @@ export class SettingsRuntime {
       : this._displayMode === "dim" ? this.settings.dimLevel
         : this.settings.brightness
     style.setProperty("--lcd-brightness-effective", String(level))
-    this.app.root.classList.toggle("cassio-display-sleep", this._displayMode === "sleep")
+    this.app.root.classList.toggle("pocket_synth-display-sleep", this._displayMode === "sleep")
   }
 
   #scheduleDisplayTimers() {
