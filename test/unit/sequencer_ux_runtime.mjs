@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
-import { installSequencerUxRuntime } from "../../app/javascript/cassio/sequencer_ux_runtime.js"
+import { installSequencerUxRuntime } from "../../app/javascript/pocket_synth/sequencer_ux_runtime.js"
 
 function makeApp() {
   const calls = { renders: 0, toasts: [], nav: [] }

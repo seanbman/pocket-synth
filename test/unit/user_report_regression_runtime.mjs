@@ -5,7 +5,7 @@ import {
   hasRecordedTrackAudio,
   installUserReportRegressionRuntime,
   mixSequenceSourceForTrack
-} from "../../app/javascript/cassio/user_report_regression_runtime.js"
+} from "../../app/javascript/pocket_synth/user_report_regression_runtime.js"
 
 const source = {
   soundId: "glass-poly",
@@ -94,12 +94,12 @@ assert.ok(mixSequenceSourceForTrack(app, source, track))
   installUserReportRegressionRuntime(previewApp)
   await previewApp.sampler.preview()
   assert.equal(calls.preview, 1)
-  assert.equal(previewApp._cassioSamplePreviewMidi, 48)
+  assert.equal(previewApp._pocket_synthSamplePreviewMidi, 48)
 
   await previewApp.sampler.preview()
   assert.equal(calls.preview, 1)
   assert.deepEqual(calls.stopped, [[48, true]])
-  assert.equal(previewApp._cassioSamplePreviewMidi, null)
+  assert.equal(previewApp._pocket_synthSamplePreviewMidi, null)
   assert.ok(calls.toast.includes("PREVIEW STOPPED"))
 }
 
