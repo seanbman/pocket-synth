@@ -1,15 +1,15 @@
-# CASSIO Error Reporting
+# POCKET SYNTH Error Reporting
 
-CASSIO uses capability-driven browser compatibility instead of Rails' blanket
+POCKET SYNTH uses capability-driven browser compatibility instead of Rails' blanket
 `allow_browser versions: :modern` gate. Older browsers are allowed to load the
-app; failures are judged by the APIs CASSIO actually uses.
+app; failures are judged by the APIs POCKET SYNTH actually uses.
 
 ## Client reporting
 
-The lightweight reporter in `app/javascript/cassio/error_reporter.js` is always
+The lightweight reporter in `app/javascript/pocket_synth/error_reporter.js` is always
 on. Deep audio tracing remains opt-in through the existing `?debug=1` path.
 
-Unhandled JavaScript errors, unhandled promise rejections, and CASSIO startup
+Unhandled JavaScript errors, unhandled promise rejections, and POCKET SYNTH startup
 construction failures are sanitized and written immediately to a separate,
 bounded IndexedDB diagnostics outbox. If IndexedDB is unavailable, a small
 localStorage fallback is used. Reports retry on launch, foreground return, and
@@ -28,7 +28,7 @@ The queue is capped at 40 reports and seven days. A report is deleted only after
 
 `ErrorReportsController` accepts at most 10 reports and 256 KiB per request,
 re-sanitizes all fields, rate-limits by a short-lived salted hash of the remote
-IP, and writes a structured `cassio_client_error` record to the Rails log.
+IP, and writes a structured `pocket_synth_client_error` record to the Rails log.
 Raw IP addresses are not stored in the report.
 
 ### GitHub issue delivery — next increment

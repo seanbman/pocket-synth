@@ -2,22 +2,22 @@
 
 ## Purpose
 
-This document triages the exploratory user-testing package in the personal Google Drive folder `grok-user-testing` and converts the useful findings into a staged remediation plan for CASSIO.
+This document triages the exploratory user-testing package in the personal Google Drive folder `grok-user-testing` and converts the useful findings into a staged remediation plan for POCKET SYNTH.
 
-The Drive report is treated as **external exploratory evidence**, not as canonical product truth. Where a recommendation conflicts with CASSIO's V1 specification or current Grapher knowledge, the canonical product model wins unless a deliberate product decision supersedes it.
+The Drive report is treated as **external exploratory evidence**, not as canonical product truth. Where a recommendation conflicts with POCKET SYNTH's V1 specification or current Grapher knowledge, the canonical product model wins unless a deliberate product decision supersedes it.
 
 Source package reviewed:
 
-- `grok-user-testing/CASSIO-User-Testing-Report.md`
+- `grok-user-testing/POCKET SYNTH-User-Testing-Report.md`
 - supporting screenshots in `grok-user-testing/screenshots/`
 - current `main` implementation and open/merged GitHub work
-- current CASSIO Grapher knowledge and canonical V1 manual
+- current POCKET SYNTH Grapher knowledge and canonical V1 manual
 
 ## Executive assessment
 
 The testing is useful. It found one credible release-blocking interaction failure, several real V1 completeness or viewport gaps, and a set of lower-confidence UX observations worth verifying.
 
-The report should **not** be implemented verbatim. In particular, its suggestion to expose SEQUENCER as a new top-level area conflicts with the canonical six-area CASSIO information architecture. V1 intentionally places the step sequencer inside LOOP. The remediation is therefore to improve discoverability inside LOOP, not to add a seventh top-level mode.
+The report should **not** be implemented verbatim. In particular, its suggestion to expose SEQUENCER as a new top-level area conflicts with the canonical six-area POCKET SYNTH information architecture. V1 intentionally places the step sequencer inside LOOP. The remediation is therefore to improve discoverability inside LOOP, not to add a seventh top-level mode.
 
 ## Finding triage
 
@@ -97,7 +97,7 @@ Scope:
 
 Acceptance:
 
-- A user can create, name, save, reopen, and rename a project entirely through CASSIO.
+- A user can create, name, save, reopen, and rename a project entirely through POCKET SYNTH.
 - Tempo, sound assignments, tracks/pattern state, and mixer state survive reload according to the V1 persistence contract.
 - Missing or referenced user audio fails safely and does not silently corrupt the project.
 

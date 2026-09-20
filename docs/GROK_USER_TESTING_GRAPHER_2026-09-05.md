@@ -22,8 +22,8 @@ grapher add \
   --status current \
   --verification partially_verified \
   --stage maintaining \
-  --content '{"observation":"Exploratory testing reported a repeatable client-tab freeze during LOOP recording after count-in plus live pad/piano input; PROJECT and SETTINGS dead ends; portrait menu clipping; low sequencer discoverability; weak interaction feedback; and an unimplemented service-worker runtime. Supporting screenshots visibly corroborate the menu/dead-end layout issue. The run did not fully exercise mic/import, long-session stability, real offline persistence, or a green cross-browser smoke suite.","source":"Personal Google Drive grok-user-testing/CASSIO-User-Testing-Report.md and supporting screenshots, reviewed 2026-09-05"}' \
-  --evidence '{"type":"document","ref":"gdrive:grok-user-testing/CASSIO-User-Testing-Report.md","summary":"External exploratory user-testing report dated 2026-09-05"}'
+  --content '{"observation":"Exploratory testing reported a repeatable client-tab freeze during LOOP recording after count-in plus live pad/piano input; PROJECT and SETTINGS dead ends; portrait menu clipping; low sequencer discoverability; weak interaction feedback; and an unimplemented service-worker runtime. Supporting screenshots visibly corroborate the menu/dead-end layout issue. The run did not fully exercise mic/import, long-session stability, real offline persistence, or a green cross-browser smoke suite.","source":"Personal Google Drive grok-user-testing/POCKET SYNTH-User-Testing-Report.md and supporting screenshots, reviewed 2026-09-05"}' \
+  --evidence '{"type":"document","ref":"gdrive:grok-user-testing/POCKET SYNTH-User-Testing-Report.md","summary":"External exploratory user-testing report dated 2026-09-05"}'
 
 # P0 user-impact problem. This records the symptom, not an invented root cause.
 grapher add \
@@ -35,7 +35,7 @@ grapher add \
   --workflow-state active \
   --stage developing \
   --content '{"problem":"A reported LOOP recording path can freeze the browser tab after count-in when live pad or piano input is generated.","impact":"The instrument becomes unresponsive during a core recording workflow, making this a release-blocking stability defect until reproduced and eliminated."}' \
-  --evidence '{"type":"document","ref":"gdrive:grok-user-testing/CASSIO-User-Testing-Report.md#B1","summary":"Tester reports repeatable client freeze while Rails backend remains responsive"}'
+  --evidence '{"type":"document","ref":"gdrive:grok-user-testing/POCKET SYNTH-User-Testing-Report.md#B1","summary":"Tester reports repeatable client freeze while Rails backend remains responsive"}'
 grapher link problem-loop-record-client-hang-20260905 observation-grok-user-testing-20260905 --rel derived_from
 
 # Explicit hypothesis; do not promote it to a finding until validation succeeds.
@@ -108,7 +108,7 @@ grapher add \
   --status current \
   --verification partially_verified \
   --stage developing \
-  --content '{"observation":"The exploratory run found manifest/icons available but no functional registered service-worker runtime for offline startup; the report observed a comment-only service-worker path and no working sw.js endpoint.","source":"Personal Google Drive grok-user-testing/CASSIO-User-Testing-Report.md section N5"}'
+  --content '{"observation":"The exploratory run found manifest/icons available but no functional registered service-worker runtime for offline startup; the report observed a comment-only service-worker path and no working sw.js endpoint.","source":"Personal Google Drive grok-user-testing/POCKET SYNTH-User-Testing-Report.md section N5"}'
 grapher link observation-pwa-runtime-gap-20260905 requirement-offline-installable-pwa-report-outbox --rel related
 
 # Staged remediation proposal.
@@ -187,7 +187,7 @@ grapher add \
   --verification unverified \
   --workflow-state not_started \
   --stage developing \
-  --content '{"action":"Register and version a production service worker, cache the safe application shell/static assets, demonstrate offline startup, keep creative data in durable browser storage, and add offline/upgrade smoke coverage while preserving the documented diagnostic-outbox design.","expected_outcome":"A previously loaded CASSIO installation can start offline without app-shell upgrades erasing creative data, and reconnect behavior remains safe for queued diagnostic reports."}'
+  --content '{"action":"Register and version a production service worker, cache the safe application shell/static assets, demonstrate offline startup, keep creative data in durable browser storage, and add offline/upgrade smoke coverage while preserving the documented diagnostic-outbox design.","expected_outcome":"A previously loaded POCKET SYNTH installation can start offline without app-shell upgrades erasing creative data, and reconnect behavior remains safe for queued diagnostic reports."}'
 grapher link task-implement-offline-pwa-foundation-20260905 requirement-offline-installable-pwa-report-outbox --rel satisfies
 
 # Tie the proposal to its tasks.

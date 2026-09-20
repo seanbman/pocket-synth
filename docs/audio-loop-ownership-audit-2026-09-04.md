@@ -1,4 +1,4 @@
-# CASSIO Audio / Loop / Sequence Ownership Audit
+# POCKET SYNTH Audio / Loop / Sequence Ownership Audit
 
 **Date:** 2026-09-04  
 **Branch:** `dev`  
@@ -70,9 +70,9 @@ So the same visible lane can contain:
 
 **Primary code:**
 
-- `app/javascript/cassio/audio/loop_engine.js`
-- `app/javascript/cassio/audio/step_sequencer.js`
-- `app/javascript/cassio/app.js`
+- `app/javascript/pocket_synth/audio/loop_engine.js`
+- `app/javascript/pocket_synth/audio/step_sequencer.js`
+- `app/javascript/pocket_synth/app.js`
 
 ---
 
