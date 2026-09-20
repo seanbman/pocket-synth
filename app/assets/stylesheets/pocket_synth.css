@@ -22,7 +22,7 @@ html, body {
   overflow: hidden;
 }
 
-.cassio-body {
+.pocket_synth-body {
   margin: 0;
   height: 100%;
   height: 100dvh;
@@ -37,7 +37,7 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.cassio-stage {
+.pocket_synth-stage {
   height: 100%;
   height: 100dvh;
   width: 100%;
@@ -53,23 +53,23 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.cassio-stage *,
-.cassio-stage *::before,
-.cassio-stage *::after {
+.pocket_synth-stage *,
+.pocket_synth-stage *::before,
+.pocket_synth-stage *::after {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -webkit-touch-callout: none;
 }
 
-.cassio-stage img,
-.cassio-stage button,
-.cassio-stage .knob {
+.pocket_synth-stage img,
+.pocket_synth-stage button,
+.pocket_synth-stage .knob {
   -webkit-user-drag: none;
   user-drag: none;
 }
 
-.cassio-stage.landscape .chassis {
+.pocket_synth-stage.landscape .chassis {
   display: none;
 }
 
@@ -1228,7 +1228,7 @@ html, body {
 
 /* Desktop: keep full-bleed but optionally soft-cap extreme ultrawide */
 @media (min-width: 720px) {
-  .cassio-stage {
+  .pocket_synth-stage {
     align-items: center;
     background:
       radial-gradient(ellipse at 20% 0%, #2a1020 0%, transparent 50%),

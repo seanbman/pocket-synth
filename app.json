@@ -1,5 +1,5 @@
 {
-  "name": "CASSIO Pocket Synth",
+  "name": "POCKET SYNTH Pocket Synth",
   "description": "Browser-based pocket synth, sampler, looper, and sequencer.",
   "stack": "heroku-24",
   "buildpacks": [

@@ -1,4 +1,4 @@
-# CASSIO Pocket Synth
+# POCKET SYNTH Pocket Synth
 
 Product direction and planned capabilities are tracked in
 [docs/FEATURE_ROADMAP.md](docs/FEATURE_ROADMAP.md).

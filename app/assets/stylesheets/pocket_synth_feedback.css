@@ -1,4 +1,4 @@
-/* Input-state feedback layered on top of the established CASSIO hardware skin. */
+/* Input-state feedback layered on top of the established POCKET SYNTH hardware skin. */
 
 .hw-btn,
 .pad,
@@ -57,10 +57,10 @@
 
 .bpm-readout.feedback-pulse,
 .lcd-status .feedback-pulse {
-  animation: cassio-bpm-feedback 0.72s steps(2, end);
+  animation: pocket_synth-bpm-feedback 0.72s steps(2, end);
 }
 
-@keyframes cassio-bpm-feedback {
+@keyframes pocket_synth-bpm-feedback {
   0%, 100% {
     color: var(--pink);
     text-shadow: none;

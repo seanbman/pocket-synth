@@ -1,6 +1,6 @@
 /*
  * Phone-portrait containment hardening from the 2026-09-05 user-testing follow-up.
- * Keep this file as overrides on top of cassio.css so the physical panel design stays intact.
+ * Keep this file as overrides on top of pocket_synth.css so the physical panel design stays intact.
  */
 
 /* Nothing rendered inside the LCD may paint through its own soft-key row. */
@@ -48,7 +48,7 @@
 /*
  * The chassis already uses 100dvh. Match vertically-sized controls to that same
  * dynamic viewport on mobile browsers so browser chrome cannot make children
- * taller than the shell. cassio.css remains the vh fallback for older engines.
+ * taller than the shell. pocket_synth.css remains the vh fallback for older engines.
  */
 @supports (height: 1dvh) {
   .side-controls,
