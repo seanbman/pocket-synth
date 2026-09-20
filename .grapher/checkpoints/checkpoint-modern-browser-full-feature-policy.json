@@ -1,0 +1,13 @@
+{
+  "checkpoint_id": "checkpoint-modern-browser-full-feature-policy",
+  "refreshed_at": "2026-09-20T05:45:00+00:00",
+  "title": "Modern-browser full-feature policy: Safari 15 transpilation is superseded. Preserve current CASSIO feature/audio work while returning runtime boot to Rails 8.1 Import Maps and native ES modules; remove the esbuild IIFE, Node production buildpack, npm asset prerequisite, legacy bundle CI, and old-browser product requirement. Keep startup/error diagnostics where they remain useful independent of legacy support.",
+  "node_ids": [
+    "checkpoint-safari15-transpile-plan",
+    "checkpoint-safari15-transpile-implementation",
+    "checkpoint-safari15-transpile-ci-fix",
+    "checkpoint-safari15-smoke-migration-fix",
+    "checkpoint-heroku-node-buildpack-fix"
+  ],
+  "graph_version": 2
+}
