@@ -2,7 +2,7 @@ require "json"
 require "fileutils"
 require "open3"
 
-module CassioDebugReport
+module PocketSynthDebugReport
   module_function
 
   REPO = "seanbman/pocket-synth"
@@ -123,7 +123,7 @@ module CassioDebugReport
     end.sort_by { |delta, clipped, _event| [ -clipped, -delta ] }.first(20)
 
     lines = []
-    lines << "# CASSIO diagnostic session #{session_id}"
+    lines << "# POCKET SYNTH diagnostic session #{session_id}"
     lines << ""
     lines << "Generated from persisted browser telemetry. This report is evidence only; it does not infer a root cause."
     lines << ""
@@ -200,17 +200,17 @@ end
 namespace :debug do
   desc "Generate a Markdown diagnostic report. Usage: bin/rails 'debug:report[latest]'"
   task :report, [ :session ] => :environment do |_task, args|
-    puts CassioDebugReport.write(args[:session] || "latest")
+    puts PocketSynthDebugReport.write(args[:session] || "latest")
   end
 
   desc "Generate latest diagnostic report and open a GitHub issue. Usage: bin/rails 'debug:github[latest]'"
   task :github, [ :session ] => :environment do |_task, args|
-    report = CassioDebugReport.write(args[:session] || "latest")
+    report = PocketSynthDebugReport.write(args[:session] || "latest")
     session_id = File.basename(report, ".md")
-    title = "CASSIO audio diagnostic #{session_id}"
+    title = "POCKET SYNTH audio diagnostic #{session_id}"
     ok = system(
       "gh", "issue", "create",
-      "--repo", CassioDebugReport::REPO,
+      "--repo", PocketSynthDebugReport::REPO,
       "--title", title,
       "--body-file", report.to_s,
       chdir: Rails.root.to_s
