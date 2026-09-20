@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
-  # Browser compatibility is capability-driven in CASSIO. Do not reject older
-  # browsers before the client can report which required APIs are actually missing.
+  # CASSIO targets modern browsers and the native Rails import-map path.
+  # Browser-specific legacy compatibility shims are intentionally not supported.
+
+  # Changes to the importmap will invalidate the etag for HTML responses
+  stale_when_importmap_changes
 end
