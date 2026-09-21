@@ -219,7 +219,7 @@ try {
     app.looper.selectTrack(le.tracks[0].id)
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r))))
     const followedScroller = app.vscreen.querySelector('[data-loop-scroll]')
-    const followedRow = app.vscreen.querySelector(`.loop-trow[data-track-id="${le.tracks[0].id}"]`)
+    const followedRow = app.vscreen.querySelector('.loop-trow[data-track-id="' + le.tracks[0].id + '"]')
     const followedRuler = app.vscreen.querySelector('.loop-ruler-row')
     const scrollerRect = followedScroller?.getBoundingClientRect()
     const rowRect = followedRow?.getBoundingClientRect()
