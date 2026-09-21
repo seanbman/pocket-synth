@@ -127,7 +127,7 @@ try {
 
     await openIndex(2)
     const displayOpen = app.screen === 'settings-display'
-    await press('nav-down'); await press('nav-right', 140)
+    await press('nav-down'); await press('nav-right', 70); await press('nav-right', 140)
     const display = {
       theme: rt.settings.chassisTheme,
       chassisVar: root.style.getPropertyValue('--chassis').trim(),
