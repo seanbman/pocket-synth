@@ -20,7 +20,7 @@
     ],
     "profile": "software",
     "created_at": "2026-09-02T09:01:59+00:00",
-    "updated_at": "2026-09-02T17:53:16+00:00"
+    "updated_at": "2026-09-21T03:17:00+00:00"
   },
   "nodes": {
     "document-cassio-v1-complete-operating-man-7fc14f07b2": {
@@ -4839,7 +4839,7 @@
       "id": "checkpoint-current-loop-engine",
       "type": "checkpoint",
       "title": "Current: loop engine",
-      "content": "Current loop engine: D1 track view + D2 step sequencer (Screens 21–25). finding-loop-d2-step-sequencer is canonical implementation truth.",
+      "content": "Current loop engine: D1 arrangement track view + D2 step sequencer (Screens 21–25), variable lanes/library tracks, clip-window audio semantics, and independent two-axis timeline scrolling. Short LEFT/RIGHT pans the timeline; hold LEFT/RIGHT moves clip offset. See finding-loop-timeline-two-axis-scroll-2026-09-20 for the current scroll contract.",
       "path": null,
       "tags": [
         "checkpoint",
@@ -4856,7 +4856,7 @@
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-02T17:53:16+00:00",
-      "updated_at": "2026-09-03T09:13:53+00:00",
+      "updated_at": "2026-09-21T03:17:00+00:00",
       "scope": {},
       "provenance": {}
     },
@@ -5296,6 +5296,49 @@
       "owners": [],
       "scope": {},
       "provenance": {}
+    },
+    "finding-loop-timeline-two-axis-scroll-2026-09-20": {
+      "id": "finding-loop-timeline-two-axis-scroll-2026-09-20",
+      "type": "finding",
+      "title": "LOOP timeline two-axis scroll and pan/move separation",
+      "content": "Fix (Sep 20 2026) for LOOP Screen 21 axis coupling observed on phone. The timeline used one loopScrollFollow flag for both axes, so a horizontal manual pan could disable vertical selected-lane following and leave the selected lane hidden behind the sticky ruler/chrome. The scroll state is now split into loopScrollFollowX and loopScrollFollowY; a manual scroll releases follow only on the axis that moved, and programmatic scroll suppression stays active through requestAnimationFrame so iOS Safari asynchronous scroll events are not misclassified as user input. The timeline is an explicit two-axis touch scrollport. Short D-pad LEFT/RIGHT pans the viewport without changing track timing; holding LEFT/RIGHT deliberately moves the selected clip offset. Regression coverage in test/smoke/loop_control.mjs checks pan-without-mutation, axis independence, and revealing an off-screen selected lane.",
+      "path": null,
+      "tags": [
+        "pocket-synth",
+        "loop",
+        "timeline",
+        "scroll",
+        "ios",
+        "ux",
+        "regression"
+      ],
+      "meta": {
+        "source": "user_report_2026-09-20"
+      },
+      "status": "current",
+      "workflow_state": "active",
+      "verification": "unverified",
+      "stage": "maintaining",
+      "evidence": [
+        {
+          "type": "test",
+          "ref": "test/smoke/loop_control.mjs",
+          "summary": "Regression assertions added; CI verification pending."
+        }
+      ],
+      "source_refs": [],
+      "owners": [],
+      "created_at": "2026-09-21T03:17:00+00:00",
+      "updated_at": "2026-09-21T03:17:00+00:00",
+      "scope": {},
+      "provenance": {
+        "actor_id": "chatgpt",
+        "actor_kind": "agent",
+        "actor_role": "implementer",
+        "source": "code_change",
+        "recorded_at": "2026-09-21T03:17:00+00:00",
+        "integrity": "declared"
+      }
     }
   },
   "edges": [
@@ -7909,6 +7952,27 @@
       "rel": "implements",
       "created_at": "2026-09-10T03:12:28+00:00",
       "note": "Startup failures now surface locally and are queued for reporting."
+    },
+    {
+      "from": "finding-loop-timeline-two-axis-scroll-2026-09-20",
+      "to": "checkpoint-current-loop-engine",
+      "rel": "applies_to",
+      "created_at": "2026-09-21T03:17:00+00:00",
+      "note": "Current Screen 21 scroll interaction contract"
+    },
+    {
+      "from": "checkpoint-current-loop-engine",
+      "to": "finding-loop-timeline-two-axis-scroll-2026-09-20",
+      "rel": "derived_from",
+      "created_at": "2026-09-21T03:17:00+00:00",
+      "note": "Two-axis timeline behavior is current loop-engine truth"
+    },
+    {
+      "from": "finding-loop-timeline-two-axis-scroll-2026-09-20",
+      "to": "concept-screen-21",
+      "rel": "implements",
+      "created_at": "2026-09-21T03:17:00+00:00",
+      "note": "Screen 21 timeline navigation and selected-lane visibility"
     }
   ]
 }
