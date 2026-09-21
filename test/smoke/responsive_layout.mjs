@@ -114,7 +114,7 @@ try {
     await sleep(220)
 
     const snapshot = await evalJs(`(async () => {
-      const root = document.querySelector('[data-controller~="pocket_synth"]')
+      const root = document.querySelector('[data-controller~="pocket-synth"]')
       const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
       if (!root || !app) return { fatal: 'no app' }
       app.screen = 'menu'
