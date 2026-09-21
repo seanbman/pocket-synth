@@ -60,7 +60,7 @@ try {
   await sleep(8000)
 
   const result = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?._postPr12StabilizationInstalled) return { fatal: 'post-PR12 stabilization runtime missing' }
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
