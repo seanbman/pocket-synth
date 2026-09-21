@@ -99,6 +99,12 @@ jobs:
           CHROME_BIN: google-chrome
         run: node test/smoke/loop_sequencer_discovery.mjs
 
+      - name: Verify LOOP two-axis timeline scrolling and controls
+        env:
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
+          CHROME_BIN: google-chrome
+        run: node test/smoke/loop_control.mjs
+
       - name: Verify PROJECT V1 save/open/import/export lifecycle
         env:
           POCKET_SYNTH_URL: http://127.0.0.1:3000/
