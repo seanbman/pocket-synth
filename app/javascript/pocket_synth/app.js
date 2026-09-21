@@ -160,7 +160,11 @@ export class PocketSynthApp {
     this.loopTimelineDirty = false
     this.loopScrollLeft = 0
     this.loopScrollTop = 0
-    this.loopScrollFollow = true
+    // Horizontal timeline panning and vertical lane following are independent.
+    // A user pan on one axis must never disable selected-lane visibility on the other.
+    this.loopScrollFollowX = true
+    this.loopScrollFollowY = true
+    this._loopScrollProgrammaticToken = 0
     this.seqTrackId = null
     this.playContext = null // null | "loop" | "seq" — only one auditions at a time
     this._renderScreen = undefined
@@ -998,7 +1002,7 @@ export class PocketSynthApp {
 
     if (maxScroll <= 0) {
       this.loopScrollLeft = 0
-    } else if (this.loopScrollFollow !== false) {
+    } else if (this.loopScrollFollowX !== false) {
       this.#followLoopTimelineScroll(scroller, maxScroll)
     } else if (timelineBars <= defaultBars) {
       this.loopScrollLeft = Math.min(this.loopScrollLeft || 0, maxScroll)
@@ -1011,10 +1015,18 @@ export class PocketSynthApp {
     if (!scroller.dataset.loopScrollBound) {
       scroller.dataset.loopScrollBound = "1"
       scroller.addEventListener("scroll", () => {
+        const left = scroller.scrollLeft
+        const top = scroller.scrollTop
+        const movedX = Math.abs(left - (this.loopScrollLeft || 0)) > 0.5
+        const movedY = Math.abs(top - (this.loopScrollTop || 0)) > 0.5
+
+        this.loopScrollLeft = left
+        this.loopScrollTop = top
         if (this._loopScrollProgrammatic) return
-        this.loopScrollLeft = scroller.scrollLeft
-        this.loopScrollTop = scroller.scrollTop
-        this.loopScrollFollow = false
+
+        // Manual panning only releases follow on the axis the user actually moved.
+        if (movedX) this.loopScrollFollowX = false
+        if (movedY) this.loopScrollFollowY = false
       }, { passive: true })
     }
     this.#bindLoopTimelineTap()
@@ -1072,10 +1084,16 @@ export class PocketSynthApp {
   }
 
   #applyLoopScroll(scroller) {
+    const token = ++this._loopScrollProgrammaticToken
     this._loopScrollProgrammatic = true
     scroller.scrollLeft = this.loopScrollLeft || 0
     scroller.scrollTop = this.loopScrollTop || 0
-    this._loopScrollProgrammatic = false
+
+    // Browser scroll events are asynchronous (notably on iOS Safari). Keep the
+    // guard alive through the frame so a restore cannot masquerade as user input.
+    requestAnimationFrame(() => {
+      if (this._loopScrollProgrammaticToken === token) this._loopScrollProgrammatic = false
+    })
   }
 
   #reflowPadsAfterPortrait() {
@@ -2583,7 +2601,7 @@ export class PocketSynthApp {
     this._loopNavHoldDir = null
   }
 
-  /** Loop timeline: tap ◀▶ = ±1s; hold ◀▶ = repeat ±1s. */
+  /** Loop timeline: tap ◀▶ pans the viewport; hold ◀▶ moves the selected clip. */
   #loopNavHorizontalDown(dir) {
     this.#clearLoopNavHold()
     this._loopNavSecMode = false
@@ -2610,7 +2628,7 @@ export class PocketSynthApp {
       return
     }
     if (dir === "left" || dir === "right") {
-      this.looper.nudgeTrackOffsetBeat(dir === "right" ? 1 : -1)
+      this.looper.panTimeline(dir === "right" ? 1 : -1)
     }
     this._loopNavSecMode = false
   }
