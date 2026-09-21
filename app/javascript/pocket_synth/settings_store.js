@@ -1,6 +1,7 @@
 const SETTINGS_KEY = "pocket_synth.systemSettings.v1"
 
 export const CHASSIS_THEMES = [
+  { id: "black", name: "BLACK", hi: "#3a3a3a", base: "#171717", deep: "#050505" },
   { id: "pink", name: "PINK", hi: "#ff4d94", base: "#ff2d7a", deep: "#d4145a" },
   { id: "mint", name: "MINT", hi: "#a4f0dc", base: "#6bd6bd", deep: "#2c8f7f" },
   { id: "cream", name: "CREAM", hi: "#fff5d9", base: "#e8dcc1", deep: "#a98f67" },
@@ -24,7 +25,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   dimLevel: 0.25,
   autoDimMinutes: 2,
   screenSleepMinutes: 10,
-  chassisTheme: "pink"
+  chassisTheme: "black"
 })
 
 const clamp = (value, min, max, fallback) => {

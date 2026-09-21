@@ -1,0 +1,15 @@
+{
+  "id": "checkpoint-black-chassis-default",
+  "title": "Black chassis option is the default",
+  "stage": "developing",
+  "kind": "decision",
+  "status": "implemented",
+  "branch": "dev",
+  "parent_commit": "05b6c51c183fddc13f95b6a1e9d416b09af0e468",
+  "summary": "Added a BLACK chassis theme to Pocket Synth and made it the default for fresh/reset settings while retaining all existing chassis color options.",
+  "evidence": [
+    "app/javascript/pocket_synth/settings_store.js",
+    "app/assets/stylesheets/pocket_synth_settings.css",
+    "test/unit/settings_store.mjs"
+  ]
+}
