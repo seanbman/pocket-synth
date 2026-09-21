@@ -24,7 +24,7 @@ function installTrackClearSemantics(app) {
 }
 
 function followSelectedLane(app) {
-  if (app.screen !== "loop-tracks" || app.loopScrollFollow === false) return
+  if (app.screen !== "loop-tracks" || app.loopScrollFollowY === false) return
   const scroller = app.vscreen?.querySelector?.("[data-loop-scroll]")
   const row = app.vscreen?.querySelector?.(`.loop-trow[data-track-id="${app.loopEngine?.selected}"]`)
   if (!scroller || !row) return
@@ -46,10 +46,14 @@ function followSelectedLane(app) {
     return
   }
 
+  const token = (app._loopScrollProgrammaticToken || 0) + 1
+  app._loopScrollProgrammaticToken = token
   app._loopScrollProgrammatic = true
   scroller.scrollTop = next
   app.loopScrollTop = next
-  requestAnimationFrame(() => { app._loopScrollProgrammatic = false })
+  requestAnimationFrame(() => {
+    if (app._loopScrollProgrammaticToken === token) app._loopScrollProgrammatic = false
+  })
 }
 
 function installDimLevelPreview(app) {
@@ -95,7 +99,7 @@ export function installPostPr12StabilizationRuntime(app) {
   app.render = (...args) => {
     const result = baseRender(...args)
     syncDeveloperControls(app)
-    if (app.screen === "loop-tracks" && app.loopScrollFollow !== false) {
+    if (app.screen === "loop-tracks" && app.loopScrollFollowY !== false) {
       requestAnimationFrame(() => requestAnimationFrame(() => followSelectedLane(app)))
     }
     return result
