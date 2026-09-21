@@ -1,7 +1,7 @@
 {
   "checkpoint_id": "checkpoint-current-loop-engine",
-  "refreshed_at": "2026-09-06T07:13:00+00:00",
-  "title": "Current: loop engine through PR12 recording isolation plus PR19 lane-visibility and full track-clear stabilization",
+  "refreshed_at": "2026-09-21T03:17:00+00:00",
+  "title": "Current: loop engine through two-axis timeline scrolling, lane visibility, and pan/move separation",
   "node_ids": [
     "finding-loop-d2-step-sequencer",
     "finding-loop-d1",
@@ -16,7 +16,8 @@
     "checkpoint-pr12-stage3-persistence",
     "checkpoint-pr12-next-isolation",
     "checkpoint-pr12-stage4-completion",
-    "checkpoint-post-pr12-stabilization-result"
+    "checkpoint-post-pr12-stabilization-result",
+    "finding-loop-timeline-two-axis-scroll-2026-09-20"
   ],
   "graph_version": 2
 }
