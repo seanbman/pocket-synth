@@ -20,7 +20,7 @@
     ],
     "profile": "software",
     "created_at": "2026-09-02T09:01:59+00:00",
-    "updated_at": "2026-09-21T03:17:00+00:00"
+    "updated_at": "2026-09-21T03:20:20+00:00"
   },
   "nodes": {
     "document-cassio-v1-complete-operating-man-7fc14f07b2": {
@@ -5317,19 +5317,24 @@
       },
       "status": "current",
       "workflow_state": "active",
-      "verification": "unverified",
+      "verification": "verified",
       "stage": "maintaining",
       "evidence": [
         {
           "type": "test",
           "ref": "test/smoke/loop_control.mjs",
-          "summary": "Regression assertions added; CI verification pending."
+          "summary": "Regression covers D-pad pan without clip mutation, horizontal/vertical follow independence, and off-screen selected-lane reveal."
+        },
+        {
+          "type": "ci",
+          "ref": "github-actions:35557030592",
+          "summary": "Dev CI completed successfully at 73b3841c39c0af015b1ffc3c21520dd40c169f42; LOOP two-axis timeline smoke passed."
         }
       ],
       "source_refs": [],
       "owners": [],
       "created_at": "2026-09-21T03:17:00+00:00",
-      "updated_at": "2026-09-21T03:17:00+00:00",
+      "updated_at": "2026-09-21T03:20:20+00:00",
       "scope": {},
       "provenance": {
         "actor_id": "chatgpt",
@@ -5337,7 +5342,9 @@
         "actor_role": "implementer",
         "source": "code_change",
         "recorded_at": "2026-09-21T03:17:00+00:00",
-        "integrity": "declared"
+        "integrity": "declared",
+        "verified_at": "2026-09-21T03:20:20+00:00",
+        "verified_by": "github-actions:35557030592"
       }
     }
   },
