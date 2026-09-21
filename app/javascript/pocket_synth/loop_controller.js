@@ -71,6 +71,8 @@ export class LoopController {
     a.trackListAssignLane = null
     a.trackListPreviewing = false
     this.#stopPreview()
+    a.loopScrollFollowX = true
+    a.loopScrollFollowY = true
     a.render()
   }
 
@@ -80,8 +82,40 @@ export class LoopController {
     const n = Number(id)
     if (!a.loopEngine.tracks.some((t) => t.id === n)) return
     a.loopEngine.select(n)
-    a.loopScrollFollow = true
+    a.loopScrollFollowX = true
+    a.loopScrollFollowY = true
     a.render()
+  }
+
+  /** Pan the visible timeline without changing any track's musical offset. */
+  panTimeline(dir) {
+    const a = this.app
+    if (a.screen !== "loop-tracks") return false
+    const scroller = a.vscreen?.querySelector?.("[data-loop-scroll]")
+    if (!scroller) return false
+
+    const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
+    if (maxScroll <= 0) return false
+
+    // One bar is the minimum useful pan; on narrow screens move enough that the
+    // user can actually reveal new material without hammering the D-pad.
+    const step = Math.max(LOOP_BAR_WIDTH_PX, Math.round(scroller.clientWidth * 0.6))
+    const current = scroller.scrollLeft
+    const next = Math.min(maxScroll, Math.max(0, current + (dir > 0 ? step : -step)))
+    if (Math.abs(next - current) < 1) return false
+
+    a.loopScrollFollowX = false
+    a.loopScrollLeft = next
+    a.loopScrollTop = scroller.scrollTop
+
+    const token = (a._loopScrollProgrammaticToken || 0) + 1
+    a._loopScrollProgrammaticToken = token
+    a._loopScrollProgrammatic = true
+    scroller.scrollLeft = next
+    requestAnimationFrame(() => {
+      if (a._loopScrollProgrammaticToken === token) a._loopScrollProgrammatic = false
+    })
+    return true
   }
 
   openTrackList({ assignLane = null } = {}) {
@@ -258,7 +292,8 @@ export class LoopController {
         const i = Math.max(0, ids.indexOf(a.loopEngine.selected))
         const next = ids[(i + (dir === "down" ? 1 : ids.length - 1)) % ids.length]
         a.loopEngine.select(next)
-        a.loopScrollFollow = true
+        a.loopScrollFollowX = true
+        a.loopScrollFollowY = true
         a.render()
       }
       if (dir === "ok") {
@@ -845,7 +880,7 @@ export class LoopController {
     const id = a.loopEngine.selected
     const sec = a.loopEngine.nudgeTrackOffset(id, dir > 0 ? 1 : -1)
     const bars = a.loopEngine.timelineBars()
-    a.loopScrollFollow = true
+    a.loopScrollFollowX = true
     a.toast(`L${id} ${sec}s · ${bars}B`)
     a.persistLoop?.()
     a.render()
@@ -857,7 +892,7 @@ export class LoopController {
     if (!t?.assigned) return 0
     const id = a.loopEngine.selected
     const sec = a.loopEngine.nudgeTrackOffset(id, (dir > 0 ? 1 : -1) * step)
-    a.loopScrollFollow = true
+    a.loopScrollFollowX = true
     a.loopTimelineDirty = true
     if (!a._loopOffsetUiRaf) {
       a._loopOffsetUiRaf = requestAnimationFrame(() => {
@@ -875,7 +910,7 @@ export class LoopController {
     const t = a.loopEngine.selectedTrack
     if (!t?.assigned) return
     const bars = a.loopEngine.timelineBars()
-    a.loopScrollFollow = true
+    a.loopScrollFollowX = true
     if (bars <= a.loopEngine.lengthBars && (t.offsetSec ?? 0) <= 0) a.loopScrollLeft = 0
     a.toast(`L${t.id} ${Math.round(t.offsetSec ?? 0)}s · ${bars}B`)
     a.persistLoop?.()
