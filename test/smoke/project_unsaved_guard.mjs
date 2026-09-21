@@ -62,7 +62,7 @@ try {
     indexedDB.deleteDatabase('pocket_synth-projects-v1')
     localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.projectRuntime
     if (!rt) return { fatal: 'project runtime missing' }
@@ -101,7 +101,7 @@ try {
   else fail("unnamed switch did not enter Save As naming")
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
     input.value = 'UNNAMED SAVE'
@@ -114,7 +114,7 @@ try {
 
   await sleep(6500)
   const restored = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.projectRuntime
     if (!rt) return { fatal: 'project runtime missing after reload' }

@@ -62,7 +62,7 @@ try {
     indexedDB.deleteDatabase('pocket_synth-projects-v1')
     localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.projectRuntime || !app?.projectAudioExportRuntime) return { fatal: 'project export runtime missing' }
     const press = async (action, wait = 90) => {

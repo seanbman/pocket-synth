@@ -35,7 +35,7 @@ try {
   const r = await send("Runtime.evaluate", {
     expression: `(async () => {
       const app = window.Stimulus?.getControllerForElementAndIdentifier(
-        document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth')?.app
+        document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth')?.app
       await app.ensureAudioRunningPublic()
       app.looper.openHome()
       const le = app.loopEngine

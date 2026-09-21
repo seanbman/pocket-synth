@@ -59,7 +59,7 @@ try {
   await sleep(7500)
 
   const changed = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.settingsRuntime
     if (!rt) return { fatal: 'settings runtime missing' }
@@ -90,7 +90,7 @@ try {
   await evalJs("location.reload(); true")
   await sleep(7000)
   const reloaded = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return {
       theme: app?.settingsRuntime?.settings?.chassisTheme,

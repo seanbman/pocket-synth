@@ -90,7 +90,7 @@ try {
 
   const setup = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth')?.app
+      document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth')?.app
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
     app.metro.setOn(false)
@@ -121,7 +121,7 @@ try {
 
   const pointerControl = async (action) => evalJs(`(() => {
     const app = window.Stimulus.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth').app
+      document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth').app
     const el = app.root.querySelector('[data-action="${action}"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 71, clientX: 10, clientY: 10 }))
     el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 71, clientX: 10, clientY: 10 }))
@@ -130,7 +130,7 @@ try {
 
   const state = () => evalJs(`(() => {
     const app = window.Stimulus.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth').app
+      document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth').app
     return {
       now: performance.now(),
       countingIn: app.transport.countingIn,

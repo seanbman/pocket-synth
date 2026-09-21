@@ -79,7 +79,7 @@ try {
   const opened = await evalJs(`(async () => {
     const trigger = document.querySelector('[data-manual-trigger]')
     const modal = document.querySelector('[data-manual-target="dialog"]')
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!trigger || !modal || !app) return { fatal: 'missing trigger/modal/app' }
     const tr = trigger.getBoundingClientRect()
@@ -128,7 +128,7 @@ try {
   if (!filtered.text.includes("microphone")) fail("visible search results do not contain query"); else pass("search results contain query")
 
   const isolated = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const search = document.querySelector('[data-manual-target="search"]')
     const before = app.heldKeys?.size ?? -1

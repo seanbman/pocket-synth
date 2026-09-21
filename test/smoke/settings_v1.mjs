@@ -59,7 +59,7 @@ try {
   await sleep(8000)
 
   const home = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.settingsRuntime) return { fatal: 'settings runtime missing' }
     const press = async (action, wait = 90) => {
@@ -83,7 +83,7 @@ try {
   else fail("SETTINGS home overflows at 390x844")
 
   const functional = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.settingsRuntime
     let pointerId = 40
@@ -175,7 +175,7 @@ try {
   await sleep(7000)
 
   const persisted = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.settingsRuntime
     return {

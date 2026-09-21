@@ -53,7 +53,7 @@ try {
 
   const out = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="pocket_synth"]'), 'pocket-synth')?.app
+      document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth')?.app
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
 

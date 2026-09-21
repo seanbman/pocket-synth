@@ -62,7 +62,7 @@ try {
     indexedDB.deleteDatabase('pocket_synth-projects-v1')
     localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.projectRuntime) return { fatal: 'project runtime missing' }
     const press = (action) => {
@@ -84,7 +84,7 @@ try {
   else fail(`PROJECT list missing: ${JSON.stringify(setup)}`)
 
   const lifecycle = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.projectRuntime
     const press = async (action, wait = 80) => {
@@ -150,7 +150,7 @@ try {
   if (!lifecycle) fail("PROJECT lifecycle did not return before reload")
 
   const switchPrompt = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const el = root.querySelector('[data-action="soft-d"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 4 }))
@@ -162,7 +162,7 @@ try {
   else fail("saved-project switch confirmation missing")
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const el = root.querySelector('[data-action="soft-c"]')
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 5 }))
     el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 5 }))
@@ -171,7 +171,7 @@ try {
 
   await sleep(6500)
   const reopened = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return { bpm: app?.transport?.bpm, active: app?.projectRuntime?.activeProjectId || null, ready: !!app?.projectRuntime }
   })()`)
@@ -179,7 +179,7 @@ try {
   else fail(`reopen restore failed: ${JSON.stringify(reopened)}`)
 
   const newStart = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.projectRuntime
     const press = async (action, wait = 80) => {
@@ -199,7 +199,7 @@ try {
   else fail(`new project flow failed: ${JSON.stringify(newStart)}`)
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
     input.value = 'NEW CLEAN'
@@ -212,7 +212,7 @@ try {
 
   await sleep(6500)
   const fresh = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="pocket_synth"]')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
     const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     return { bpm: app?.transport?.bpm, active: app?.projectRuntime?.activeProjectId || null }
   })()`)
