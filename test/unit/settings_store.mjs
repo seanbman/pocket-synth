@@ -43,8 +43,10 @@ const invalid = normalizeSettings({ countInBars: 3, chassisTheme: "mud" })
 assert.equal(invalid.countInBars, DEFAULT_SETTINGS.countInBars)
 assert.equal(invalid.chassisTheme, DEFAULT_SETTINGS.chassisTheme)
 
-assert(CHASSIS_THEMES.length >= 6)
+assert(CHASSIS_THEMES.length >= 9)
+assert.equal(DEFAULT_SETTINGS.chassisTheme, "black")
+assert.equal(chassisTheme("black").name, "BLACK")
 assert.equal(chassisTheme("mint").name, "MINT")
-assert.equal(chassisTheme("does-not-exist").id, "pink")
+assert.equal(chassisTheme("does-not-exist").id, "black")
 
 console.log("PASS: SETTINGS persist safely and chassis themes normalize")

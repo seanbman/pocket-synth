@@ -1,0 +1,12 @@
+{
+  "id": "checkpoint-black-chassis-ci-regression-fix",
+  "title": "Black default chassis CI regression fixed",
+  "stage": "developing",
+  "kind": "implementation",
+  "status": "implemented",
+  "summary": "The SETTINGS V1 browser smoke test assumed PINK was the default and used one right-step to reach MINT. BLACK is now the default, so the test now advances BLACK -> PINK -> MINT before asserting persistence.",
+  "evidence": [
+    "test/smoke/settings_v1.mjs"
+  ],
+  "commit": "66518c205450d5108d51ef4b3689c89f809bac24"
+}
