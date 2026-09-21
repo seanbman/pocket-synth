@@ -115,7 +115,7 @@ export function renderLoopTrackView(state) {
           <div class="loop-tgrid">${rows}</div>
         </div>
         <div class="green loop-thint">PATTERN SEQUENCER · HOLD B</div>
-        <div class="muted loop-thint">TAP ROW · ▲▼ LANE · ◀▶ ±1s · L${sel}${selEmpty ? "" : ` @ ${selOff}s`}</div>
+        <div class="muted loop-thint">TAP ROW · ▲▼ LANE · ◀▶ PAN · HOLD ◀▶ MOVE · L${sel}${selEmpty ? "" : ` @ ${selOff}s`}</div>
         <div class="lib-hint">${hintOk} · HOLD C OPTIONS</div>
         <div class="lib-hint muted">REC · PIANO → TRACK · A +LANE · HOLD A −LANE · ${selEmpty ? "D LIST" : "D SAVE/UNDO"} · B MUTE · C SOLO</div>
       </div>
