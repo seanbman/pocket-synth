@@ -134,7 +134,10 @@ try {
     // A manual horizontal pan must not disable vertical selected-lane following.
     app.loopScrollFollowX = true
     app.loopScrollFollowY = true
-    const manualLeft = Math.min(Math.max(1, dpadPanLeft + 5), Math.max(1, scroller.scrollWidth - scroller.clientWidth))
+    const maxManualLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
+    const manualLeft = dpadPanLeft > 1
+      ? Math.max(0, dpadPanLeft - Math.min(5, dpadPanLeft))
+      : Math.min(maxManualLeft, dpadPanLeft + 5)
     scroller.scrollLeft = manualLeft
     scroller.dispatchEvent(new Event('scroll'))
     const horizontalKeepsVerticalFollow = app.loopScrollFollowX === false && app.loopScrollFollowY !== false
