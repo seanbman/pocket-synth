@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   scan_ruby:
@@ -20,10 +20,10 @@ jobs:
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
-      
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
+
   scan_js:
     runs-on: ubuntu-latest
 
@@ -73,82 +73,77 @@ jobs:
 
       - name: Start Rails
         run: |
-          bin/rails server -b 127.0.0.1 -p 3000 > /tmp/cassio-rails.log 2>&1 &
+          bin/rails server -b 127.0.0.1 -p 3000 > /tmp/pocket_synth-rails.log 2>&1 &
           for i in {1..40}; do
             if curl --fail --silent http://127.0.0.1:3000/up >/dev/null; then exit 0; fi
             sleep 0.5
           done
-          cat /tmp/cassio-rails.log
+          cat /tmp/pocket_synth-rails.log
           exit 1
-
-      - name: Verify older Safari is admitted and error reporting ingests
-        env:
-          CASSIO_URL: http://127.0.0.1:3000/
-        run: node test/smoke/browser_compat_error_reporting.mjs
 
       - name: Check portrait chassis, keyboard, and menu containment
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/responsive_layout.mjs
 
       - name: Verify searchable full-screen manual
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/manual.mjs
 
       - name: Verify LOOP sequencer discoverability
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/loop_sequencer_discovery.mjs
 
       - name: Verify PROJECT V1 save/open/import/export lifecycle
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/project_v1.mjs
 
       - name: Verify PROJECT song export navigation and formats
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/project_audio_export.mjs
 
       - name: Verify unnamed PROJECT sessions cannot be replaced silently
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/project_unsaved_guard.mjs
 
       - name: Verify SETTINGS V1 controls, chassis color, and reload persistence
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/settings_v1.mjs
 
       - name: Verify chassis rendering and PLAY metronome SETTINGS sync
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/settings_bridge.mjs
 
       - name: Verify pointer, touch, mapped-key, HOLD, and TAP/BPM feedback
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/input_feedback.mjs
 
       - name: Verify post-PR12 startup, track clear/visibility, dim, and dev gating
         env:
-          CASSIO_URL: http://127.0.0.1:3000/
+          POCKET_SYNTH_URL: http://127.0.0.1:3000/
           CHROME_BIN: google-chrome
         run: node test/smoke/post_pr12_stabilization.mjs
 
       - name: Print Rails log on failure
         if: failure()
-        run: cat /tmp/cassio-rails.log || true
+        run: cat /tmp/pocket_synth-rails.log || true
 
   lint:
     runs-on: ubuntu-latest

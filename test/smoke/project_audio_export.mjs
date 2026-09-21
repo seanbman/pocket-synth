@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9352
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-project-audio-export")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -59,11 +59,11 @@ try {
   await sleep(8000)
 
   const result = await evalJs(`(async () => {
-    indexedDB.deleteDatabase('cassio-projects-v1')
-    localStorage.removeItem('cassio.activeProjectId')
+    indexedDB.deleteDatabase('pocket_synth-projects-v1')
+    localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.projectRuntime || !app?.projectAudioExportRuntime) return { fatal: 'project export runtime missing' }
     const press = async (action, wait = 90) => {
       const el = root.querySelector('[data-action="' + action + '"]')
@@ -74,7 +74,7 @@ try {
 
     await app.projectRuntime.open()
     await press('soft-b')
-    const input = app.vscreen.querySelector('#cassio-project-name-field')
+    const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
     input.value = 'EXPORT TEST'
     input.dispatchEvent(new Event('input', { bubbles: true }))
     await press('soft-d', 180)
@@ -117,7 +117,7 @@ try {
   })()`)
 
   if (result?.fatal) throw new Error(result.fatal)
-  if (result.manageText.includes("EXPORT AUDIO") && result.manageText.includes("EXPORT .CASSIO")) pass("PROJECT Manage exposes audio and editable project export")
+  if (result.manageText.includes("EXPORT AUDIO") && result.manageText.includes("EXPORT .POCKET SYNTH")) pass("PROJECT Manage exposes audio and editable project export")
   else fail(`PROJECT Manage export actions missing: ${JSON.stringify(result)}`)
 
   if (result.exportScreen === "project-audio-export" && result.exportText.includes("EXPORT SONG")) pass("hardware navigation opens song export screen")

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
-import { installPlayRecordLaneRuntime } from "../../app/javascript/cassio/play_record_lane_runtime.js"
+import { installPlayRecordLaneRuntime } from "../../app/javascript/pocket_synth/play_record_lane_runtime.js"
 
 function makeApp({ screen = "play", hasClip = true } = {}) {
   const calls = { added: 0, ensured: [], armed: [], selected: [], toasts: [], persisted: 0 }

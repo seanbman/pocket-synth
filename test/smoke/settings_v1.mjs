@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9346
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-settings-v1")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -59,8 +59,8 @@ try {
   await sleep(8000)
 
   const home = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?.settingsRuntime) return { fatal: 'settings runtime missing' }
     const press = async (action, wait = 90) => {
       const el = root.querySelector('[data-action="' + action + '"]')
@@ -83,8 +83,8 @@ try {
   else fail("SETTINGS home overflows at 390x844")
 
   const functional = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
     const rt = app.settingsRuntime
     let pointerId = 40
     const press = async (action, wait = 100) => {
@@ -175,8 +175,8 @@ try {
   await sleep(7000)
 
   const persisted = await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.settingsRuntime
     return {
       ready: !!rt,

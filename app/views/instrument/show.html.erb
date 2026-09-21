@@ -1,19 +1,19 @@
-<% content_for :title, "CASSIO" %>
+<% content_for :title, "POCKET SYNTH" %>
 
-<div class="cassio-stage" data-controller="cassio">
+<div class="pocket_synth-stage" data-controller="pocket-synth">
   <div class="portrait-gate" data-portrait-gate hidden>
     <div class="portrait-gate-inner">
-      <div class="boot-title">CASSIO</div>
+      <div class="boot-title">POCKET SYNTH</div>
       <div class="boot-sub">PORTRAIT ONLY</div>
       <div class="boot-msg">ROTATE DEVICE</div>
     </div>
   </div>
 
-  <div class="chassis" aria-label="CASSIO pocket synth sampler">
+  <div class="chassis" aria-label="POCKET SYNTH pocket synth sampler">
     <header class="brand-row">
       <div class="brand-block">
         <div class="brand-line">
-          <div class="brand">CASSIO</div>
+          <div class="brand">POCKET SYNTH</div>
           <div class="brand-model">studio - 0926</div>
         </div>
         <div class="brand-sub">POCKET SYNTH / SAMPLER</div>
@@ -125,7 +125,7 @@
 <% if Rails.env.development? || Rails.env.test? %>
   <button
     type="button"
-    data-cassio-glitch-marker="true"
+    data-pocket_synth-glitch-marker="true"
     aria-label="Mark audible audio glitch in diagnostic timeline"
     hidden
     style="position:fixed;right:8px;bottom:calc(env(safe-area-inset-bottom, 0px) + 8px);z-index:2147483647;padding:8px 10px;border:2px solid currentColor;border-radius:3px;background:#fff;color:#000;font:700 11px/1 monospace;letter-spacing:.04em;touch-action:manipulation;box-shadow:0 2px 8px rgba(0,0,0,.35);"

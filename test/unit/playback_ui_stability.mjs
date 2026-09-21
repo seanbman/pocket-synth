@@ -5,8 +5,8 @@ import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const here = dirname(fileURLToPath(import.meta.url))
-const appSrc = readFileSync(resolve(here, "../../app/javascript/cassio/app.js"), "utf8")
-const loopSrc = readFileSync(resolve(here, "../../app/javascript/cassio/loop_controller.js"), "utf8")
+const appSrc = readFileSync(resolve(here, "../../app/javascript/pocket_synth/app.js"), "utf8")
+const loopSrc = readFileSync(resolve(here, "../../app/javascript/pocket_synth/loop_controller.js"), "utf8")
 
 assert.match(appSrc, /if \(!this\._loopUiRaf\)/, "transport beat refresh must stay guarded")
 assert.match(loopSrc, /a\._loopUiRaf = requestAnimationFrame\(frame\)/, "playback UI loop must own the guarded rAF slot")

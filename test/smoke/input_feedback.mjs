@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9347
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-input-feedback")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -60,8 +60,8 @@ try {
   await sleep(8000)
 
   const result = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?._inputFeedbackRuntimeInstalled) return { fatal: 'input feedback runtime missing' }
     app.screen = 'play'
     app.project.hold = false

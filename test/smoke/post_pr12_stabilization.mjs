@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9351
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-post-pr12")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -60,8 +60,8 @@ try {
   await sleep(8000)
 
   const result = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     if (!app?._postPr12StabilizationInstalled) return { fatal: 'post-PR12 stabilization runtime missing' }
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -106,26 +106,26 @@ try {
     const dimPreview = app.settingsRuntime._displayMode === 'dim'
       && Math.abs(Number(root.style.getPropertyValue('--lcd-brightness-effective')) - 0.12) < 0.001
 
-    localStorage.removeItem('cassio.debug')
+    localStorage.removeItem('pocket_synth.debug')
     app.render()
     await wait(30)
-    const marker = document.querySelector('[data-cassio-glitch-marker]')
+    const marker = document.querySelector('[data-pocket_synth-glitch-marker]')
     const markerHiddenNormally = !marker || marker.hidden === true
-    localStorage.setItem('cassio.debug', '1')
+    localStorage.setItem('pocket_synth.debug', '1')
     app.render()
     await wait(30)
     const markerShownInDev = !marker || marker.hidden === false
-    localStorage.removeItem('cassio.debug')
+    localStorage.removeItem('pocket_synth.debug')
     app.render()
 
-    const { showStartupFailure } = await import('cassio/startup_guard')
+    const { showStartupFailure } = await import('pocket_synth/startup_guard')
     const panel = showStartupFailure(root, new Error('SMOKE STARTUP FAILURE'), { reload: () => {} })
     const startupGuard = !!panel
       && panel.textContent.includes('STARTUP ERROR')
       && getComputedStyle(panel).backgroundColor === 'rgb(5, 5, 5)'
-      && root.getAttribute('data-cassio-startup-error') === 'true'
+      && root.getAttribute('data-pocket_synth-startup-error') === 'true'
     panel.remove()
-    root.removeAttribute('data-cassio-startup-error')
+    root.removeAttribute('data-pocket_synth-startup-error')
 
     return {
       fatal: null,

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
-import { installTrackNamingRuntime } from "../../app/javascript/cassio/track_naming_runtime.js"
+import { installTrackNamingRuntime } from "../../app/javascript/pocket_synth/track_naming_runtime.js"
 
 function makeApp({ assigned = false, name = "EMPTY" } = {}) {
   const track = {

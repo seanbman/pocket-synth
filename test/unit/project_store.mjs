@@ -4,7 +4,7 @@ import {
   decodeProjectBundle,
   encodeProjectBundle,
   makeProjectBundle
-} from "../../app/javascript/cassio/project_store.js"
+} from "../../app/javascript/pocket_synth/project_store.js"
 
 const state = {
   bpm: 126,
@@ -27,7 +27,7 @@ const sounds = [
   { id: "unrelated", name: "Unused", audio: new Float32Array([0.9]) }
 ]
 const bundle = makeProjectBundle(project, sounds)
-assert.equal(bundle.format, "cassio-project-v1")
+assert.equal(bundle.format, "pocket_synth-project-v1")
 assert.deepEqual(bundle.userSounds.map((s) => s.id).sort(), ["user-kick", "user-lead"])
 
 const decoded = decodeProjectBundle(encodeProjectBundle(bundle))
@@ -36,5 +36,5 @@ assert(decoded.project.state.loop.arrangement.lanes[0].source.pcm instanceof Flo
 assert.deepEqual(Array.from(decoded.project.state.loop.arrangement.lanes[0].source.pcm), [0.25, -0.5, 0.75])
 assert(decoded.userSounds[0].audio instanceof Float32Array)
 
-assert.throws(() => decodeProjectBundle('{"format":"nope"}'), /NOT A CASSIO V1 PROJECT/)
+assert.throws(() => decodeProjectBundle('{"format":"nope"}'), /NOT A POCKET SYNTH V1 PROJECT/)
 console.log("PASS: project bundles preserve referenced sounds and typed audio")

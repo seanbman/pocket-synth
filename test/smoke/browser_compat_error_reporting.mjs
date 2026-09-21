@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
 
-const ROOT = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const ROOT = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const base = new URL(ROOT)
 const oldSafari = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
 
 const page = await fetch(base, { headers: { Accept: "text/html", "User-Agent": oldSafari } })
-assert.equal(page.status, 200, `older Safari must reach CASSIO instead of Rails 406; got ${page.status}`)
-assert.match(await page.text(), /CASSIO/)
+assert.equal(page.status, 200, `older Safari must reach POCKET SYNTH instead of Rails 406; got ${page.status}`)
+assert.match(await page.text(), /POCKET SYNTH/)
 
 const id = `smoke-${Date.now()}`
 const endpoint = new URL("/error_reports", base)
@@ -40,4 +40,4 @@ const invalid = await fetch(endpoint, {
 })
 assert.equal(invalid.status, 400)
 
-console.log("PASS: older Safari reaches CASSIO and error-report ingest acknowledges valid UUIDs")
+console.log("PASS: older Safari reaches POCKET SYNTH and error-report ingest acknowledges valid UUIDs")

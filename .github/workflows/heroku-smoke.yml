@@ -30,7 +30,7 @@ jobs:
 
       - name: Boot production Puma and check health
         run: |
-          bundle exec puma -C config/puma.rb > /tmp/cassio-production-smoke.log 2>&1 &
+          bundle exec puma -C config/puma.rb > /tmp/pocket_synth-production-smoke.log 2>&1 &
           for i in {1..40}; do
             if curl --fail --silent http://127.0.0.1:${PORT}/up >/dev/null; then
               curl --fail --silent http://127.0.0.1:${PORT}/health/deploy
@@ -38,7 +38,7 @@ jobs:
             fi
             sleep 0.5
           done
-          cat /tmp/cassio-production-smoke.log
+          cat /tmp/pocket_synth-production-smoke.log
           exit 1
 
   verify_live_deploy:

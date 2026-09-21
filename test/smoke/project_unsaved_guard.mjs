@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "http://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "http://127.0.0.1:3000/"
 const PORT = 9345
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-project-unsaved")
 const chrome = spawn(process.env.CHROME_BIN || "google-chrome", [
@@ -59,24 +59,24 @@ try {
   await sleep(8000)
 
   const guard = await evalJs(`(async () => {
-    indexedDB.deleteDatabase('cassio-projects-v1')
-    localStorage.removeItem('cassio.activeProjectId')
+    indexedDB.deleteDatabase('pocket_synth-projects-v1')
+    localStorage.removeItem('pocket_synth.activeProjectId')
     await new Promise((r) => setTimeout(r, 100))
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.projectRuntime
     if (!rt) return { fatal: 'project runtime missing' }
 
     const targetState = rt.snapshotCurrent()
     targetState.bpm = 99
     await rt.importBundle({
-      format: 'cassio-project-v1',
+      format: 'pocket_synth-project-v1',
       version: 1,
       project: { name: 'TARGET', state: targetState },
       userSounds: []
     })
     rt.activeProjectId = null
-    localStorage.removeItem('cassio.activeProjectId')
+    localStorage.removeItem('pocket_synth.activeProjectId')
     app.transport.bpm = 147
     app.project.bpm = 147
 
@@ -101,9 +101,9 @@ try {
   else fail("unnamed switch did not enter Save As naming")
 
   await evalJs(`(() => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'cassio').app
-    const input = app.vscreen.querySelector('#cassio-project-name-field')
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus.getControllerForElementAndIdentifier(root, 'pocket-synth').app
+    const input = app.vscreen.querySelector('#pocket_synth-project-name-field')
     input.value = 'UNNAMED SAVE'
     input.dispatchEvent(new Event('input', { bubbles: true }))
     const el = root.querySelector('[data-action="soft-d"]')
@@ -114,8 +114,8 @@ try {
 
   await sleep(6500)
   const restored = await evalJs(`(async () => {
-    const root = document.querySelector('[data-controller~="cassio"]')
-    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'cassio')?.app
+    const root = document.querySelector('[data-controller~="pocket-synth"]')
+    const app = window.Stimulus?.getControllerForElementAndIdentifier(root, 'pocket-synth')?.app
     const rt = app?.projectRuntime
     if (!rt) return { fatal: 'project runtime missing after reload' }
     await rt.open()

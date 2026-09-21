@@ -1,0 +1,11 @@
+{
+  "checkpoint_id": "checkpoint-dev-audio-merge-reconciliation",
+  "refreshed_at": "2026-09-10T07:26:00+00:00",
+  "title": "Dev/main reconciliation preserves the two useful pre-merge audio ownership fixes on top of current main: arrangement recording taps allocate dynamically beyond six lanes, and all generated sequencer playback explicitly opts out of the armed live-record bus",
+  "node_ids": [
+    "checkpoint-current-audio-architecture",
+    "checkpoint-current-loop-engine",
+    "checkpoint-safari15-transpile-implementation"
+  ],
+  "graph_version": 2
+}

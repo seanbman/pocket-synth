@@ -1,5 +1,5 @@
 # Async is sufficient for the current single-web-dyno prototype. Move to a
-# shared adapter before scaling CASSIO across multiple web dynos.
+# shared adapter before scaling POCKET SYNTH across multiple web dynos.
 development:
   adapter: async
 

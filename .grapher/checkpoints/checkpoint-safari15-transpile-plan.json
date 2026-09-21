@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "checkpoint-safari15-transpile-plan",
+  "refreshed_at": "2026-09-10T07:08:00+00:00",
+  "title": "Safari 15 compatibility plan: replace the runtime import-map dependency with an esbuild browser bundle targeting Safari 15, statically register Stimulus controllers, preserve capability-driven browser admission, add a classic-script startup fallback, and integrate the bundle into development, CI, Docker, and Heroku builds",
+  "node_ids": [
+    "checkpoint-current-ui-controls",
+    "checkpoint-heroku-deploy-plan",
+    "checkpoint-heroku-deploy-result",
+    "checkpoint-post-pr12-stabilization-plan"
+  ],
+  "graph_version": 2
+}

@@ -9,7 +9,7 @@ import { spawn } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 
-const URL = process.argv[2] || process.env.CASSIO_URL || "https://127.0.0.1:3000/"
+const URL = process.argv[2] || process.env.POCKET_SYNTH_URL || "https://127.0.0.1:3000/"
 const PORT = 9341
 const profile = join(dirname(fileURLToPath(import.meta.url)), ".chrome-profile-audio-graph")
 
@@ -54,7 +54,7 @@ try {
 
   const out = await evalJs(`(async () => {
     const app = window.Stimulus?.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller~="cassio"]'), 'cassio')?.app
+      document.querySelector('[data-controller~="pocket-synth"]'), 'pocket-synth')?.app
     if (!app) return { fatal: 'no app' }
     await app.ensureAudioRunningPublic()
 

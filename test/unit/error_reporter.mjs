@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { fingerprintFor, sanitizeReportText } from "../../app/javascript/cassio/error_reporter.js"
+import { fingerprintFor, sanitizeReportText } from "../../app/javascript/pocket_synth/error_reporter.js"
 
 const sanitized = sanitizeReportText("boom https://example.test/path?token=secret data:text/plain,PRIVATE")
 assert.equal(sanitized.includes("token=secret"), false)

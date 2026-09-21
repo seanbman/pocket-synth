@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
-import { installRecordingRuntime } from "../../app/javascript/cassio/recording_runtime.js"
+import { installRecordingRuntime } from "../../app/javascript/pocket_synth/recording_runtime.js"
 
 const nextTask = () => new Promise((resolve) => setTimeout(resolve, 0))
 
@@ -66,7 +66,7 @@ function makeApp({ playContext = null } = {}) {
   assert.equal(calls.seqTriggers[0].options.fromSeq, true)
 }
 
-// REC from stop is input-only: backing starts requested by CassioApp are suppressed.
+// REC from stop is input-only: backing starts requested by PocketSynthApp are suppressed.
 // Stage 4 restores the original completion callback, but only after deferred teardown/cache.
 {
   const { app, calls, finish } = makeApp({ playContext: null })

@@ -4,14 +4,14 @@
   data-action="click->manual#backdropClose"
   role="dialog"
   aria-modal="true"
-  aria-labelledby="cassio-manual-title"
+  aria-labelledby="pocket_synth-manual-title"
   hidden
 >
   <div class="manual-panel">
     <header class="manual-head">
       <div class="manual-title-wrap">
-        <div class="manual-kicker">CASSIO · STUDIO-0926</div>
-        <h1 class="manual-title" id="cassio-manual-title">USER MANUAL</h1>
+        <div class="manual-kicker">POCKET SYNTH · STUDIO-0926</div>
+        <h1 class="manual-title" id="pocket_synth-manual-title">USER MANUAL</h1>
       </div>
       <button type="button" class="manual-close" data-action="manual#close" aria-label="Close manual">×</button>
     </header>
@@ -23,7 +23,7 @@
         data-manual-target="search"
         data-action="input->manual#search"
         placeholder="Search: record, trim, pattern, export…"
-        aria-label="Search CASSIO manual"
+        aria-label="Search POCKET SYNTH manual"
         autocomplete="off"
       >
       <button type="button" class="manual-clear" data-action="manual#clearSearch">CLEAR</button>
@@ -60,7 +60,7 @@
 
         <section class="manual-section" id="manual-start" data-manual-target="section" tabindex="-1">
           <h2>01 · Start here</h2>
-          <p>CASSIO is a browser-based pocket synth, sampler, looper and pattern workstation. The physical-looking chassis is the main interface: the LCD changes by mode while the knobs, soft keys, navigation cluster, transport, pads and keyboard stay in the same places.</p>
+          <p>POCKET SYNTH is a browser-based pocket synth, sampler, looper and pattern workstation. The physical-looking chassis is the main interface: the LCD changes by mode while the knobs, soft keys, navigation cluster, transport, pads and keyboard stay in the same places.</p>
           <div class="manual-note"><strong>Fastest way around:</strong> hold <span class="manual-key">BACK / MENU</span> from almost any screen to open the six-area menu: PLAY, LOOP, SOUND, MIX, PROJECT and SETTINGS. Transport keeps running while the menu is open.</div>
           <h3>Core mental model</h3>
           <ul>
@@ -235,7 +235,7 @@
 
         <section class="manual-section" id="manual-project" data-manual-target="section" tabindex="-1">
           <h2>13 · PROJECT</h2>
-          <p>PROJECT manages complete CASSIO sessions. The list shows saved local projects and identifies the active one. Recovery autosave operates separately so an interrupted session can be recovered.</p>
+          <p>PROJECT manages complete POCKET SYNTH sessions. The list shows saved local projects and identifies the active one. Recovery autosave operates separately so an interrupted session can be recovered.</p>
           <h3>Main project screen</h3>
           <ul>
             <li>▲/▼ selects a saved project.</li>
@@ -243,10 +243,10 @@
             <li><span class="manual-key">A · NEW</span> starts a new project.</li>
             <li><span class="manual-key">B · SAVE</span> saves the current project.</li>
             <li><span class="manual-key">C · RENAME</span> renames the selected/active project.</li>
-            <li>◀ imports a CASSIO project file; ▶ opens project management.</li>
+            <li>◀ imports a POCKET SYNTH project file; ▶ opens project management.</li>
           </ul>
           <h3>Project management</h3>
-          <p>Manage offers SAVE AS, DUPLICATE, EXPORT .CASSIO and DELETE. When switching away from work with unsaved changes, CASSIO asks whether to cancel, discard, or save before continuing.</p>
+          <p>Manage offers SAVE AS, DUPLICATE, EXPORT .POCKET SYNTH and DELETE. When switching away from work with unsaved changes, POCKET SYNTH asks whether to cancel, discard, or save before continuing.</p>
           <p>Project naming uses the device keyboard and accepts up to 18 characters.</p>
         </section>
 
@@ -280,12 +280,12 @@
 
         <section class="manual-section" id="manual-storage" data-manual-target="section" tabindex="-1">
           <h2>16 · Storage & files</h2>
-          <p>CASSIO currently treats projects and user-created sounds as browser-owned data. That means the browser/device storage is the primary working store rather than a server account.</p>
+          <p>POCKET SYNTH currently treats projects and user-created sounds as browser-owned data. That means the browser/device storage is the primary working store rather than a server account.</p>
           <ul>
             <li><strong>Recovery autosave</strong> protects the current session state.</li>
             <li><strong>Saved projects</strong> live in local browser storage and can be reopened from PROJECT.</li>
             <li><strong>User sounds/samples/kits</strong> live in the local user library.</li>
-            <li><strong>EXPORT .CASSIO</strong> creates a portable project file from PROJECT → MANAGE.</li>
+            <li><strong>EXPORT .POCKET SYNTH</strong> creates a portable project file from PROJECT → MANAGE.</li>
             <li><strong>IMPORT</strong> restores a compatible project file through PROJECT.</li>
           </ul>
           <div class="manual-note">Browser storage can be cleared by browser/device cleanup tools. For important work, export a project file rather than relying on a single browser installation as the only copy.</div>
@@ -302,7 +302,7 @@
           <h3>Build a repeating pattern</h3>
           <ol><li>Open LOOP.</li><li>Hold B for the pattern sequencer.</li><li>Edit one of pattern slots A–D.</li><li>Return to the desired lane and use DROP PATTERN to place it into the arrangement.</li></ol>
           <h3>Back up a session</h3>
-          <ol><li>PROJECT → SAVE.</li><li>Open project management.</li><li>Choose EXPORT .CASSIO.</li><li>Keep the exported file somewhere outside browser storage.</li></ol>
+          <ol><li>PROJECT → SAVE.</li><li>Open project management.</li><li>Choose EXPORT .POCKET SYNTH.</li><li>Keep the exported file somewhere outside browser storage.</li></ol>
         </section>
 
         <section class="manual-section" id="manual-troubleshooting" data-manual-target="section" tabindex="-1">
@@ -318,11 +318,11 @@
           <h3>A pattern keeps repeating</h3>
           <p>Open the lane menu/pattern sequencer and inspect its pattern content. A lane can contain sequence events even when no recorded waveform is obvious.</p>
           <h3>Project or samples disappeared after browser cleanup</h3>
-          <p>CASSIO’s current data is browser-local. Restore from an exported .CASSIO file where available and use SETTINGS → STORAGE → PERSIST to request stronger local persistence support from the browser.</p>
+          <p>POCKET SYNTH’s current data is browser-local. Restore from an exported .POCKET SYNTH file where available and use SETTINGS → STORAGE → PERSIST to request stronger local persistence support from the browser.</p>
           <h3>The interface looks dim</h3>
           <p>Check SETTINGS → DISPLAY for AUTO DIM, DIM LEVEL and SCREEN SLEEP. Interacting with the chassis should wake the display; DIM NOW is only a preview/action.</p>
           <h3>Startup fails completely</h3>
-          <p>CASSIO has an explicit startup-error surface instead of silently remaining white. Reload once; if the error persists, note the displayed error and browser/device information from SETTINGS → ABOUT for debugging.</p>
+          <p>POCKET SYNTH has an explicit startup-error surface instead of silently remaining white. Reload once; if the error persists, note the displayed error and browser/device information from SETTINGS → ABOUT for debugging.</p>
         </section>
       </main>
     </div>

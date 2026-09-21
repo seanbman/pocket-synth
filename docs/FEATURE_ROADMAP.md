@@ -1,11 +1,11 @@
-# CASSIO Feature Roadmap
+# POCKET SYNTH Feature Roadmap
 
 This list records product direction beyond the current prototype. Items marked
 **planned** are requirements, not claims about the current build.
 
 ## Installable offline app — planned
 
-- Install CASSIO to a phone or desktop home screen as a standalone Progressive
+- Install POCKET SYNTH to a phone or desktop home screen as a standalone Progressive
   Web App.
 - Cache the application shell, interface assets, factory sounds, and other safe
   static resources so the instrument can start without a network connection.
@@ -28,7 +28,7 @@ This list records product direction beyond the current prototype. Items marked
   future path, never the only path.
 - **Implemented:** Send bounded batches to the Rails backend and remove a queued
   report only after the server acknowledges its UUID. The server re-sanitizes,
-  rate-limits, and emits structured `cassio_client_error` logs.
+  rate-limits, and emits structured `pocket_synth_client_error` logs.
 - **Implemented:** Do not serialize recordings, audio buffers, project/sound state,
   credentials, query strings, or GitHub tokens. Diagnostics remain separate from
   creative-work storage and are pruned by age and record count.
@@ -38,7 +38,7 @@ This list records product direction beyond the current prototype. Items marked
 
 ## Portable Pocket Synth files — planned
 
-CASSIO will import and export versioned, self-contained Pocket Synth package
+POCKET SYNTH will import and export versioned, self-contained Pocket Synth package
 files. Import and export must work locally while offline; sharing or cloud sync
 is optional and separate.
 
@@ -70,8 +70,8 @@ Package rules:
   names. Remap internal IDs safely when merging with an existing library.
 - Preserve enough source material and processing state for lossless project
   continuation. Rendered WAV/MP3 export remains a separate feature for ordinary
-  listening and use outside CASSIO.
-- Support explicit schema migrations so newer CASSIO versions can open older
+  listening and use outside POCKET SYNTH.
+- Support explicit schema migrations so newer POCKET SYNTH versions can open older
   packages. Newer unsupported package versions must fail clearly and leave the
   local library untouched.
 

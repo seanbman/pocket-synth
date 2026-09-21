@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict"
-import { installSequenceVoiceGuardRuntime } from "../../app/javascript/cassio/sequence_voice_guard_runtime.js"
+import { installSequenceVoiceGuardRuntime } from "../../app/javascript/pocket_synth/sequence_voice_guard_runtime.js"
 
 function makeApp() {
   const calls = { triggers: [], sampleOff: [], synthOff: [] }

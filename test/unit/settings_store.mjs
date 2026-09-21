@@ -6,7 +6,7 @@ import {
   loadSettings,
   normalizeSettings,
   saveSettings
-} from "../../app/javascript/cassio/settings_store.js"
+} from "../../app/javascript/pocket_synth/settings_store.js"
 
 const memory = new Map()
 const storage = {

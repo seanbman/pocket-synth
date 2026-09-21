@@ -1,9 +1,9 @@
 import assert from "node:assert/strict"
 import fs from "node:fs"
 
-const app = fs.readFileSync("app/javascript/cassio/app.js", "utf8")
-const play = fs.readFileSync("app/javascript/cassio/screens/play.js", "utf8")
-const sampler = fs.readFileSync("app/javascript/cassio/sampler_controller.js", "utf8")
+const app = fs.readFileSync("app/javascript/pocket_synth/app.js", "utf8")
+const play = fs.readFileSync("app/javascript/pocket_synth/screens/play.js", "utf8")
+const sampler = fs.readFileSync("app/javascript/pocket_synth/sampler_controller.js", "utf8")
 
 assert.match(app, /this\.menuIndex = 2/, "main menu should initially select SOUND")
 assert.match(app, /if \(key === "d"\) this\.sampler\.openHub\(\)/,

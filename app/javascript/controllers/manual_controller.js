@@ -39,7 +39,7 @@ export default class extends Controller {
   }
 
   keydown(event) {
-    // Keep manual typing/navigation from reaching CASSIO's global performance keys.
+    // Keep manual typing/navigation from reaching POCKET SYNTH's global performance keys.
     event.stopPropagation()
     if (event.key === "Escape") {
       event.preventDefault()
