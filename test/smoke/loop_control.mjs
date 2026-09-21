@@ -107,7 +107,8 @@ try {
     le.tracks.find(t => t.id === 3).buffer = buf
     le.setTrackOffset(3, 10)
     app.looper.openHome()
-    app.loopScrollFollow = true
+    app.loopScrollFollowX = true
+    app.loopScrollFollowY = true
     app.render()
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
     const scroller = app.vscreen.querySelector('[data-loop-scroll]')
@@ -115,6 +116,28 @@ try {
     const scrollWidth = scroller?.scrollWidth ?? 0
     const clientWidth = scroller?.clientWidth ?? 0
     const offsetSec = le.tracks.find(t => t.id === 3)?.offsetSec
+
+    // Short LEFT/RIGHT presses pan the viewport and must not rewrite clip timing.
+    scroller.scrollLeft = 0
+    app.loopScrollLeft = 0
+    app.loopScrollFollowX = false
+    await new Promise((r) => requestAnimationFrame(r))
+    const offsetBeforePan = le.tracks.find(t => t.id === 3)?.offsetSec
+    const navRight = app.root.querySelector('[data-action="nav-right"]')
+    navRight?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 91 }))
+    navRight?.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 91 }))
+    await new Promise((r) => requestAnimationFrame(r))
+    const dpadPanLeft = scroller.scrollLeft
+    const offsetAfterPan = le.tracks.find(t => t.id === 3)?.offsetSec
+    const dpadPansWithoutMoving = dpadPanLeft > 0 && offsetAfterPan === offsetBeforePan
+
+    // A manual horizontal pan must not disable vertical selected-lane following.
+    app.loopScrollFollowX = true
+    app.loopScrollFollowY = true
+    const manualLeft = Math.min(Math.max(1, dpadPanLeft + 5), Math.max(1, scroller.scrollWidth - scroller.clientWidth))
+    scroller.scrollLeft = manualLeft
+    scroller.dispatchEvent(new Event('scroll'))
+    const horizontalKeepsVerticalFollow = app.loopScrollFollowX === false && app.loopScrollFollowY !== false
 
     app.looper.selectTrack(5)
     const tapSelected = le.selected
@@ -178,6 +201,30 @@ try {
     const dropHtml = app.vscreen?.innerHTML || ''
     const dropClip = dropHtml.includes('loop-clip') && dropHtml.includes('data-track-id="4"')
 
+    // Grow the arrangement beyond the visible LCD, then verify selecting an
+    // off-screen lane scrolls it below the sticky ruler instead of hiding it.
+    while (le.tracks.length < 12) le.addLane()
+    app.looper.openHome()
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+    const vScroller = app.vscreen.querySelector('[data-loop-scroll]')
+    const verticalOverflow = !!vScroller && vScroller.scrollHeight > vScroller.clientHeight + 1
+    if (vScroller) {
+      vScroller.scrollTop = Math.max(0, vScroller.scrollHeight - vScroller.clientHeight)
+      app.loopScrollTop = vScroller.scrollTop
+      app.loopScrollFollowY = false
+    }
+    app.looper.selectTrack(le.tracks[0].id)
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r))))
+    const followedScroller = app.vscreen.querySelector('[data-loop-scroll]')
+    const followedRow = app.vscreen.querySelector(`.loop-trow[data-track-id="${le.tracks[0].id}"]`)
+    const followedRuler = app.vscreen.querySelector('.loop-ruler-row')
+    const scrollerRect = followedScroller?.getBoundingClientRect()
+    const rowRect = followedRow?.getBoundingClientRect()
+    const rulerHeight = followedRuler?.getBoundingClientRect().height || 0
+    const selectedLaneVisible = !!(verticalOverflow && scrollerRect && rowRect &&
+      rowRect.top >= scrollerRect.top + rulerHeight - 2 &&
+      rowRect.bottom <= scrollerRect.bottom + 2)
+
     // Delete lane (engine + confirm UI)
     const nBeforeDel = le.tracks.length
     le.addLane()
@@ -194,7 +241,8 @@ try {
 
     return {
       playingAfterStop, sourcesAfterStop, muted, solo, quantize, scrollLeft, scrollWidth, clientWidth,
-      offsetSec, tapSelected, seqClip, emptyLaneOk, emptyOpensList, before, afterAdd,
+      offsetSec, dpadPanLeft, dpadPansWithoutMoving, horizontalKeepsVerticalFollow,
+      verticalOverflow, selectedLaneVisible, tapSelected, seqClip, emptyLaneOk, emptyOpensList, before, afterAdd,
       menuHasDrop, menuNoTrackSeq, selectedVisible, menuScrollTop,
       shakerName: shaker.name, customName: custom.name, showsFullName, noPoppedLoop,
       dropAssigned, dropHasPat, dropClip,
@@ -219,6 +267,12 @@ try {
     else fail(`offset ${out.offsetSec}`)
     if (out.scrollLeft > 0) pass(`timeline panned (${out.scrollLeft}px)`)
     else fail(`timeline did not pan (scrollLeft=${out.scrollLeft} sw=${out.scrollWidth} cw=${out.clientWidth})`)
+    if (out.dpadPansWithoutMoving) pass(`D-pad pans timeline without moving clip (${out.dpadPanLeft}px)`)
+    else fail("D-pad pan changed clip timing or failed to scroll")
+    if (out.horizontalKeepsVerticalFollow) pass("horizontal pan preserves vertical follow")
+    else fail("horizontal pan disabled vertical selected-lane follow")
+    if (out.verticalOverflow && out.selectedLaneVisible) pass("selected off-screen lane scrolls into vertical view")
+    else fail(`vertical lane follow overflow=${out.verticalOverflow} visible=${out.selectedLaneVisible}`)
     if (out.tapSelected === 5) pass("selectTrack focuses timeline row")
     else fail(`selectTrack id ${out.tapSelected}`)
     if (out.seqClip) pass("seq-only library track draws clip")
