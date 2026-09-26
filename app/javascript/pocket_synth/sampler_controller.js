@@ -404,14 +404,15 @@ export class SamplerController {
         }
         input.onchange = () => finish(input.files?.[0] || null)
         input.addEventListener("cancel", () => finish(null))
-        // Keep picker in the soft-key gesture turn.
+        // Keep picker in the soft-key gesture turn. showPicker() is synchronous
+        // (returns undefined), so never chain .catch() from it. A second click after
+        // showPicker() can cancel/break the native picker on mobile browsers.
         try {
-          if (typeof input.showPicker === "function") {
-            input.showPicker().catch(() => input.click())
-          } else {
-            input.click()
-          }
+          if (typeof input.showPicker === "function") input.showPicker()
+          else input.click()
         } catch (_) {
+          // Some browsers expose showPicker() but reject it. Fall back once while
+          // we're still in the original user-activation turn.
           try { input.click() } catch (e2) {
             finish(null)
             a.toast("CAN'T OPEN FILES")
